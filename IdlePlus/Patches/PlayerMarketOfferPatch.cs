@@ -10,6 +10,9 @@ using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 
 namespace IdlePlus.Patches {
 	
+	/// <summary>
+	/// A patch to add support for compact numbers in the market offer price.
+	/// </summary>
 	[HarmonyPatch(typeof(PlayerMarketOffer))]
 	public class PlayerMarketOfferPatch {
 
@@ -47,8 +50,7 @@ namespace IdlePlus.Patches {
 			}
 
 			// Parse the number.
-			Numbers.NumberModifier modifier;
-			var number = Numbers.ParseNumber(input, out modifier);
+			var number = Numbers.ParseNumber(input, out var modifier);
 			
 			// Make sure it isn't an invalid number.
 			if (number == -1) {
@@ -97,6 +99,9 @@ namespace IdlePlus.Patches {
 			PreviousInputs[__instance] = input;
 			return false;
 		}
+		
+		// TODO: When the client is updated, we might be able to remove most of
+		//       these patches and instead just patch the get price method.
 
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(PlayerMarketOffer.GetCurrentTotalPrice))]

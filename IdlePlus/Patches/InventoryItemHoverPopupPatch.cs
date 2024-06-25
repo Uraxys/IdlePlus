@@ -10,6 +10,11 @@ using Object = UnityEngine.Object;
 
 namespace IdlePlus.Patches {
 	
+	/// <summary>
+	/// A patch to add the market value to the inventory item hover popup,
+	/// while also removing the item value if the item can't be sold to the
+	/// game shop.
+	/// </summary>
 	[HarmonyPatch(typeof(InventoryItemHoverPopup))]
 	public class InventoryItemHoverPopupPatch {
 		

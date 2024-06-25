@@ -10,6 +10,11 @@ namespace IdlePlus.Utilities {
 	[HarmonyPatch]
 	public static class ModLocalization {
 		
+		/// <summary>
+		/// Modded localization keys to be injected into the game's localization
+		/// manager. The key will be automatically prefixed with the mod ID to
+		/// avoid overriding existing keys.
+		/// </summary>
 		private static readonly Dictionary<string, string> LocalizationKeys = new Dictionary<string, string> {
 			{ "edit_offer", "Edit offer" },
 		};
@@ -52,18 +57,40 @@ namespace IdlePlus.Utilities {
 			});
 		}
 
+		/// <summary>
+		/// Override the localization key with a modded key for the given
+		/// GameObject.
+		/// </summary>
+		/// <param name="gameObject">The GameObject we're overriding.</param>
+		/// <param name="key">The new localization key, shouldn't include the mod id.</param>
 		public static void SetModdedLocalizationKey(GameObject gameObject, string key) {
 			SetLocalizationKey(gameObject.transform, $"{IdlePlus.ModID}_{key}");
 		}
 		
+		/// <summary>
+		/// Override the localization key with a modded key for the given
+		/// Transform.
+		/// </summary>
+		/// <param name="transform">The Transform of the GameObject we're overriding.</param>
+		/// <param name="key">The new localization key, shouldn't include the mod id.</param>
 		public static void SetModdedLocalizationKey(Transform transform, string key) {
 			SetLocalizationKey(transform, $"{IdlePlus.ModID}_{key}");
 		}
 
+		/// <summary>
+		/// Override the localization key for the given GameObject.
+		/// </summary>
+		/// <param name="obj">The GameObject we're overriding.</param>
+		/// <param name="key">The new localization key.</param>
 		public static void SetLocalizationKey(GameObject obj, string key) {
 			SetLocalizationKey(obj.transform, key);
 		}
 		
+		/// <summary>
+		/// Override the localization key for the given Transform.
+		/// </summary>
+		/// <param name="obj">The Transform of the GameObject we're overriding.</param>
+		/// <param name="key">The new localization key.</param>
 		public static void SetLocalizationKey(Transform obj, string key) {
 			LocalizationText localizationText = obj.GetComponent<LocalizationText>();
 			if (localizationText == null) {
@@ -74,10 +101,22 @@ namespace IdlePlus.Utilities {
 			localizationText.SetKeyRuntime(key);
 		}
 
+		/// <summary>
+		/// Get a modded localized value for the given key.
+		/// </summary>
+		/// <param name="key">The localization key, shouldn't include the mod id.</param>
+		/// <param name="arguments">The arguments.</param>
+		/// <returns></returns>
 		public static string GetModdedLocalizedValue(string key, params Object[] arguments) {
 			return GetLocalizedValue($"{IdlePlus.ModID}_{key}", arguments);
 		}
 		
+		/// <summary>
+		/// Get a localized value for the given key.
+		/// </summary>
+		/// <param name="key">The localization key.</param>
+		/// <param name="arguments">The arguments.</param>
+		/// <returns></returns>
 		public static string GetLocalizedValue(string key, params Object[] arguments) {
 			const int maxArguments = 6;
 			if (arguments.Length > maxArguments) {

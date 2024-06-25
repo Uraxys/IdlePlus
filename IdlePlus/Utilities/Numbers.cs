@@ -3,6 +3,13 @@ using System;
 namespace IdlePlus.Utilities {
 	public static class Numbers {
 
+		/// <summary>
+		/// Converts the given number to a compact format.
+		/// </summary>
+		/// <param name="number">The number to compact.</param>
+		/// <returns>The compacted number, numbers under 100,000 isn't compacted,
+		/// but are instead formatted, while anything above 100,000 will be
+		/// formatted as either 0K, 0M or 0B, depending on the amount.</returns>
 		public static string ToCompactFormat(long number) {
 			if (number < 100_000) return number.ToString("#,0");
 			if (number < 1_000_000) return $"{number / 1000}K";
@@ -10,6 +17,13 @@ namespace IdlePlus.Utilities {
 			return $"{number / 1_000_000_000.0:0.###}B";
 		}
 
+		/// <summary>
+		/// Parse the given input as a number.
+		/// This method supports compact formats such as: 1k, 1m, 1b, 1kk, 1kkk, 0.5k, .5m, 1.b
+		/// </summary>
+		/// <param name="input">The input to parse.</param>
+		/// <param name="format">The format the number was using.</param>
+		/// <returns></returns>
 		public static long ParseNumber(string input, out NumberModifier format) {
 			format = NumberModifier.Unknown;
 			NumberModifier modifier;

@@ -14,6 +14,9 @@ using UnityEngine.UI.ProceduralImage;
 
 namespace IdlePlus.Patches {
 	
+	/// <summary>
+	/// A patch to add an "Edit offer" button to the marker offer popup.
+	/// </summary>
 	[HarmonyPatch(typeof(ViewPlayerMarketOfferPopup))]
 	public class ViewPlayerMarketOfferPopupPatch {
 
