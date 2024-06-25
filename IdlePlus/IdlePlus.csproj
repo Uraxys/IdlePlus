@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{09EF1AF1-FAEB-4F9E-AC59-9476F4D43830}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>IdlePlus</RootNamespace>
+        <AssemblyName>IdlePlus</AssemblyName>
+        <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="0Harmony">
+          <HintPath>..\libs\core\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp">
+          <HintPath>..\libs\interop\Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+          <HintPath>..\libs\interop\Assembly-CSharp-firstpass.dll</HintPath>
+        </Reference>
+        <Reference Include="BepInEx.Core">
+          <HintPath>..\libs\core\BepInEx.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="BepInEx.Unity.IL2CPP">
+          <HintPath>..\libs\core\BepInEx.Unity.IL2CPP.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppInterop.Runtime">
+          <HintPath>..\libs\core\Il2CppInterop.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2Cppmscorlib">
+          <HintPath>..\libs\interop\Il2Cppmscorlib.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem">
+          <HintPath>..\libs\interop\Il2CppSystem.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem.Core">
+          <HintPath>..\libs\interop\Il2CppSystem.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem.Net.Http">
+          <HintPath>..\libs\interop\Il2CppSystem.Net.Http.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem.Runtime.Serialization">
+          <HintPath>..\libs\interop\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem.Xml">
+          <HintPath>..\libs\interop\Il2CppSystem.Xml.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil">
+          <HintPath>..\libs\core\Mono.Cecil.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil.Mdb">
+          <HintPath>..\libs\core\Mono.Cecil.Mdb.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil.Pdb">
+          <HintPath>..\libs\core\Mono.Cecil.Pdb.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil.Rocks">
+          <HintPath>..\libs\core\Mono.Cecil.Rocks.dll</HintPath>
+        </Reference>
+        <Reference Include="Newtonsoft.Json">
+          <HintPath>..\libs\interop\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="Unity.TextMeshPro">
+          <HintPath>..\libs\interop\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine">
+          <HintPath>..\libs\interop\UnityEngine.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+          <HintPath>..\libs\interop\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+          <HintPath>..\libs\interop\UnityEngine.IMGUIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+          <HintPath>..\libs\interop\UnityEngine.InputLegacyModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.InputModule">
+          <HintPath>..\libs\interop\UnityEngine.InputModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+          <HintPath>..\libs\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+          <HintPath>..\libs\interop\UnityEngine.UI.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+          <HintPath>..\libs\interop\UnityEngine.UIModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="IdleClansAPI\IdleAPI.cs" />
+        <Compile Include="IdleClansAPI\MarketEntry.cs" />
+        <Compile Include="IdlePlus.cs" />
+        <Compile Include="IdlePlusBehaviour.cs" />
+        <Compile Include="Patches\FTUEManagerPatch.cs" />
+        <Compile Include="Patches\InventoryItemHoverPopupPatch.cs" />
+        <Compile Include="Patches\PlayerMarketOfferPatch.cs" />
+        <Compile Include="Patches\ViewPlayerMarketOfferPopupPatch.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="Utilities\GameObjects.cs" />
+        <Compile Include="Utilities\IdleLog.cs" />
+        <Compile Include="Utilities\IdleTasks.cs" />
+        <Compile Include="Utilities\ModLocalization.cs" />
+        <Compile Include="Utilities\Numbers.cs" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+
+</Project>
