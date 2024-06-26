@@ -8,8 +8,16 @@ namespace IdlePlus.Utilities {
 		public static ManualLogSource Logger;
 		private static readonly Regex PlaceholderRegex = new Regex(@"\{\}");
 		
-		public static void Error(object message, params object[] args) {
+		/*public static void Error(object message, params object[] args) {
 			Log(LogLevel.Error, message, args);
+		}*/
+		
+		public static void Error(object message) {
+			Log(LogLevel.Error, message);
+		}
+		
+		public static void Error(object message, Il2CppSystem.Exception exception) {
+			Log(LogLevel.Error, "{}\n{}", message, exception.ToString());
 		}
 		
 		public static void Error(object message, Exception exception) {

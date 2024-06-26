@@ -21,12 +21,25 @@ namespace IdlePlus.Utilities {
 		}
 		
 		/// <summary>
-		/// Create a new task that runs every frame until it's cancelled.
+		/// Create a new task that runs next frame
 		/// </summary>
 		/// <param name="action">The action to run every frame.</param>
 		/// <returns>The created task.</returns>
-		public static IdleTask Run(Action<IdleTask> action) {
-			var task = new IdleTask(action, -1F);
+		public static IdleTask Run(Action action) {
+			var task = new IdleTask(idleTask => {
+				action.Invoke();
+				idleTask.Cancel();
+			}, -1F, -1F);
+			Tasks.Add(task);
+			return task;
+		}
+		
+		public static IdleTask Delay(float delay, Action action) {
+			if (delay < 0) throw new ArgumentException("Delay must be greater than 0.");
+			var task = new IdleTask(idleTask => {
+				action.Invoke();
+				idleTask.Cancel();
+			}, delay, -1F);
 			Tasks.Add(task);
 			return task;
 		}
@@ -35,13 +48,14 @@ namespace IdlePlus.Utilities {
 		/// Create a new task that runs every interval seconds until it's
 		/// cancelled.
 		/// </summary>
+		/// <param name="delay">The delay in seconds before the task starts.</param>
 		/// <param name="interval">The interval in seconds.</param>
 		/// <param name="action">The action to run every interval.</param>
 		/// <returns>The created task.</returns>
-		/// <exception cref="ArgumentException">If the interval is less than or equal to 0.</exception>
-		public static IdleTask Interval(float interval, Action<IdleTask> action) {
-			if (interval <= 0) throw new ArgumentException("Interval must be greater than 0");
-			var task = new IdleTask(action, interval);
+		/// <exception cref="ArgumentException">If the interval is less than 0.</exception>
+		public static IdleTask Repeat(float delay, float interval, Action<IdleTask> action) {
+			if (interval < 0) throw new ArgumentException("Interval must be greater than 0.");
+			var task = new IdleTask(action, delay, interval);
 			Tasks.Add(task);
 			return task;
 		}
@@ -50,20 +64,17 @@ namespace IdlePlus.Utilities {
 			private readonly Action<IdleTask> _taskAction;
 			private readonly Action _action;
 			private readonly float _interval;
+			private readonly int _frameStart;
 			
 			private float _time;
+			private float _delay;
 			private bool _cancelled;
 
-			public IdleTask(Action<IdleTask> taskAction, float interval) {
+			public IdleTask(Action<IdleTask> taskAction, float delay, float interval) {
 				_taskAction = taskAction;
 				_action = null;
 				_interval = interval;
-			}
-
-			public IdleTask(Action action, float interval) {
-				_taskAction = null;
-				_action = action;
-				_interval = interval;
+				_frameStart = Time.frameCount;
 			}
 
 			/// <summary>
@@ -75,6 +86,24 @@ namespace IdlePlus.Utilities {
 				// Check if the task has been cancelled before ticking, this
 				// might happen if it's been cancelled from the outside.
 				if (_cancelled) return false;
+				var dt = Time.deltaTime;
+				
+				// Tasks always start the next frame, so if the frame count is
+				// still the same, return true.
+				if (_frameStart == Time.frameCount) return true;
+				
+				// Check for delay.
+				if (_delay > 0) {
+					if (_delay > dt) {
+						_delay -= dt;
+						return true;
+					}
+
+					// Delay is less than the delta time, modify the delta time
+					// and remove the delay.
+					_delay = -1;
+					dt -= _delay;
+				}
 				
 				// If the interval is less than 0, then run the task once per
 				// frame.
@@ -85,7 +114,7 @@ namespace IdlePlus.Utilities {
 				
 				// Interval is greater than 0, increment the time and check if
 				// it's time to run the task.
-				_time += Time.deltaTime;
+				_time += dt;
 				if (_time < _interval) return true;
 
 				Run();

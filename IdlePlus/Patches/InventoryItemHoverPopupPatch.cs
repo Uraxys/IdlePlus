@@ -2,6 +2,7 @@ using Databases;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Utilities;
+using Player;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -57,18 +58,19 @@ namespace IdlePlus.Patches {
 			var basePriceText = __instance._itemValueText;
 			var marketPriceText = _marketValue.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 
+			var canNotBeSold = item.CanNotBeSoldToGameShop;
+			var canNotBeTraded = item.CanNotBeTraded || PlayerData.Instance.GameMode == GameMode.Ironman;
+			
 			// Disable the base value if the item can't be sold.
-			if (item.CanNotBeSoldToGameShop) {
-				baseObj.SetActive(false);
-			} else {
+			if (canNotBeSold) baseObj.SetActive(false);
+			else {
 				baseObj.SetActive(true);
 				basePriceText.text = Numbers.ToCompactFormat(item.BaseValue);
 			}
 			
 			// Disable the market value if the item can't be sold.
-			if (item.CanNotBeTraded) {
-				marketObj.SetActive(false);
-			} else {
+			if (canNotBeTraded) marketObj.SetActive(false);
+			else {
 				var price = IdleAPI.GetMarketEntry(item)?.GetSellBuyPrice();
 				var text = price > 0 ? Numbers.ToCompactFormat(price.Value) : "???";
 				
@@ -79,9 +81,7 @@ namespace IdlePlus.Patches {
 				// be sold to the game shop.
 				var rectTransform = marketObj.GetComponent<RectTransform>();
 				var x = rectTransform.sizeDelta.x;
-				
-				if (item.CanNotBeSoldToGameShop) rectTransform.sizeDelta = new Vector2(x, SingleYSize);
-				else rectTransform.sizeDelta = new Vector2(x, DefaultYSize);
+				rectTransform.sizeDelta = canNotBeSold ? new Vector2(x, SingleYSize) : new Vector2(x, DefaultYSize);
 			}
 			
 			__instance._contentRefresh.RefreshContentFitters();

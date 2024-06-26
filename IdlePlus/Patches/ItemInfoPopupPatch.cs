@@ -2,6 +2,7 @@ using Databases;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Utilities;
+using Player;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -40,16 +41,19 @@ namespace IdlePlus.Patches {
 			var baseText = _baseValue.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 			var marketText = _marketValue.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 			
-			if (item.CanNotBeSoldToGameShop) _baseValue.SetActive(false);
+			var canNotBeSold = item.CanNotBeSoldToGameShop;
+			var canNotBeTraded = item.CanNotBeTraded || PlayerData.Instance.GameMode == GameMode.Ironman;
+			
+			if (canNotBeSold) _baseValue.SetActive(false);
 			else {
 				_baseValue.SetActive(true);
 				baseText.text = Numbers.ToCompactFormat(item.BaseValue);
 				
 				// If the market value is disabled, move the base value to the default position.
-				_baseValue.transform.localPosition = item.CanNotBeTraded ? ValueDefaultPosition : BaseValuePosition;
+				_baseValue.transform.localPosition = canNotBeTraded ? ValueDefaultPosition : BaseValuePosition;
 			}
 			
-			if (item.CanNotBeTraded) _marketValue.SetActive(false);
+			if (canNotBeTraded) _marketValue.SetActive(false);
 			else {
 				var price = IdleAPI.GetMarketEntry(item)?.GetSellBuyPrice();
 				var text = price > 0 ? Numbers.ToCompactFormat(price.Value) : "???";
@@ -57,7 +61,7 @@ namespace IdlePlus.Patches {
 				marketText.text = text;
 				
 				// If the base value is disabled, move the market value to the default position.
-				_marketValue.transform.localPosition = item.CanNotBeSoldToGameShop ? ValueDefaultPosition : MarketValuePosition;
+				_marketValue.transform.localPosition = canNotBeSold ? ValueDefaultPosition : MarketValuePosition;
 			}
 			
 			__instance._contentRefresh.RefreshContentFitters();

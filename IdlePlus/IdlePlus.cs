@@ -34,7 +34,7 @@ namespace IdlePlus {
 			harmony.PatchAll();
 			
 			// Create the market prices update task.
-			IdleTasks.Interval(60, task => {
+			IdleTasks.Repeat(0, 60, task => {
 				if (!NetworkClient.IsConnected()) return;
 				IdleAPI.UpdateMarketPrices();
 			});
@@ -64,12 +64,14 @@ namespace IdlePlus {
 			var playerMarket = Object.FindObjectOfType<PlayerMarketPage>(true);
 			if (playerMarket == null) IdleLog.Warn("Couldn't find PlayerMarketPage in OnLogin!");
 			else {
-				playerMarket.gameObject.SetActive(true);
-				playerMarket.gameObject.SetActive(false);
+				IdleTasks.Run(() => {
+					playerMarket.gameObject.SetActive(true);
+					playerMarket.gameObject.SetActive(false);
+					
+					// Update market prices.
+					IdleAPI.UpdateMarketPrices();
+				});
 			}
-			
-			// Update market prices.
-			IdleAPI.UpdateMarketPrices();
 		}
 	}
 }
