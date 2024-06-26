@@ -51,7 +51,7 @@ namespace IdlePlus.Utilities {
 		
 		[HarmonyPostfix]
 		[HarmonyPatch(typeof(LocalizationManager), nameof(LocalizationManager.SetupLanguage))]
-		private static void PrefixInitialize(Task __result) {
+		private static void PostfixInitialize(Task __result) {
 			__result.ContinueWith((Action<Task>) delegate {
 				Initialize();
 			});

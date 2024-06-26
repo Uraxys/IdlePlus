@@ -121,7 +121,7 @@
         <Compile Include="IdleClansAPI\MarketEntry.cs" />
         <Compile Include="IdlePlus.cs" />
         <Compile Include="IdlePlusBehaviour.cs" />
-        <Compile Include="Patches\FTUEManagerPatch.cs" />
+        <Compile Include="Patches\PlayerDataPatch.cs" />
         <Compile Include="Patches\InventoryItemHoverPopupPatch.cs" />
         <Compile Include="Patches\PlayerMarketOfferPatch.cs" />
         <Compile Include="Patches\ViewPlayerMarketOfferPopupPatch.cs" />
@@ -131,6 +131,7 @@
         <Compile Include="Utilities\IdleTasks.cs" />
         <Compile Include="Utilities\ModLocalization.cs" />
         <Compile Include="Utilities\Numbers.cs" />
+        <Compile Include="Utilities\Profiler.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 
