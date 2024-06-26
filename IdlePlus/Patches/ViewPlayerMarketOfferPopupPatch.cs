@@ -94,7 +94,7 @@ namespace IdlePlus.Patches {
 			var prefix = __instance._isBuyOffer ? "Highest" : "Lowest";
 			var marketEntry = IdleAPI.GetMarketEntry(__instance._item);
 			var price = marketEntry == null ? "???" : __instance._isBuyOffer ? 
-				marketEntry.GetBuyPrice().ToString() : marketEntry.GetSellPrice().ToString();
+				Numbers.Format(marketEntry.GetBuyPrice()) : Numbers.Format(marketEntry.GetSellPrice());
 			__instance._priceText.m_text += $" <color=#aaa>({prefix} {price})</color>";
 		}
 

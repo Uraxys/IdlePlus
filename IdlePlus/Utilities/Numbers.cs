@@ -16,6 +16,8 @@ namespace IdlePlus.Utilities {
 			if (number < 1_000_000_000) return $"{number / 1_000_000.0:0.###}M";
 			return $"{number / 1_000_000_000.0:0.###}B";
 		}
+		
+		public static string Format(long number) => number.ToString("#,0");
 
 		/// <summary>
 		/// Parse the given input as a number.
