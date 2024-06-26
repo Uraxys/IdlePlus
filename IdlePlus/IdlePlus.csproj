@@ -121,6 +121,7 @@
         <Compile Include="IdleClansAPI\MarketEntry.cs" />
         <Compile Include="IdlePlus.cs" />
         <Compile Include="IdlePlusBehaviour.cs" />
+        <Compile Include="Patches\ItemInfoPopupPatch.cs" />
         <Compile Include="Patches\PlayerDataPatch.cs" />
         <Compile Include="Patches\InventoryItemHoverPopupPatch.cs" />
         <Compile Include="Patches\PlayerMarketOfferPatch.cs" />

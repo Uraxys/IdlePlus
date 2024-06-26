@@ -21,12 +21,10 @@ namespace IdlePlus {
 			ModVersion = "1.0.0";
 		
 		private static bool _initialized;
-		public static Profiler _profiler;
 		
 		public override void Load() {
 			IdleLog.Logger = Log;
 			IdleLog.Info("Loading Idle Plus...");
-			_profiler = new Profiler();
 			
 			// Create the IdleClansPlusBehaviour instance.
 			IdlePlusBehaviour.Create();
@@ -45,45 +43,7 @@ namespace IdlePlus {
 		}
 
 		internal static void Update() {
-			_profiler.Start(); // Starts the root section.
-			
-			_profiler.Push("idleTasks");
 			IdleTasks.Update();
-			_profiler.Pop(); // Pops idleTasks
-			
-			_profiler.Push("test");
-			// Some heavy work
-			float result = 0;
-			for (int i = 0; i < 1000; i++) {
-				result += i - 1;
-				result *= i + 1;
-				result--;
-			}
-			_profiler.Push("innerTest");
-			result = 0;
-			for (int i = 0; i < 1000; i++) {
-				result -= i + 1;
-			}
-			
-			_profiler.Push("innerCheck");
-			result = 0;
-			while (result < 1000) {
-				result++;
-				if (result % 3 == 0) result++;
-			}
-			_profiler.Pop(); // Pops innerCheck
-			_profiler.Pop(); // Pops innerTest
-			_profiler.Pop(); // Pops test
-			
-			_profiler.Push("trackTotalInner");
-			for (int i = 0; i < 1000; i++) {
-				_profiler.Push("trackInner");
-				result += i % 5;
-				_profiler.Pop(); // Pops trackInner
-			}
-			_profiler.Pop(); // Pops trackTotalInner
-			
-			_profiler.Stop(); // "pops" the root section.
 		}
 
 		internal static void OnLogin() {
@@ -93,6 +53,7 @@ namespace IdlePlus {
 			// Do one time initialization for objects that are only created once.
 			if (!_initialized) {
 				_initialized = true;
+				ItemInfoPopupPatch.InitializeOnce();
 				InventoryItemHoverPopupPatch.InitializeOnce();
 				ViewPlayerMarketOfferPopupPatch.InitializeOnce();
 			}

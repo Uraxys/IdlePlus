@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using IdlePlus.Utilities;
 using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
 
@@ -27,7 +25,7 @@ namespace IdlePlus {
 			IdlePlus.Update();
 			
 			// Used for testing.
-			if (Input.GetKeyDown(KeyCode.Space)) {
+			/*if (Input.GetKeyDown(KeyCode.Space)) {
 				if (!IdlePlus._profiler.Enabled) return;
 				IdleLog.Info("Showing report for toplevel sections");
 				List<Profiler.Report> report = IdlePlus._profiler.GetReport();
@@ -42,25 +40,24 @@ namespace IdlePlus {
 			if (Input.GetKeyDown(KeyCode.B)) {
 				if (!IdlePlus._profiler.Enabled) return;
 				IdleLog.Info("Showing full report");
-				LogAllSections(null, 0);
+				LogAllSections(IdlePlus._profiler.GetFullReport(), 0);
 			}
 
 			if (Input.GetKeyDown(KeyCode.P)) {
 				var profilerEnabled = IdlePlus._profiler.Enabled;
 				IdlePlus._profiler.Enabled = !profilerEnabled;
 				IdleLog.Info($"Profiler is now {(!profilerEnabled ? "disabled" : "enabled")}");
-			}
+			}*/
 		}
 
-		private void LogAllSections(string section, int depth) {
-			var reports = IdlePlus._profiler.GetReport(section, false);
+		/*private void LogAllSections(List<Profiler.Report> reports, int depth) {
 			foreach (var entry in reports) {
 				var text = new string(' ', depth * 2) + $"L {entry.Section}: " +
 				           $"section {entry.SectionPercent:0.00}%, total {entry.TotalPercentage:0.00}%, " +
 				           $"time {entry.Time / 1_000_000D:0.00}ms";
 				IdleLog.Info(text);
-				if (entry.Path != null) LogAllSections(entry.Path, depth + 1);
+				if (entry.SubSections != null) LogAllSections(entry.SubSections, depth + 1);
 			}
-		}
+		}*/
 	}
 }
