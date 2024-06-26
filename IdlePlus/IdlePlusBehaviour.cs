@@ -28,7 +28,7 @@ namespace IdlePlus {
 			
 			// Used for testing.
 			if (Input.GetKeyDown(KeyCode.Space)) {
-				if (!IdlePlus._profiler.IsEnabled()) return;
+				if (!IdlePlus._profiler.Enabled) return;
 				IdleLog.Info("Showing report for toplevel sections");
 				List<Profiler.Report> report = IdlePlus._profiler.GetReport();
 				foreach (var entry in report) {
@@ -40,17 +40,15 @@ namespace IdlePlus {
 			}
 
 			if (Input.GetKeyDown(KeyCode.B)) {
-				if (!IdlePlus._profiler.IsEnabled()) return;
+				if (!IdlePlus._profiler.Enabled) return;
 				IdleLog.Info("Showing full report");
 				LogAllSections(null, 0);
 			}
 
 			if (Input.GetKeyDown(KeyCode.P)) {
-				var enabled = IdlePlus._profiler.IsEnabled();
-				if (enabled) IdlePlus._profiler.Disable();
-				else IdlePlus._profiler.Enable();
-				
-				IdleLog.Info($"Profiler is now {(enabled ? "disabled" : "enabled")}");
+				var profilerEnabled = IdlePlus._profiler.Enabled;
+				IdlePlus._profiler.Enabled = !profilerEnabled;
+				IdleLog.Info($"Profiler is now {(!profilerEnabled ? "disabled" : "enabled")}");
 			}
 		}
 

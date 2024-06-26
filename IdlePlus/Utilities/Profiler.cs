@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IdlePlus.Utilities.Extensions;
 
 namespace IdlePlus.Utilities {
 	public class Profiler {
@@ -14,34 +15,45 @@ namespace IdlePlus.Utilities {
 		/// <summary>
 		/// If the Profiler should be enabled the next time it's started.
 		/// </summary>
-		private bool _enabledState;
+		public bool Enabled { get; set; }
 		
 		/// <summary>
 		/// If the Profiler is currently running.
 		/// </summary>
-		private bool _enabled;
+		private bool _currentlyEnabled;
 
 		public Profiler(bool enabled = false) {
 			//_instance = this;
-			_enabled = enabled;
+			Enabled = enabled;
+			_currentlyEnabled = enabled;
 		}
 
+		#region Start/Stop
+		
+		/// <summary>
+		/// Starts the current profiling session.
+		/// Must always be called before pushing or popping any sections.
+		/// </summary>
 		public void Start() {
-			_enabled = _enabledState;
-			if (!_enabled) return;
+			_currentlyEnabled = Enabled;
+			if (!_currentlyEnabled) return;
 
 			if (_currentSection != null) {
 				IdleLog.Warn("Profiler: Tried to start, but it's already running.");
 				return;
 			}
 			
+			// "Push" the main section.
 			_currentSection = RootSection;
 			_sections.Add(_currentSection);
-			_timestamps.Add(GetNanos());
+			_timestamps.Add(DateTime.Now.Ticks * 100);
 		}
 		
+		/// <summary>
+		/// Stops the current profiling session.
+		/// </summary>
 		public void Stop() {
-			if (!_enabled) return;
+			if (!_currentlyEnabled) return;
 			
 			if (_currentSection != RootSection) {
 				IdleLog.Warn($"Profiler: Tried to disable, but not all sections were closed!\n" +
@@ -53,10 +65,22 @@ namespace IdlePlus.Utilities {
 			Pop();
 		}
 		
+		#endregion
+
+		#region Get report
+		
+		/// <summary>
+		/// Get the report for a given section.
+		/// This will only return the children of the given section, and not
+		/// all of them. If you want the full report, use #GetFullReport().
+		/// </summary>
+		/// <param name="section">The section to get the report of, or null for the root section.</param>
+		/// <param name="includeTopLevel">If the given section should also be included in the list.</param>
+		/// <returns>A sorted list of reports for the given section.</returns>
 		public List<Report> GetReport(string section = null, bool includeTopLevel = true) {
-			if (!IsEnabled()) return new List<Report>();
+			if (!_currentlyEnabled) return new List<Report>();
 			
-			List<Report> results = new List<Report>();
+			var results = new List<Report>();
 			section = section == null ? RootSection : $"{RootSection}.{section}";
 			
 			// Get the total time for the target and the root section.
@@ -82,7 +106,7 @@ namespace IdlePlus.Utilities {
 					// Get the time and calculate the percentage.
 					var time = _profiling[key];
 					var totalPercentage = time * 100D / totalTime;
-					var sectionPercentage = time * 100D / trackedTime;
+					var sectionPercentage = time * 100D / targetTime;
 					var subSection = key.Substring(section.Length + 1);
 					// Add the result
 					results.Add(new Report(subSection, key.Substring(RootSection.Length + 1), time, totalPercentage,
@@ -93,15 +117,13 @@ namespace IdlePlus.Utilities {
 			// Add untracked time.
 			if (trackedTime < targetTime) {
 				var time = targetTime - trackedTime;
-				var sectionPercentage = time * 100D / trackedTime;
 				var totalPercentage = time * 100D / totalTime;
+				var sectionPercentage = time * 100D / targetTime;
 				results.Add(new Report("#untracked", null, time, totalPercentage, sectionPercentage));
 			}
 			
 			// Decay the profiling time.
-			foreach (var pair in _profiling) {
-				_profiling[pair.Key] = (long) (pair.Value * 0.999D);
-			}
+			_profiling.ReplaceAll((k, v) => (long)(v * 0.99D));
 			
 			// Sort the results by time then add the current section at the top.
 			results.Sort((a, b) => b.Time.CompareTo(a.Time));
@@ -110,20 +132,31 @@ namespace IdlePlus.Utilities {
 			return results;
 		}
 
-		public void Enable() {
-			_enabledState = true;
-		}
+		/// <summary>
+		/// Get the full report for all the subsections starting from the given
+		/// section.
+		/// </summary>
+		/// <param name="section">The section to get the full report for, or null for the root section.</param>
+		/// <param name="topLevel">If the given section should also be included in the list.</param>
+		/// <returns>A list of reports for the given section and all its subsections.</returns>
+		public List<Report> GetFullReport(string section = null, bool topLevel = true) {
+			var reports = GetReport(section, topLevel);
+			
+			foreach (var report in reports) {
+				if (report.Path == null) continue;
+				var includeTopLevel = topLevel;
+				report.SubSections = GetFullReport(report.Path, false);
+			}
 
-		public void Disable() {
-			_enabledState = false;
+			return reports;
 		}
 		
-		public bool IsEnabled() {
-			return _enabled;
-		}
+		#endregion
 
+		#region Push/Pop
+		
 		public void Push(string section) {
-			if (!IsEnabled()) return;
+			if (!_currentlyEnabled) return;
 			
 			if (_currentSection == null) {
 				IdleLog.Warn("Profiler: Tried to push, but no sections are open.");
@@ -133,11 +166,11 @@ namespace IdlePlus.Utilities {
 			// Begin the section.
 			_currentSection += $".{section}";
 			_sections.Add(_currentSection);
-			_timestamps.Add(GetNanos());
+			_timestamps.Add(DateTime.Now.Ticks * 100);
 		}
 		
 		public void Pop() {
-			if (!IsEnabled()) return;
+			if (!_currentlyEnabled) return;
 
 			if (_currentSection == null) {
 				IdleLog.Warn("Profiler: Tried to pop, but no sections are open.");
@@ -145,8 +178,8 @@ namespace IdlePlus.Utilities {
 			}
 
 			// End the section.
-			var endTime = GetNanos();
-			var startTime = RemoveAndGet(_timestamps, _timestamps.Count - 1);
+			var endTime = DateTime.Now.Ticks * 100;
+			var startTime = _timestamps.RemoveAndGet(_timestamps.Count - 1);
 			var time = endTime - startTime;
 			_sections.RemoveAt(_sections.Count - 1);
 			
@@ -159,29 +192,44 @@ namespace IdlePlus.Utilities {
 		}
 		
 		public void PopPush(string section) {
-			if (!IsEnabled()) return;
+			if (!_currentlyEnabled) return;
 			
 			Pop();
 			Push(section);
 		}
 		
-		private static long GetNanos() {
-			return DateTime.Now.Ticks * 100;
-		}
-		
-		private static long RemoveAndGet(List<long> list, int index) {
-			var value = list[index];
-			list.RemoveAt(index);
-			return value;
-		}
+		#endregion
 		
 		public class Report {
 			
+			/// <summary>
+			/// The name of the section.
+			/// </summary>
 			public string Section { get; }
+			/// <summary>
+			/// The path to this section.
+			/// </summary>
 			public string Path { get; }
+			
+			/// <summary>
+			/// The total time spent profiling this section.
+			/// </summary>
 			public long Time { get; }
+			/// <summary>
+			/// The total percentage of the time spent in this section.
+			/// </summary>
 			public double TotalPercentage { get; }
+			/// <summary>
+			/// The percentage of the time spent in this section using the
+			/// parent section as the total.
+			/// </summary>
 			public double SectionPercent { get; }
+
+			/// <summary>
+			/// The children of this section.
+			/// Is only available if the report was created with #GetFullReport().
+			/// </summary>
+			public List<Report> SubSections { get; set; } = null;
 
 			public Report(string section, string path, long time, double totalPercentage, double sectionPercent) {
 				Section = section;
