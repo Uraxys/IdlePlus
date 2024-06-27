@@ -3,7 +3,6 @@ using HarmonyLib;
 using Il2CppSystem;
 using Il2CppSystem.Threading.Tasks;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace IdlePlus.Utilities {
 	
@@ -17,6 +16,7 @@ namespace IdlePlus.Utilities {
 		/// </summary>
 		private static readonly Dictionary<string, string> LocalizationKeys = new Dictionary<string, string> {
 			{ "edit_offer", "Edit offer" },
+			{ "claim_all", "Claim all" },
 		};
 		
 		/// <summary>
@@ -107,8 +107,8 @@ namespace IdlePlus.Utilities {
 		/// <param name="key">The localization key, shouldn't include the mod id.</param>
 		/// <param name="arguments">The arguments.</param>
 		/// <returns></returns>
-		public static string GetModdedLocalizedValue(string key, params Object[] arguments) {
-			return GetLocalizedValue($"{IdlePlus.ModID}_{key}", arguments);
+		public static string GetModdedValue(string key, params string[] arguments) {
+			return GetValue($"{IdlePlus.ModID}_{key}", arguments);
 		}
 		
 		/// <summary>
@@ -117,7 +117,7 @@ namespace IdlePlus.Utilities {
 		/// <param name="key">The localization key.</param>
 		/// <param name="arguments">The arguments.</param>
 		/// <returns></returns>
-		public static string GetLocalizedValue(string key, params Object[] arguments) {
+		public static string GetValue(string key, params string[] arguments) {
 			const int maxArguments = 6;
 			if (arguments.Length > maxArguments) {
 				IdleLog.Warn($"Too many arguments for localization key (>6): {maxArguments}");
@@ -145,7 +145,7 @@ namespace IdlePlus.Utilities {
 			return LocalizationManager.GetLocalizedValue(key, arg1, arg2, arg3, arg4, arg5, arg6);
 		}
 
-		private static string GetArgument(Object[] args, int number) {
+		private static string GetArgument(string[] args, int number) {
 			if (args == null || args.Length <= number || args[number] == null) return $"null{number}";
 			return args[number].ToString();
 		} 

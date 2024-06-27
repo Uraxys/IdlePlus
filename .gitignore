@@ -35,4 +35,5 @@ Desktop.ini
 
 # User defined
 .idea
-/libs
+libs/*
+!libs/README.md

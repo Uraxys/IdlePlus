@@ -56,6 +56,7 @@ namespace IdlePlus {
 				ItemInfoPopupPatch.InitializeOnce();
 				InventoryItemHoverPopupPatch.InitializeOnce();
 				ViewPlayerMarketOfferPopupPatch.InitializeOnce();
+				AdsViewPopupPatch.InitializeOnce();
 			}
 			
 			// After we've logged in, find the PlayerMarketPage and "initialize"
