@@ -18,13 +18,13 @@ namespace IdlePlus {
 			ModAuthor = "Uraxys",
 			ModID = "idleplus",
 			ModGuid = "dev.uraxys.idleplus",
-			ModVersion = "1.0.0";
+			ModVersion = "1.0.1";
 		
 		private static bool _initialized;
 		
 		public override void Load() {
 			IdleLog.Logger = Log;
-			IdleLog.Info("Loading Idle Plus...");
+			IdleLog.Info($"Loading Idle Plus v{ModVersion}...");
 			
 			// Create the IdleClansPlusBehaviour instance.
 			IdlePlusBehaviour.Create();
@@ -39,7 +39,7 @@ namespace IdlePlus {
 				IdleAPI.UpdateMarketPrices();
 			});
 			
-			IdleLog.Info("Idle Plus loaded!");
+			IdleLog.Info($"Idle Plus v{ModVersion} loaded!");
 		}
 
 		internal static void Update() {
