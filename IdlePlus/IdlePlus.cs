@@ -47,9 +47,6 @@ namespace IdlePlus {
 		}
 
 		internal static void OnLogin() {
-			// Do initialization for objects that are recreated on login.
-			PlayerMarketOfferPatch.Initialize();
-			
 			// Do one time initialization for objects that are only created once.
 			if (!_initialized) {
 				_initialized = true;
@@ -62,17 +59,18 @@ namespace IdlePlus {
 			// After we've logged in, find the PlayerMarketPage and "initialize"
 			// it, this will allow us to create sell offers from our inventory
 			// without having to manually open the player market first.
-			var playerMarket = Object.FindObjectOfType<PlayerMarketPage>(true);
-			if (playerMarket == null) IdleLog.Warn("Couldn't find PlayerMarketPage in OnLogin!");
-			else {
-				IdleTasks.Run(() => {
-					playerMarket.gameObject.SetActive(true);
-					playerMarket.gameObject.SetActive(false);
-					
-					// Update market prices.
-					IdleAPI.UpdateMarketPrices();
-				});
-			}
+			IdleTasks.Run(() => { // TODO: Don't run a frame later when the client exception is fixed.
+				var playerMarket = Object.FindObjectOfType<PlayerMarketPage>(true);
+				playerMarket.gameObject.SetActive(true);
+				playerMarket.gameObject.SetActive(false);
+				
+				// Do initialization for objects that are recreated on login.
+				PlayerMarketOfferPatch.Initialize();
+				ViewPlayerMarketOfferPopupPatch.Initialize();
+				
+				// Update market prices.
+				IdleAPI.UpdateMarketPrices();
+			});
 		}
 	}
 }

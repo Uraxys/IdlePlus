@@ -6,6 +6,7 @@ using IdlePlus.IdleClansAPI;
 using IdlePlus.Utilities;
 using Network;
 using Player;
+using PlayerMarket;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -55,6 +56,17 @@ namespace IdlePlus.Patches {
 			// Set the color.
 			var buttonProceduralImage = _editBtnObj.GetComponent<ProceduralImage>();
 			buttonProceduralImage.color = new Color(0.1294F, 0.549F, 0.6349F, 1F);
+		}
+
+		public static void Initialize() {
+			var popup = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
+			var popupComponent = popup.GetComponent<ViewPlayerMarketOfferPopup>();
+			
+			var playerMarket = GameObjects.FindDisabledByPath("GameCanvas/PageCanvas/PlayerMarket");
+			var playerMarketComponent = playerMarket.GetComponent<PlayerMarketPage>();
+			
+			// Update the player market page reference.
+			popupComponent._playerMarketPage = playerMarketComponent;
 		}
 		
 		[HarmonyPostfix]

@@ -27,7 +27,11 @@ namespace IdlePlus.Utilities {
 		/// <returns>The created task.</returns>
 		public static IdleTask Run(Action action) {
 			var task = new IdleTask(idleTask => {
-				action.Invoke();
+				try {
+					action.Invoke();
+				} catch (Exception e) {
+					IdleLog.Error("Error while running task!", e);
+				}
 				idleTask.Cancel();
 			}, -1F, -1F);
 			Tasks.Add(task);
@@ -37,7 +41,11 @@ namespace IdlePlus.Utilities {
 		public static IdleTask Delay(float delay, Action action) {
 			if (delay < 0) throw new ArgumentException("Delay must be greater than 0.");
 			var task = new IdleTask(idleTask => {
-				action.Invoke();
+				try {
+					action.Invoke();
+				} catch (Exception e) {
+					IdleLog.Error("Error while running task!", e);
+				}
 				idleTask.Cancel();
 			}, delay, -1F);
 			Tasks.Add(task);
