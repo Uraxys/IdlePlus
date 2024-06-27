@@ -21,8 +21,8 @@ and download it, make sure to get the x86 version for IL2CPP)*
 3. Optionally, make a backup of Idle Clans (create a copy of the `Idle Clans` folder and rename it to `Idle Clans - Vanilla`).
 4. Extract the contents of the BepInEx zip file directly into the game folder (`Idle Clans`).
 5. Start the game by either running `Idle Clans.exe` or via Steam. BepInEx 6 will install automatically; it should only take a few seconds.
-6. Close the game and download the latest version of the mod from the [releases page](https://github.com/Uraxys/IdlePlus/releases).
-7. Place the mod into the `plugins` folder (`Idle Clans/BepInEx/plugins`).
+6. Close the game and download the latest version of the mod from the [releases page](https://github.com/Uraxys/IdlePlus/releases) (`IdlePlus-X.X.X.zip`).
+7. Open the downloaded zip file and move the IdlePlus.dll file into the `plugins` folder (`Idle Clans/BepInEx/plugins`).
 8. Optionally, turn off the BepInEx console by going into the config (`Idle Clans/BepInEx/config/BepInEx.cfg`) and setting `Enabled` under `[Logging.Console]` to `false`.
 9. Done, you can now start the game and enjoy Idle Plus!
 
