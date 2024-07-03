@@ -95,11 +95,15 @@ namespace IdlePlus.Patches {
 			// Disable the base value if the item can't be sold.
 			if (canNotBeSold) baseObj.SetActive(false);
 			else {
-				var gold = shift ? item.BaseValue * amount : item.BaseValue;
+				var value = ModSettings.MarketValue.IncludeNegotiation.Value ? 
+					ItemDatabase.GetItemSellValue(item) : 
+					item.BaseValue;
+				
+				var gold = shift ? value * amount : value;
 				var text = !shift ? 
 					Numbers.ToCompactFormat(gold) : 
 					$"{Numbers.ToCompactFormat(gold)} = {amountText} x " +
-					$"{Numbers.ToCompactFormat(item.BaseValue)}";
+					$"{Numbers.ToCompactFormat(value)}";
 				
 				baseObj.SetActive(true);
 				basePriceText.text = text;

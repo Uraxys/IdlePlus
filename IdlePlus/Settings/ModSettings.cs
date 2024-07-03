@@ -12,7 +12,7 @@ namespace IdlePlus.Settings {
 		
 		public static readonly SettingCategory MarketValueCategory = SettingCategory.Create("Item Value",
 			MarketValue.Enabled, MarketValue.HideForIronman, MarketValue.ShiftForTotal, 
-			MarketValue.DisplayType);
+			MarketValue.IncludeNegotiation, MarketValue.DisplayType);
 		
 		public static readonly SettingCategory[] Categories = { MarketValueCategory };
 		
@@ -33,6 +33,12 @@ namespace IdlePlus.Settings {
 				"marketvalue_shifttotal",
 				"Hold shift to display the total value.",
 				true
+			);
+			
+			public static readonly ToggleSetting IncludeNegotiation = ToggleSetting.Create(
+				"marketvalue_includeNegotiation",
+				"Include the negotiation boost in the item value.",
+				false
 			);
 		
 			public static readonly DropdownSetting DisplayType = DropdownSetting.Create(

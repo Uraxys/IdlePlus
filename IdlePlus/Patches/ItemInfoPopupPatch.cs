@@ -52,7 +52,10 @@ namespace IdlePlus.Patches {
 			if (canNotBeSold) _baseValue.SetActive(false);
 			else {
 				_baseValue.SetActive(true);
-				baseText.text = Numbers.ToCompactFormat(item.BaseValue);
+				var value = ModSettings.MarketValue.IncludeNegotiation.Value ? 
+					ItemDatabase.GetItemSellValue(item) : 
+					item.BaseValue;
+				baseText.text = Numbers.ToCompactFormat(value);
 				
 				// If the market value is disabled, move the base value to the default position.
 				_baseValue.transform.localPosition = canNotBeTraded ? ValueDefaultPosition : BaseValuePosition;
