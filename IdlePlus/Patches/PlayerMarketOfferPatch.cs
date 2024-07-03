@@ -3,7 +3,9 @@ using System.Text.RegularExpressions;
 using Databases;
 using HarmonyLib;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Attributes;
 using Il2CppSystem;
+using Player;
 using PlayerMarket;
 using TMPro;
 using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
@@ -16,13 +18,19 @@ namespace IdlePlus.Patches {
 	[HarmonyPatch(typeof(PlayerMarketOffer))]
 	public class PlayerMarketOfferPatch {
 
-		private static readonly Dictionary<PlayerMarketOffer, string> PreviousInputs = new Dictionary<PlayerMarketOffer, string>();
+		private static readonly Dictionary<PlayerMarketOffer, string> PreviousPriceInputs = new Dictionary<PlayerMarketOffer, string>();
+		private static readonly Dictionary<PlayerMarketOffer, string> PreviousQuantityInputs = new Dictionary<PlayerMarketOffer, string>();
 		
+		[Initialize]
 		public static void Initialize() {
 			// Find the price input field and set it no character validation.
-			var priceInputObj = GameObjects.FindDisabledByPath("GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Price/PriceInputField");
+			var priceInputObj = GameObjects.FindByPath("GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Price/PriceInputField");
 			var priceInputField = priceInputObj.GetComponent<TMPro.TMP_InputField>();
 			priceInputField.characterValidation = TMP_InputField.CharacterValidation.None;
+			
+			var quantityInputObj = GameObjects.FindByPath("GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Quantity/QuantityInputField");
+			var quantityInputField = quantityInputObj.GetComponent<TMPro.TMP_InputField>();
+			quantityInputField.characterValidation = TMP_InputField.CharacterValidation.None;
 		}
 
 		/// <summary>
@@ -32,12 +40,12 @@ namespace IdlePlus.Patches {
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(PlayerMarketOffer.OnPriceInputFieldModified))]
 		public static bool PrefixOnPriceInputFieldModified(PlayerMarketOffer __instance) {
-			var previousText = PreviousInputs.TryGetValue(__instance, out var previousInput) ? previousInput : "";
+			var previousText = PreviousPriceInputs.TryGetValue(__instance, out var previousInput) ? previousInput : "";
 			var input = __instance._priceInputField.m_Text;
 
 			// If the input is empty, then don't do anything.
 			if (input.Length == 0) {
-				PreviousInputs[__instance] = "";
+				PreviousPriceInputs[__instance] = "";
 				return false;
 			}
             
@@ -53,9 +61,9 @@ namespace IdlePlus.Patches {
 			var number = Numbers.ParseNumber(input, out var modifier);
 			
 			// Make sure it isn't an invalid number.
-			if (number == -1) {
+			if (number == long.MinValue) {
 				__instance.SetupTotalPriceText();
-				PreviousInputs[__instance] = input;
+				PreviousPriceInputs[__instance] = input;
 				return false;
 			}
 			
@@ -64,7 +72,7 @@ namespace IdlePlus.Patches {
 			if (number < 0) {
 				__instance._priceInputField.SetTextWithoutNotify("1");
 				__instance.SetupTotalPriceText();
-				PreviousInputs[__instance] = "1";
+				PreviousPriceInputs[__instance] = "1";
 				return false;
 			}
 
@@ -96,7 +104,93 @@ namespace IdlePlus.Patches {
 			
 			__instance._priceInputField.SetTextWithoutNotify(input);
 			__instance.SetupTotalPriceText();
-			PreviousInputs[__instance] = input;
+			PreviousPriceInputs[__instance] = input;
+			return false;
+		}
+
+		[HarmonyPrefix]
+		[HarmonyPatch(nameof(PlayerMarketOffer.OnQuantityInputFieldModified))]
+		public static bool PrefixOnQuantityInputFieldModified(PlayerMarketOffer __instance) {
+			var previousText = PreviousQuantityInputs.TryGetValue(__instance, out var previousInput) ? previousInput : "";
+			var input = __instance._quantityInputField.m_Text;
+
+			// If the input is empty, then don't do anything.
+			if (input.Length == 0) {
+				PreviousQuantityInputs[__instance] = "";
+				return false;
+			}
+            
+			// Validate format, if it isn't valid then set it back to the previous text.
+			if (input.Length != 0 && !Regex.IsMatch(input, @"^(\d+(\.\d+)?|\.(\d+)?|\d+\.)([kmb]|kk|kkk)?$", 
+				    RegexOptions.IgnoreCase)) {
+				__instance._quantityInputField.SetTextWithoutNotify(previousText);
+				__instance.SetupTotalPriceText();
+				return false;
+			}
+
+			// Parse the number.
+			var number = Numbers.ParseNumber(input, out _);
+
+			// Make sure it isn't an invalid number.
+			if (number == long.MinValue) {
+				__instance.SetupTotalPriceText();
+				PreviousQuantityInputs[__instance] = input;
+				return false;
+			}
+
+			// Bounds check
+			
+			if (number < 0) {
+				__instance._quantityInputField.SetTextWithoutNotify("1");
+				__instance.SetupTotalPriceText();
+				PreviousQuantityInputs[__instance] = "1";
+				return false;
+			}
+
+			// Buy offers doesn't have an upper limit.
+			if (__instance.IsBuyOffer) {
+				__instance._quantityInputField.SetTextWithoutNotify(input);
+				__instance.SetupTotalPriceText();
+				PreviousQuantityInputs[__instance] = input;
+				return false;
+			}
+
+			var itemAmount = PlayerData.Instance.Inventory.GetItemAmount(__instance._selectedItem);
+			if (number > itemAmount) {
+				__instance._quantityInputField.SetTextWithoutNotify(itemAmount.ToString());
+				__instance.SetupTotalPriceText();
+				PreviousQuantityInputs[__instance] = itemAmount.ToString();
+				return false;
+			}
+			
+			__instance._quantityInputField.SetTextWithoutNotify(input);
+			__instance.SetupTotalPriceText();
+			PreviousQuantityInputs[__instance] = input;
+			return false;
+		}
+
+		[HarmonyPrefix]
+		[HarmonyPatch(nameof(PlayerMarketOffer.IncrementQuantityInputFieldAmount))]
+		public static bool PrefixIncrementQuantityInputFieldAmount(PlayerMarketOffer __instance, int amount) {
+			var input = __instance._quantityInputField.m_Text;
+			var number = Numbers.ParseNumber(input, out _);
+			
+			// If the number is invalid, then set it to 1 + amount.
+			if (number == long.MinValue) {
+				number = 1 + amount;
+				__instance._quantityInputField.SetText(number.ToString());
+				return false;
+			}
+
+			number += amount;
+			
+			// Can't go below 1.
+			if (number < 1) {
+				__instance._quantityInputField.SetText("1");
+				return false;
+			}
+			
+			__instance._quantityInputField.SetText(number.ToString());
 			return false;
 		}
 		
@@ -111,6 +205,13 @@ namespace IdlePlus.Patches {
 			
 			var price = Numbers.ParseNumber(priceInput, out _);
 			var quantity = Numbers.ParseNumber(quantityInput, out _);
+
+			// If the price or quantity is invalid, then set the total price to
+			// an invalid value.
+			if (quantity < 1 || price < 1) {
+				__result = Decimal.MinValue;
+				return false;
+			}
 			
 			__result = price * quantity;
 			return false;
@@ -164,26 +265,49 @@ namespace IdlePlus.Patches {
 			return false;
 		}
 		
+		[HarmonyPrefix]
+		[HarmonyPatch(nameof(PlayerMarketOffer.OnMaxButtonPressed))]
+		public static void PrefixOnMaxButtonPressed(PlayerMarketOffer __instance, out string __state) {
+			__state = __instance._priceInputField.m_Text;
+			var number = Numbers.ParseNumber(__instance._priceInputField.m_Text, out _);
+			__instance._priceInputField.SetTextWithoutNotify(number.ToString());
+		}
+		
+		[HarmonyPostfix]
+		[HarmonyPatch(nameof(PlayerMarketOffer.OnMaxButtonPressed))]
+		public static void PostfixOnMaxButtonPressed(PlayerMarketOffer __instance, string __state) {
+			__instance._priceInputField.SetTextWithoutNotify(__state);
+		}
+		
 		// Handle confirm offer.
 		// I'm not going to recreate the entire method... so a simple prefix and
 		// postfix hack will do.
 		
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(PlayerMarketOffer.OnConfirmButtonPressed))]
-		public static void PrefixOnConfirmButtonPressed(PlayerMarketOffer __instance, out string __state) {
+		public static void PrefixOnConfirmButtonPressed(PlayerMarketOffer __instance,
+			out Tuple<string, string> __state) {
+			
 			// Before OnConfirmButtonPressed is called, save the current text and
 			// set it to the parsed number, we'll then restore it after the method
 			// has been called.
-			__state = __instance._priceInputField.m_Text;
-			var number = Numbers.ParseNumber(__state, out _);
+			__state = Tuple.Create(__instance._priceInputField.m_Text, __instance._quantityInputField.m_Text);
+			var number = Numbers.ParseNumber(__instance._priceInputField.m_Text, out _);
 			__instance._priceInputField.SetTextWithoutNotify(number.ToString());
+			
+			// Also do the same hack for the quantity input field.
+			number = Numbers.ParseNumber(__instance._quantityInputField.m_Text, out _);
+			__instance._quantityInputField.SetTextWithoutNotify(number.ToString());
 		}
 		
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(PlayerMarketOffer.OnConfirmButtonPressed))]
-		public static void PostfixOnConfirmButtonPressed(PlayerMarketOffer __instance, string __state) {
+		public static void PostfixOnConfirmButtonPressed(PlayerMarketOffer __instance, 
+			Tuple<string, string> __state) {
+			
 			// Restore the original text.
-			__instance._priceInputField.SetTextWithoutNotify(__state);
+			__instance._priceInputField.SetTextWithoutNotify(__state.Item1);
+			__instance._quantityInputField.SetTextWithoutNotify(__state.Item2);
 		}
 	}
 }

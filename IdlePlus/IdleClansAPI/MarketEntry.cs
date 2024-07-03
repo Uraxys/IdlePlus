@@ -1,3 +1,4 @@
+using IdlePlus.Settings;
 using Newtonsoft.Json.Linq;
 
 namespace IdlePlus.IdleClansAPI {
@@ -23,6 +24,12 @@ namespace IdlePlus.IdleClansAPI {
 			return -1;
 		}
 		
+		public int GetBuySellPrice() {
+			if (HighestBuyPrice > 0) return HighestBuyPrice;
+			if (LowestSellPrice > 0) return LowestSellPrice;
+			return -1;
+		}
+		
 		public int GetSellPrice() {
 			if (LowestSellPrice <= 0) return -1;
 			return LowestSellPrice;
@@ -31,6 +38,23 @@ namespace IdlePlus.IdleClansAPI {
 		public int GetBuyPrice() {
 			if (HighestBuyPrice <= 0) return -1;
 			return HighestBuyPrice;
+		}
+
+		public int GetAveragePrice() {
+			if (AveragePrice <= 0) return -1;
+			return AveragePrice;
+		}
+		
+		// Get price depending on setting.
+		public int GetPriceDependingOnSetting() {
+			switch (ModSettings.MarketValue.DisplayType.Value) {
+				case 0: return GetSellBuyPrice();
+				case 1: return GetBuySellPrice();
+				case 2: return GetSellPrice();
+				case 3: return GetBuyPrice();
+				case 4: return GetAveragePrice();
+				default: return -1;
+			}
 		}
 	}
 }

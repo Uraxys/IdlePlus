@@ -1,7 +1,9 @@
 using Databases;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
+using IdlePlus.Settings;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Attributes;
 using Player;
 using Popups;
 using TMPro;
@@ -19,9 +21,10 @@ namespace IdlePlus.Patches {
 		private static GameObject _baseValue;
 		private static GameObject _marketValue;
 		
+		[InitializeOnce]
 		public static void InitializeOnce() {
 			// Create the market value object.
-			_baseValue = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/ItemInfoPopup/VisualInfo/Value");
+			_baseValue = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ItemInfoPopup/VisualInfo/Value");
 			_marketValue = Object.Instantiate(_baseValue, _baseValue.transform.parent, false);
 			_marketValue.name = "MarketValue";
 			_marketValue.transform.SetSiblingIndex(1);
@@ -42,7 +45,9 @@ namespace IdlePlus.Patches {
 			var marketText = _marketValue.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 			
 			var canNotBeSold = item.CanNotBeSoldToGameShop;
-			var canNotBeTraded = item.CanNotBeTraded || PlayerData.Instance.GameMode == GameMode.Ironman;
+			var canNotBeTraded = item.CanNotBeTraded || !ModSettings.MarketValue.Enabled.Value ||
+			                     (PlayerData.Instance.GameMode == GameMode.Ironman &&
+			                      ModSettings.MarketValue.HideForIronman.Value);
 			
 			if (canNotBeSold) _baseValue.SetActive(false);
 			else {
@@ -55,8 +60,9 @@ namespace IdlePlus.Patches {
 			
 			if (canNotBeTraded) _marketValue.SetActive(false);
 			else {
-				var price = IdleAPI.GetMarketEntry(item)?.GetSellBuyPrice();
+				var price = IdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
 				var text = price > 0 ? Numbers.ToCompactFormat(price.Value) : "???";
+				
 				_marketValue.SetActive(true);
 				marketText.text = text;
 				

@@ -12,7 +12,7 @@ namespace IdlePlus.Utilities {
 
 		private static readonly List<IdleTask> Tasks = new List<IdleTask>();
 		
-		public static void Update() {
+		public static void Tick() {
 			for (var i = 0; i < Tasks.Count; i++) {
 				if (Tasks[i].Tick()) continue;
 				Tasks.RemoveAt(i);
@@ -64,6 +64,23 @@ namespace IdlePlus.Utilities {
 		public static IdleTask Repeat(float delay, float interval, Action<IdleTask> action) {
 			if (interval < 0) throw new ArgumentException("Interval must be greater than 0.");
 			var task = new IdleTask(action, delay, interval);
+			Tasks.Add(task);
+			return task;
+		}
+
+		public static IdleTask Update(GameObject obj, Action action) {
+			var task = new IdleTask(idleTask => {
+				// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+				if (obj == null) {
+					IdleLog.Info("Object was destroyed, cancelling task.");
+					idleTask.Cancel();
+					return;
+				}
+				
+				if (!obj.activeInHierarchy) return;
+				
+				action.Invoke();
+			}, -1, -1);
 			Tasks.Add(task);
 			return task;
 		}

@@ -11,6 +11,8 @@ namespace IdlePlus.Utilities {
 		/// but are instead formatted, while anything above 100,000 will be
 		/// formatted as either 0K, 0M or 0B, depending on the amount.</returns>
 		public static string ToCompactFormat(long number) {
+			if (number > 2_000_000_000) return ">2B";
+			
 			if (number < 100_000) return number.ToString("#,0");
 			if (number < 1_000_000) return $"{number / 1000}K";
 			if (number < 1_000_000_000) return $"{number / 1_000_000.0:0.###}M";
@@ -53,15 +55,16 @@ namespace IdlePlus.Utilities {
 				if (input.StartsWith(".")) input = "0" + input;
 				if (input.EndsWith(".")) input = input.TrimEnd('.');
 				
-				if (!double.TryParse(input, out var number)) return -1;
+				if (!double.TryParse(input, out var number)) return long.MinValue;
 				return (long) (number * (long) modifier);
 			}
 			
-			// Check if the number starts or ends with a dot, if it does, remove it.
-			input = input.Trim('.');
+			// Add a zero in front or behind the dot.
+			if (input.StartsWith(".")) input = "0" + input;
+			if (input.EndsWith(".")) input = input.TrimEnd('.');
 			
 			// Try to parse it as a normal number.
-			if (!long.TryParse(input, out var result)) return -1;
+			if (!long.TryParse(input, out var result)) return long.MinValue;
 			return result;
 		}
 		

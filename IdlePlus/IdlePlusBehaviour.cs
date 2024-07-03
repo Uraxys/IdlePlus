@@ -1,9 +1,12 @@
 using System;
-using Il2CppInterop.Runtime.Injection;
+using IdlePlus.Utilities.Attributes;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace IdlePlus {
 	
+	[RegisterIl2Cpp]
 	public class IdlePlusBehaviour : MonoBehaviour {
 		
 		public static IdlePlusBehaviour Instance;
@@ -12,13 +15,12 @@ namespace IdlePlus {
 
 		internal static void Create() {
 			if (Instance != null) return;
-			// Inject the type into Il2Cpp.
-			ClassInjector.RegisterTypeInIl2Cpp<IdlePlusBehaviour>();
-			// Create the game object.
 			var obj = new GameObject("IdlePlus");
 			DontDestroyOnLoad(obj);
 			obj.hideFlags = HideFlags.HideAndDontSave;
 			Instance = obj.AddComponent<IdlePlusBehaviour>();
+			
+			SceneManager.sceneLoaded += (UnityAction<Scene, LoadSceneMode>) Instance.OnSceneLoaded;
 		}
 
 		public void Update() {
@@ -28,6 +30,10 @@ namespace IdlePlus {
 			/*if (Input.GetKeyDown(KeyCode.Space)) {
 		
 			}*/
+		}
+
+		public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+			IdlePlus.OnSceneLoaded(scene, mode);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 using Popups;
 
-namespace IdlePlus.Utilities {
+namespace IdlePlus.Utilities.Helpers {
 	public static class PopupHelper {
 
 		public static GenericPopup Generic(bool hideActive = false, bool moveBackground = true) {

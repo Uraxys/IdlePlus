@@ -1,12 +1,16 @@
 using Databases;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
+using IdlePlus.Settings;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Attributes;
+using IdlePlus.Utilities.Extensions;
 using Player;
 using Popups;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 
 namespace IdlePlus.Patches {
@@ -19,13 +23,17 @@ namespace IdlePlus.Patches {
 	[HarmonyPatch(typeof(InventoryItemHoverPopup))]
 	public class InventoryItemHoverPopupPatch {
 		
-		private static GameObject _marketValue;
-
 		private const float SingleYSize = 38.6147F;
 		private const float DefaultYSize = 15F;
 		
+		private static GameObject _marketValue;
+		
+		[InitializeOnce]
 		public static void InitializeOnce() {
-			var value = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/InventoryItemHoverPopup/Background/Value");
+			var inventoryItemHoverPopup = GameObject.Find("PopupManager/Canvas/HardPopups/InventoryItemHoverPopup");
+			var popup = inventoryItemHoverPopup.Use<InventoryItemHoverPopup>();
+							
+			var value = inventoryItemHoverPopup.Find("Background/Value");
 			var background = value.transform.parent.gameObject;
 			var hoverPopup = background.transform.parent.gameObject;
 			
@@ -38,19 +46,36 @@ namespace IdlePlus.Patches {
 
 			// Swap the icon for the market icon.
 			var icon = GameObject.Find("GameCanvas/NavigationCanvas/CommunitySection/Tabs/PlayerMarketTab/ScalingObjects/Icon");
-			var uiImage = icon.GetComponent<UnityEngine.UI.Image>();
+			var uiImage = icon.GetComponent<Image>();
 			var sprite = uiImage.activeSprite;
-			_marketValue.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().overrideSprite = sprite;
+			_marketValue.transform.GetChild(0).GetComponent<Image>().overrideSprite = sprite;
 			
 			// Fix the popup size.
 			background.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 			hoverPopup.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+			// "Update" method.
+			var heldShift = false;
+			IdleTasks.Update(inventoryItemHoverPopup, () => {
+				if (!ModSettings.MarketValue.ShiftForTotal.Value) return;
+				var shift = Input.GetKey(KeyCode.LeftShift);
+				if (shift == heldShift) return;
+				heldShift = shift;
+				
+				// Update the text.
+				UpdateText(popup);
+			});
 		}
 		
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(InventoryItemHoverPopup.Setup))]
 		public static void PostfixSetup(InventoryItemHoverPopup __instance, Item item) {
 			if (item == null) return;
+			UpdateText(__instance, item);
+		}
+		
+		private static void UpdateText(InventoryItemHoverPopup __instance, Item item = null) {
+			if (item == null) item = __instance.AttachedItem;
 			
 			var baseObj = __instance._itemValueText.transform.parent.gameObject;
 			var marketObj = _marketValue;
@@ -59,20 +84,35 @@ namespace IdlePlus.Patches {
 			var marketPriceText = _marketValue.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 
 			var canNotBeSold = item.CanNotBeSoldToGameShop;
-			var canNotBeTraded = item.CanNotBeTraded || PlayerData.Instance.GameMode == GameMode.Ironman;
+			var canNotBeTraded = item.CanNotBeTraded || !ModSettings.MarketValue.Enabled.Value ||
+			                     (PlayerData.Instance.GameMode == GameMode.Ironman &&
+			                      ModSettings.MarketValue.HideForIronman.Value);
+
+			var shift = Input.GetKey(KeyCode.LeftShift) && ModSettings.MarketValue.ShiftForTotal.Value;
+			var amount = (long) PlayerData.Instance.Inventory.GetItemAmount(item);
+			var amountText = Numbers.ToCompactFormat(amount);
 			
 			// Disable the base value if the item can't be sold.
 			if (canNotBeSold) baseObj.SetActive(false);
 			else {
+				var gold = shift ? item.BaseValue * amount : item.BaseValue;
+				var text = !shift ? 
+					Numbers.ToCompactFormat(gold) : 
+					$"{Numbers.ToCompactFormat(gold)} = {amountText} x " +
+					$"{Numbers.ToCompactFormat(item.BaseValue)}";
+				
 				baseObj.SetActive(true);
-				basePriceText.text = Numbers.ToCompactFormat(item.BaseValue);
+				basePriceText.text = text;
 			}
 			
 			// Disable the market value if the item can't be sold.
 			if (canNotBeTraded) marketObj.SetActive(false);
 			else {
-				var price = IdleAPI.GetMarketEntry(item)?.GetSellBuyPrice();
-				var text = price > 0 ? Numbers.ToCompactFormat(price.Value) : "???";
+				var price = IdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
+				var text = price == null || price <= 0 ? "???" : !shift ? 
+						Numbers.ToCompactFormat(price.Value) : 
+						$"{Numbers.ToCompactFormat(price.Value * amount)} = {amountText} x " +
+						$"{Numbers.ToCompactFormat(price.Value)}";
 				
 				marketObj.SetActive(true);
 				marketPriceText.text = text;

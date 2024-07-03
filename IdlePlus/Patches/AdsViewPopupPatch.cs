@@ -3,6 +3,8 @@ using Databases;
 using GameContent;
 using HarmonyLib;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Attributes;
+using IdlePlus.Utilities.Helpers;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -18,8 +20,9 @@ namespace IdlePlus.Patches {
 		private static GameObject _claimBtnObj;
 		private static GameObject _claimAllBtnObj;
 		
+		[InitializeOnce]
 		public static void InitializeOnce() {
-			_claimBtnObj = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/AdsViewPopup/WatchAdButton");
+			_claimBtnObj = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/AdsViewPopup/WatchAdButton");
 			_claimAllBtnObj = Object.Instantiate(_claimBtnObj, _claimBtnObj.transform.parent, false);
 			
 			// Edit position and rect transform.

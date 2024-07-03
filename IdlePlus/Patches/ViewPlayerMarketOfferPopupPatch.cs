@@ -4,6 +4,7 @@ using Databases;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Attributes;
 using Network;
 using Player;
 using PlayerMarket;
@@ -26,14 +27,15 @@ namespace IdlePlus.Patches {
 		private static GameObject _abortBtnObj;
 		private static GameObject _editBtnObj;
 		
+		[InitializeOnce]
 		public static void InitializeOnce() {
-			_abortBtnObj = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/AbortOfferButton");
-			var closeBtn = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/CloseButton");
+			_abortBtnObj = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/AbortOfferButton");
+			var closeBtn = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/CloseButton");
 			
 			_editBtnObj = Object.Instantiate(closeBtn, closeBtn.transform.parent, false);
 			_editBtnObj.name = "EditOfferButton";
 			var editBtnText = _editBtnObj.transform.GetChild(0).gameObject;
-			ModLocalization.SetModdedLocalizationKey(editBtnText, "edit_offer");
+			ModLocalization.SetModdedKey(editBtnText, "edit_offer");
 
 			// Edit position and rect transform.
 			var rect = _abortBtnObj.GetComponent<RectTransform>();
@@ -58,11 +60,12 @@ namespace IdlePlus.Patches {
 			buttonProceduralImage.color = new Color(0.1294F, 0.549F, 0.6349F, 1F);
 		}
 
+		[Initialize]
 		public static void Initialize() {
-			var popup = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
+			var popup = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
 			var popupComponent = popup.GetComponent<ViewPlayerMarketOfferPopup>();
 			
-			var playerMarket = GameObjects.FindDisabledByPath("GameCanvas/PageCanvas/PlayerMarket");
+			var playerMarket = GameObjects.FindByPath("GameCanvas/PageCanvas/PlayerMarket");
 			var playerMarketComponent = playerMarket.GetComponent<PlayerMarketPage>();
 			
 			// Update the player market page reference.
@@ -111,7 +114,7 @@ namespace IdlePlus.Patches {
 		}
 
 		private static void OnEditOfferButtonPressed() {
-			var popupObject = GameObjects.FindDisabledByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
+			var popupObject = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
 			var playerMarketPopup = popupObject.GetComponent<ViewPlayerMarketOfferPopup>();
 			var marketOffer = playerMarketPopup._marketOffer;
 

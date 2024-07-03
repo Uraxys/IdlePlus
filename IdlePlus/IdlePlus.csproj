@@ -48,6 +48,9 @@
         <Reference Include="BepInEx.Unity.IL2CPP">
           <HintPath>..\libs\core\BepInEx.Unity.IL2CPP.dll</HintPath>
         </Reference>
+        <Reference Include="DOTween">
+          <HintPath>..\libs\interop\DOTween.dll</HintPath>
+        </Reference>
         <Reference Include="Il2CppInterop.Runtime">
           <HintPath>..\libs\core\Il2CppInterop.Runtime.dll</HintPath>
         </Reference>
@@ -68,6 +71,9 @@
         </Reference>
         <Reference Include="Il2CppSystem.Xml">
           <HintPath>..\libs\interop\Il2CppSystem.Xml.dll</HintPath>
+        </Reference>
+        <Reference Include="LeanGUI">
+          <HintPath>..\libs\interop\LeanGUI.dll</HintPath>
         </Reference>
         <Reference Include="Mono.Cecil">
           <HintPath>..\libs\core\Mono.Cecil.dll</HintPath>
@@ -97,6 +103,9 @@
         <Reference Include="UnityEngine.CoreModule">
           <HintPath>..\libs\interop\UnityEngine.CoreModule.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule">
+          <HintPath>..\libs\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.IMGUIModule">
           <HintPath>..\libs\interop\UnityEngine.IMGUIModule.dll</HintPath>
         </Reference>
@@ -112,6 +121,9 @@
         <Reference Include="UnityEngine.UI">
           <HintPath>..\libs\interop\UnityEngine.UI.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.UIElementsModule">
+          <HintPath>..\libs\interop\UnityEngine.UIElementsModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.UIModule">
           <HintPath>..\libs\interop\UnityEngine.UIModule.dll</HintPath>
         </Reference>
@@ -122,21 +134,49 @@
         <Compile Include="IdlePlus.cs" />
         <Compile Include="IdlePlusBehaviour.cs" />
         <Compile Include="Patches\AdsViewPopupPatch.cs" />
+        <Compile Include="Patches\HotItemEntryPatch.cs" />
         <Compile Include="Patches\ItemInfoPopupPatch.cs" />
+        <Compile Include="Patches\ItemPatch.cs" />
         <Compile Include="Patches\PlayerDataPatch.cs" />
         <Compile Include="Patches\InventoryItemHoverPopupPatch.cs" />
         <Compile Include="Patches\PlayerMarketOfferPatch.cs" />
+        <Compile Include="Patches\SettingsPopupPatch.cs" />
         <Compile Include="Patches\ViewPlayerMarketOfferPopupPatch.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="Settings\ModSettings.cs" />
+        <Compile Include="Settings\SettingCategory.cs" />
+        <Compile Include="Settings\Types\DropdownSetting.cs" />
+        <Compile Include="Settings\Types\Setting.cs" />
+        <Compile Include="Settings\Types\ToggleSetting.cs" />
+        <Compile Include="Settings\Unity\DropdownSettingsEntry.cs" />
+        <Compile Include="Settings\Unity\SettingsPopupIdlePlusTab.cs" />
+        <Compile Include="Settings\Unity\SettingsSection.cs" />
+        <Compile Include="Settings\Unity\ToggleSettingsEntry.cs" />
+        <Compile Include="Unity\DebugRender.cs" />
+        <Compile Include="Unity\IdlePlusDropdown.cs" />
+        <Compile Include="Unity\HotItemButton.cs" />
+        <Compile Include="Utilities\AssetLoader.cs" />
+        <Compile Include="Utilities\Attributes\Initialize.cs" />
+        <Compile Include="Utilities\Attributes\InitializeOnce.cs" />
+        <Compile Include="Utilities\Attributes\RegisterIl2Cpp.cs" />
+        <Compile Include="Utilities\Extensions\ComponentExtension.cs" />
         <Compile Include="Utilities\Extensions\DictionaryExtension.cs" />
+        <Compile Include="Utilities\Extensions\GameObjectExtension.cs" />
         <Compile Include="Utilities\Extensions\ListExtension.cs" />
+        <Compile Include="Utilities\Extensions\UnityEventExtension.cs" />
         <Compile Include="Utilities\GameObjects.cs" />
+        <Compile Include="Utilities\Helpers\CollectionHelper.cs" />
+        <Compile Include="Utilities\Helpers\PopupHelper.cs" />
+        <Compile Include="Utilities\Helpers\UiHelper.cs" />
         <Compile Include="Utilities\IdleLog.cs" />
         <Compile Include="Utilities\IdleTasks.cs" />
+        <Compile Include="Utilities\InitPriority.cs" />
         <Compile Include="Utilities\ModLocalization.cs" />
         <Compile Include="Utilities\Numbers.cs" />
-        <Compile Include="Utilities\PopupHelper.cs" />
         <Compile Include="Utilities\Profiler.cs" />
+        <Compile Include="Utilities\RandomUtils.cs" />
+        <Compile Include="Utilities\Vec2.cs" />
+        <Compile Include="Utilities\Vec3.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 

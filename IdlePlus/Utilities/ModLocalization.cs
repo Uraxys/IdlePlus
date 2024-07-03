@@ -15,6 +15,7 @@ namespace IdlePlus.Utilities {
 		/// avoid overriding existing keys.
 		/// </summary>
 		private static readonly Dictionary<string, string> LocalizationKeys = new Dictionary<string, string> {
+			{ "idle_plus", "Idle Plus" },
 			{ "edit_offer", "Edit offer" },
 			{ "claim_all", "Claim all" },
 		};
@@ -63,8 +64,8 @@ namespace IdlePlus.Utilities {
 		/// </summary>
 		/// <param name="gameObject">The GameObject we're overriding.</param>
 		/// <param name="key">The new localization key, shouldn't include the mod id.</param>
-		public static void SetModdedLocalizationKey(GameObject gameObject, string key) {
-			SetLocalizationKey(gameObject.transform, $"{IdlePlus.ModID}_{key}");
+		public static void SetModdedKey(GameObject gameObject, string key) {
+			SetKey(gameObject.transform, $"{IdlePlus.ModID}_{key}");
 		}
 		
 		/// <summary>
@@ -73,8 +74,8 @@ namespace IdlePlus.Utilities {
 		/// </summary>
 		/// <param name="transform">The Transform of the GameObject we're overriding.</param>
 		/// <param name="key">The new localization key, shouldn't include the mod id.</param>
-		public static void SetModdedLocalizationKey(Transform transform, string key) {
-			SetLocalizationKey(transform, $"{IdlePlus.ModID}_{key}");
+		public static void SetModdedKey(Transform transform, string key) {
+			SetKey(transform, $"{IdlePlus.ModID}_{key}");
 		}
 
 		/// <summary>
@@ -82,8 +83,8 @@ namespace IdlePlus.Utilities {
 		/// </summary>
 		/// <param name="obj">The GameObject we're overriding.</param>
 		/// <param name="key">The new localization key.</param>
-		public static void SetLocalizationKey(GameObject obj, string key) {
-			SetLocalizationKey(obj.transform, key);
+		public static void SetKey(GameObject obj, string key) {
+			SetKey(obj.transform, key);
 		}
 		
 		/// <summary>
@@ -91,14 +92,22 @@ namespace IdlePlus.Utilities {
 		/// </summary>
 		/// <param name="obj">The Transform of the GameObject we're overriding.</param>
 		/// <param name="key">The new localization key.</param>
-		public static void SetLocalizationKey(Transform obj, string key) {
-			LocalizationText localizationText = obj.GetComponent<LocalizationText>();
+		public static void SetKey(Transform obj, string key) {
+			var localizationText = obj.GetComponent<LocalizationText>();
 			if (localizationText == null) {
 				IdleLog.Warn($"GameObject {obj.name} doesn't have a LocalizationText component!");
 				return;
 			}
 			
+			// Also update the text.
+			var text = obj.GetComponent<TMPro.TextMeshProUGUI>();
+			if (text != null) text.text = GetValue(key);
+			
 			localizationText.SetKeyRuntime(key);
+		}
+		
+		public static string GetModdedKey(string key) {
+			return $"{IdlePlus.ModID}_{key}";
 		}
 
 		/// <summary>

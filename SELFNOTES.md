@@ -1,0 +1,1 @@
+1. Adding a ProceduralImage to a GameObject without a modifier will create an error.
