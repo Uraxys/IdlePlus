@@ -5,6 +5,7 @@ using HarmonyLib;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
+using IdlePlus.Utilities.Extensions;
 using Network;
 using Player;
 using PlayerMarket;
@@ -24,13 +25,19 @@ namespace IdlePlus.Patches {
 
 		private static readonly HashSet<string> EditingCancellingOffers = new HashSet<string>();
 		private static readonly HashSet<string> EditingCollectingOffers = new HashSet<string>();
+
+		private static GameObject _playerMarketOfferPopup;
 		private static GameObject _abortBtnObj;
 		private static GameObject _editBtnObj;
 		
 		[InitializeOnce]
 		public static void InitializeOnce() {
-			_abortBtnObj = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/AbortOfferButton");
-			var closeBtn = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/CloseButton");
+			_playerMarketOfferPopup = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
+			
+			// "PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/AbortOfferButton"
+			_abortBtnObj = _playerMarketOfferPopup.Find("AbortOfferButton").gameObject;
+			// "PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup/CloseButton"
+			var closeBtn = _playerMarketOfferPopup.Find("CloseButton").gameObject;
 			
 			_editBtnObj = Object.Instantiate(closeBtn, closeBtn.transform.parent, false);
 			_editBtnObj.name = "EditOfferButton";
@@ -62,10 +69,11 @@ namespace IdlePlus.Patches {
 
 		[Initialize]
 		public static void Initialize() {
-			var popup = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
+			var popup = _playerMarketOfferPopup;
+			//var popup = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
 			var popupComponent = popup.GetComponent<ViewPlayerMarketOfferPopup>();
 			
-			var playerMarket = GameObjects.FindByPath("GameCanvas/PageCanvas/PlayerMarket");
+			var playerMarket = GameObjects.FindByCachedPath("GameCanvas/PageCanvas/PlayerMarket");
 			var playerMarketComponent = playerMarket.GetComponent<PlayerMarketPage>();
 			
 			// Update the player market page reference.
@@ -114,8 +122,9 @@ namespace IdlePlus.Patches {
 		}
 
 		private static void OnEditOfferButtonPressed() {
-			var popupObject = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
-			var playerMarketPopup = popupObject.GetComponent<ViewPlayerMarketOfferPopup>();
+			var popup = _playerMarketOfferPopup;
+			//var popup = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ViewPlayerMarketOfferPopup");
+			var playerMarketPopup = popup.GetComponent<ViewPlayerMarketOfferPopup>();
 			var marketOffer = playerMarketPopup._marketOffer;
 
 			if (marketOffer == null) {

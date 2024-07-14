@@ -22,7 +22,7 @@ namespace IdlePlus.Patches {
 		
 		[InitializeOnce]
 		public static void InitializeOnce() {
-			_claimBtnObj = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/AdsViewPopup/WatchAdButton");
+			_claimBtnObj = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/AdsViewPopup/WatchAdButton");
 			_claimAllBtnObj = Object.Instantiate(_claimBtnObj, _claimBtnObj.transform.parent, false);
 			
 			// Edit position and rect transform.

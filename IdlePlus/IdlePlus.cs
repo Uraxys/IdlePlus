@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
@@ -25,7 +26,7 @@ namespace IdlePlus {
 			ModAuthor = "Uraxys",
 			ModID = "idleplus",
 			ModGuid = "dev.uraxys.idleplus",
-			ModVersion = "1.1.0"
+			ModVersion = "1.1.1"
 #if DEBUG
 			             + "-DEBUG";
 #else
@@ -68,6 +69,7 @@ namespace IdlePlus {
 
 		internal static void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
 			IdleLog.Info($"Scene loaded: {scene.name}");
+			GameObjects.InitializeCache();
 			CallInitializeOnce(scene.name);
 			CallInitialize(scene.name);
 		}
@@ -192,6 +194,8 @@ namespace IdlePlus {
 		}
 		
 		private static void CallInitializeOnce(string scene = null) {
+			var watch = Stopwatch.StartNew();
+			
 			if (scene != null) {
 				if (_initializeOnceMethodsOnScene.Count == 0) return;
 				var removed = new List<MethodInfo>();
@@ -215,6 +219,9 @@ namespace IdlePlus {
 				foreach (var method in removed) {
 					_initializeOnceMethodsOnScene.Remove(method);
 				}
+				
+                watch.Stop();
+				IdleLog.Info($"Ran InitializeOnce for scene {scene} in {watch.ElapsedMilliseconds}ms");
 				return;
 			}
 				
@@ -228,9 +235,14 @@ namespace IdlePlus {
 					IdleLog.Error($"Error running InitializeOnce for {name}!", e);
 				}
 			}
+			
+			watch.Stop();
+			IdleLog.Info($"Ran InitializeOnce in {watch.ElapsedMilliseconds}ms");
 		}
 
 		private static void CallInitialize(string scene = null) {
+			var watch = Stopwatch.StartNew();
+			
 			if (scene != null) {
 				if (_initializeMethodsOnScene.Count == 0) return;
 				foreach (var method in _initializeMethodsOnScene
@@ -243,6 +255,9 @@ namespace IdlePlus {
 						IdleLog.Error($"Error running Initialize on scene {scene} for {name}!", e);
 					}
 				}
+				
+				watch.Stop();
+				IdleLog.Info($"Ran Initialize for scene {scene} in {watch.ElapsedMilliseconds}ms");
 				return;
 			}
 			
@@ -257,6 +272,9 @@ namespace IdlePlus {
 					IdleLog.Error($"Error running Initialize for {name}!", e);
 				}
 			}
+			
+			watch.Stop();
+			IdleLog.Info($"Ran Initialize in {watch.ElapsedMilliseconds}ms");
 		}
 	}
 }

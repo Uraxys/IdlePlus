@@ -5,7 +5,9 @@ using IdlePlus.Settings;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
+using Il2CppSystem;
 using Player;
+using Player.Inventory;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -30,7 +32,8 @@ namespace IdlePlus.Patches {
 		
 		[InitializeOnce]
 		public static void InitializeOnce() {
-			var inventoryItemHoverPopup = GameObject.Find("PopupManager/Canvas/HardPopups/InventoryItemHoverPopup");
+			var inventoryItemHoverPopup =
+				GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/InventoryItemHoverPopup");
 			var popup = inventoryItemHoverPopup.Use<InventoryItemHoverPopup>();
 							
 			var value = inventoryItemHoverPopup.Find("Background/Value");
@@ -45,7 +48,8 @@ namespace IdlePlus.Patches {
 			marketValueRectTransform.sizeDelta = new Vector2(marketValueRectTransform.sizeDelta.x, 15F);
 
 			// Swap the icon for the market icon.
-			var icon = GameObject.Find("GameCanvas/NavigationCanvas/CommunitySection/Tabs/PlayerMarketTab/ScalingObjects/Icon");
+			var icon = GameObjects.FindByCachedPath(
+				"GameCanvas/NavigationCanvas/CommunitySection/Tabs/PlayerMarketTab/ScalingObjects/Icon");
 			var uiImage = icon.GetComponent<Image>();
 			var sprite = uiImage.activeSprite;
 			_marketValue.transform.GetChild(0).GetComponent<Image>().overrideSprite = sprite;
@@ -66,6 +70,20 @@ namespace IdlePlus.Patches {
 				UpdateText(popup);
 			});
 		}
+		
+		/*[Initialize]
+		private static void Initialize() {
+			PlayerData.Instance.Inventory.gold
+			
+			var goldTextObj =
+				GameObjects.FindByCachedPath(
+					"GameCanvas/PageCanvas/InventoryPage/HeaderPanel/GoldPanel/GoldTextContainer/Text (TMP)");
+			var goldText = goldTextObj.Use<TextMeshProUGUI>();
+			goldText.OnPreRenderText += (Action<TMP_TextInfo>) delegate(TMP_TextInfo info) {
+				IdleLog.Info("Updating gold text.");
+				info.textComponent.text = Numbers.FormatBasedOnSetting((long)PlayerData.Instance.Inventory.Gold);
+			};
+		}*/
 		
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(InventoryItemHoverPopup.Setup))]
@@ -101,9 +119,9 @@ namespace IdlePlus.Patches {
 				
 				var gold = shift ? value * amount : value;
 				var text = !shift ? 
-					Numbers.ToCompactFormat(gold) : 
-					$"{Numbers.ToCompactFormat(gold)} = {amountText} x " +
-					$"{Numbers.ToCompactFormat(value)}";
+					Numbers.FormatBasedOnSetting(gold) : 
+					$"{Numbers.FormatBasedOnSetting(gold)} = {amountText} x " +
+					$"{Numbers.FormatBasedOnSetting(value)}";
 				
 				baseObj.SetActive(true);
 				basePriceText.text = text;
@@ -114,9 +132,9 @@ namespace IdlePlus.Patches {
 			else {
 				var price = IdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
 				var text = price == null || price <= 0 ? "???" : !shift ? 
-						Numbers.ToCompactFormat(price.Value) : 
-						$"{Numbers.ToCompactFormat(price.Value * amount)} = {amountText} x " +
-						$"{Numbers.ToCompactFormat(price.Value)}";
+						Numbers.FormatBasedOnSetting(price.Value) : 
+						$"{Numbers.FormatBasedOnSetting(price.Value * amount)} = {amountText} x " +
+						$"{Numbers.FormatBasedOnSetting(price.Value)}";
 				
 				marketObj.SetActive(true);
 				marketPriceText.text = text;

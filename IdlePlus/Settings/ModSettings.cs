@@ -12,7 +12,7 @@ namespace IdlePlus.Settings {
 		
 		public static readonly SettingCategory MarketValueCategory = SettingCategory.Create("Item Value",
 			MarketValue.Enabled, MarketValue.HideForIronman, MarketValue.ShiftForTotal, 
-			MarketValue.IncludeNegotiation, MarketValue.DisplayType);
+			MarketValue.IncludeNegotiation, MarketValue.DisplayType, MarketValue.DisplayFormat);
 		
 		public static readonly SettingCategory[] Categories = { MarketValueCategory };
 		
@@ -46,6 +46,13 @@ namespace IdlePlus.Settings {
 				"Which value to display as the market value.",
 				0,
 				"Sell then buy", "Buy then sell", "Sell only", "Buy only", "Average"
+			);
+			
+			public static readonly DropdownSetting DisplayFormat = DropdownSetting.Create(
+				"marketvalue_format",
+				"Which format to display the values in.",
+				0,
+				"Dynamic", "Full", "Thousands", "Millions"
 			);
 		}
 		

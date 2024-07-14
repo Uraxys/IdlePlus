@@ -24,13 +24,13 @@ namespace IdlePlus.Patches {
 		[InitializeOnce]
 		public static void InitializeOnce() {
 			// Create the market value object.
-			_baseValue = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/ItemInfoPopup/VisualInfo/Value");
+			_baseValue = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/ItemInfoPopup/VisualInfo/Value");
 			_marketValue = Object.Instantiate(_baseValue, _baseValue.transform.parent, false);
 			_marketValue.name = "MarketValue";
 			_marketValue.transform.SetSiblingIndex(1);
 			
 			// Swap the icon for the market icon.
-			var icon = GameObject.Find("GameCanvas/NavigationCanvas/CommunitySection/Tabs/PlayerMarketTab/ScalingObjects/Icon");
+			var icon = GameObjects.FindByCachedPath("GameCanvas/NavigationCanvas/CommunitySection/Tabs/PlayerMarketTab/ScalingObjects/Icon");
 			var uiImage = icon.GetComponent<UnityEngine.UI.Image>();
 			var sprite = uiImage.activeSprite;
 			_marketValue.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().overrideSprite = sprite;

@@ -27,7 +27,7 @@ namespace IdlePlus.Patches {
 			if (_initialized) return;
 			_initialized = true;
 			
-			var settingsPopupObj = GameObjects.FindByPathNonNull(SettingsPopupPath);
+			var settingsPopupObj = GameObjects.FindByCachedPath(SettingsPopupPath);
 
 			// Insert out own version text under the current build text.
 			var buildTextObj = settingsPopupObj.Find("BuildText");

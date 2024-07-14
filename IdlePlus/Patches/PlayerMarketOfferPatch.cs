@@ -24,12 +24,14 @@ namespace IdlePlus.Patches {
 		[Initialize]
 		public static void Initialize() {
 			// Find the price input field and set it no character validation.
-			var priceInputObj = GameObjects.FindByPath("GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Price/PriceInputField");
-			var priceInputField = priceInputObj.GetComponent<TMPro.TMP_InputField>();
+			var priceInputObj = GameObjects.FindByCachedPath("GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Price/PriceInputField");
+			var priceInputField = priceInputObj.GetComponent<TMP_InputField>();
 			priceInputField.characterValidation = TMP_InputField.CharacterValidation.None;
 			
-			var quantityInputObj = GameObjects.FindByPath("GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Quantity/QuantityInputField");
-			var quantityInputField = quantityInputObj.GetComponent<TMPro.TMP_InputField>();
+			// Get the quantity input field from the price input object.
+			// "GameCanvas/PageCanvas/PlayerMarket/Panel/PlayerMarketOfferPage/Quantity/QuantityInputField"
+			var quantityInputObj = priceInputObj.transform.parent.parent.Find("Quantity/QuantityInputField");
+			var quantityInputField = quantityInputObj.GetComponent<TMP_InputField>();
 			quantityInputField.characterValidation = TMP_InputField.CharacterValidation.None;
 		}
 

@@ -10,6 +10,7 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 - **Compact numbers in market**: Write your offer price with compact numbers, e.g. `1k`, `8.52m`, `1kk`, `.5b`.
 - **No "you need to open player marker before doing this"**: In the vanilla game, you need to open the player market before being able to create a sell offers from your inventory, this mod removes that limitation, allowing you to create a sell offer instantly after logging in.
 - **Market value**: See the market value of items while hovering over them.
+- **Shift for total value**: You can hold shift to see the total value of an item in your inventory (value * quantity).
 - **Item tweak**: Items that can't be sold to the game shop won't display a price when hovered over.
 - **And much more planned!**
 

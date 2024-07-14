@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using IdlePlus.Utilities.Extensions;
 using Il2CppInterop.Runtime;
@@ -7,6 +9,25 @@ using Object = UnityEngine.Object;
 
 namespace IdlePlus.Utilities {
 	internal static class GameObjects {
+		
+		private static readonly Dictionary<string, GameObject> CachedObjectPaths = new Dictionary<string, GameObject>();
+		
+		public static void InitializeCache() {
+			var watch = Stopwatch.StartNew();
+			
+			CachedObjectPaths.Clear();
+			
+			// Loop over every game object in the scene and cache it by path.
+			foreach (var obj in Resources.FindObjectsOfTypeAll<Transform>()) {
+				if (obj.parent != null) continue;
+				if (CachedObjectPaths.ContainsKey(obj.gameObject.name)) 
+					IdleLog.Info($"Duplicate game object name: {obj.gameObject.name}");
+				CachedObjectPaths[obj.gameObject.name] = obj.gameObject;
+			}
+			
+			watch.Stop();
+			IdleLog.Info($"Cached {CachedObjectPaths.Count} game objects in {watch.ElapsedMilliseconds}ms.");
+		}
 		
 		public static GameObject FindByName(string name) {
 			Transform[] objs = Resources.FindObjectsOfTypeAll<Transform>();
@@ -48,6 +69,21 @@ namespace IdlePlus.Utilities {
 				if (obj != null) return obj.gameObject;
 			}
 			return null;
+		}
+
+		public static GameObject FindByCachedPath(string path) {
+			var parent = path.Substring(0, path.IndexOf('/'));
+			CachedObjectPaths.TryGetValue(parent, out var obj);
+			if (obj == null) {
+				IdleLog.Warn($"GameObject not found by cached path: {path}");
+				return null;
+			}
+			
+			if (!path.Contains('/')) return obj;
+			path = path.Substring(path.IndexOf('/') + 1);
+			return obj.transform.Find(path)?.gameObject;
+
+			//return _cachedObjectPaths.TryGetValue(path, out var obj) ? obj : null;
 		}
 		
 		public static GameObject NewRect(string name, GameObject parent = null, params Type[] components) {

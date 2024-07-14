@@ -1,8 +1,30 @@
 using System;
+using IdlePlus.Settings;
 
 namespace IdlePlus.Utilities {
 	public static class Numbers {
 
+		public static double TruncateToDecimalPlace(double value, int decimalPlaces) {
+			var factor = Math.Pow(10, decimalPlaces);
+			return Math.Truncate(value * factor) / factor;
+		}
+        
+		public static string FormatBasedOnSetting(long number, bool vanillaFormat = false) {
+			switch (ModSettings.MarketValue.DisplayFormat.Value) {
+				case 0: return ToCompactFormat(number, vanillaFormat);
+				case 1: return Format(number);
+				case 2:
+					return number < 1_000_000 ? 
+						$"{TruncateToDecimalPlace((double)number / 1000, 1):0.#}K" : 
+						$"{number / 1_000:#,0}K";
+				case 3: 
+					return number < 1_000_000_000 ? 
+						$"{TruncateToDecimalPlace((double)number / 1_000_000, 1):0.#}M" : 
+						$"{number / 1_000_000_000:#,0}B";
+				default: throw new ArgumentOutOfRangeException();
+			}
+		}
+		
 		/// <summary>
 		/// Converts the given number to a compact format.
 		/// </summary>
@@ -10,13 +32,21 @@ namespace IdlePlus.Utilities {
 		/// <returns>The compacted number, numbers under 100,000 isn't compacted,
 		/// but are instead formatted, while anything above 100,000 will be
 		/// formatted as either 0K, 0M or 0B, depending on the amount.</returns>
-		public static string ToCompactFormat(long number) {
-			if (number > 2_000_000_000) return ">2B";
+		public static string ToCompactFormat(long number, bool vanillaFormat = false) {
+			//if (number > 2_000_000_000) return ">2B";
+
+			if (vanillaFormat) {
+				if (number < 1000) return number.ToString("#,0");
+				if (number < 1_000_000) return $"{TruncateToDecimalPlace((double)number / 1000, 1):0.#}K";
+				if (number < 1_000_000_000) return $"{TruncateToDecimalPlace((double)number / 1_000_000, 1):0.#}M";
+				return $"{TruncateToDecimalPlace((double)number / 1_000_000_000, 1):0.#}B";
+				/*return number < 1_000_000_000 ? $"{(double) number / 1_000_000:0.#}M" : 
+					$"{(double) number / 1_000_000_000:0.#}B";*/
+			}
 			
 			if (number < 100_000) return number.ToString("#,0");
 			if (number < 1_000_000) return $"{number / 1000}K";
-			if (number < 1_000_000_000) return $"{number / 1_000_000.0:0.###}M";
-			return $"{number / 1_000_000_000.0:0.###}B";
+			return number < 1_000_000_000 ? $"{number / 1_000_000.0:0.###}M" : $"{number / 1_000_000_000.0:0.###}B";
 		}
 		
 		public static string Format(long number) => number.ToString("#,0");

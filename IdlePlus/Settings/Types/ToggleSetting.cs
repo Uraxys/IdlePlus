@@ -26,6 +26,8 @@ namespace IdlePlus.Settings.Types {
 		public bool State { get; private set; }
 		
 		public readonly bool DefaultState;
+
+		public Action<bool> OnValueChanged;
 		
 		private ToggleSetting(string id, bool requireRestart, string description, bool defaultState) {
 			Id = id;
@@ -42,11 +44,13 @@ namespace IdlePlus.Settings.Types {
 			if (!RequireRestart) {
 				State = value;
 				Value = value;
+				OnValueChanged?.Invoke(value);
 				return;
 			}
 			
 			State = value;
 			Dirty = value != Value;
+			OnValueChanged?.Invoke(value);
 		}
 		
 		public override byte[] Serialize() {

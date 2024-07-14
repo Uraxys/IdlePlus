@@ -29,6 +29,8 @@ namespace IdlePlus.Settings.Types {
 		
 		public readonly int DefaultValue;
 		public readonly string[] Options;
+		
+		public Action<int> OnValueChanged;
 
 		private DropdownSetting(string id, bool requireRestart, string description, int defaultValue, string[] options) {
 			Id = id;
@@ -44,14 +46,17 @@ namespace IdlePlus.Settings.Types {
 		
 		public void Set(int value) {
 			if (value < 0 || value >= Options.Length) value = 0;
+			
 			if (!RequireRestart) {
 				State = value;
 				Value = value;
+				OnValueChanged?.Invoke(value);
 				return;
 			}
 			
 			State = value;
 			Dirty = value != Value;
+			OnValueChanged?.Invoke(value);
 		}
 		
 		public override byte[] Serialize() {
