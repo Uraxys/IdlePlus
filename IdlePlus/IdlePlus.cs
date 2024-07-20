@@ -9,6 +9,7 @@ using Client;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Settings;
+using IdlePlus.TexturePack;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using Il2CppInterop.Runtime.Injection;
@@ -45,6 +46,7 @@ namespace IdlePlus {
 			IdleLog.Logger = Log;
 			IdleLog.Info($"Loading Idle Plus v{ModVersion}...");
 			
+			TexturePackManager.Load();
 			ModSettings.Load();
 			RegisterIl2CppTypes();
 			LoadInitializeMethods();

@@ -14,7 +14,14 @@ namespace IdlePlus.Settings {
 			MarketValue.Enabled, MarketValue.HideForIronman, MarketValue.ShiftForTotal, 
 			MarketValue.IncludeNegotiation, MarketValue.DisplayType, MarketValue.DisplayFormat);
 		
-		public static readonly SettingCategory[] Categories = { MarketValueCategory };
+		public static readonly SettingCategory TexturePackCategory = SettingCategory.Create("Texture Pack",
+			TexturePack.CurrentPack);
+		
+		public static readonly SettingCategory MiscellaneousCategory = SettingCategory.Create("Miscellaneous",
+			Miscellaneous.InternalItemNames);
+		
+		public static readonly SettingCategory[] Categories = { MarketValueCategory, TexturePackCategory,
+			MiscellaneousCategory };
 		
 		public static class MarketValue {
 			public static readonly ToggleSetting Enabled = ToggleSetting.Create(
@@ -52,7 +59,19 @@ namespace IdlePlus.Settings {
 				"marketvalue_format",
 				"Which format to display the values in.",
 				0,
-				"Dynamic", "Full", "Thousands", "Millions"
+				"Default", "Full", "Thousands", "Millions"
+			);
+		}
+
+		public static class TexturePack {
+			public static StringDropdownSetting CurrentPack;
+		}
+        
+		public static class Miscellaneous {
+			public static readonly ToggleSetting InternalItemNames = ToggleSetting.Create(
+				"misc_internalItemNames",
+				"Display the internal item name instead of the display name.",
+				false
 			);
 		}
 		

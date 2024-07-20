@@ -4,7 +4,7 @@ using PlayerMarket;
 
 namespace IdlePlus.Patches {
 	
-	[HarmonyPatch(typeof(HotItemEntry))]
+	/*[HarmonyPatch(typeof(HotItemEntry))]
 	public class HotItemEntryPatch {
 		
 		[HarmonyPostfix]
@@ -22,5 +22,5 @@ namespace IdlePlus.Patches {
 			if (hotItemButton == null) hotItemButton = __instance.gameObject.AddComponent<HotItemButton>();
 			hotItemButton.Setup(-1);
 		}
-	}
+	}*/
 }

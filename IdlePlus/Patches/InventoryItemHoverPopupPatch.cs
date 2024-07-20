@@ -5,9 +5,7 @@ using IdlePlus.Settings;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
-using Il2CppSystem;
 using Player;
-using Player.Inventory;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -71,20 +69,6 @@ namespace IdlePlus.Patches {
 			});
 		}
 		
-		/*[Initialize]
-		private static void Initialize() {
-			PlayerData.Instance.Inventory.gold
-			
-			var goldTextObj =
-				GameObjects.FindByCachedPath(
-					"GameCanvas/PageCanvas/InventoryPage/HeaderPanel/GoldPanel/GoldTextContainer/Text (TMP)");
-			var goldText = goldTextObj.Use<TextMeshProUGUI>();
-			goldText.OnPreRenderText += (Action<TMP_TextInfo>) delegate(TMP_TextInfo info) {
-				IdleLog.Info("Updating gold text.");
-				info.textComponent.text = Numbers.FormatBasedOnSetting((long)PlayerData.Instance.Inventory.Gold);
-			};
-		}*/
-		
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(InventoryItemHoverPopup.Setup))]
 		public static void PostfixSetup(InventoryItemHoverPopup __instance, Item item) {
@@ -94,6 +78,10 @@ namespace IdlePlus.Patches {
 		
 		private static void UpdateText(InventoryItemHoverPopup __instance, Item item = null) {
 			if (item == null) item = __instance.AttachedItem;
+			
+			// Check if we should display the internal item name or not.
+			if (ModSettings.Miscellaneous.InternalItemNames.Value)
+				__instance._itemNameText.text = $"{item.Name} ({item.ItemId})";
 			
 			var baseObj = __instance._itemValueText.transform.parent.gameObject;
 			var marketObj = _marketValue;

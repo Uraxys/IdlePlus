@@ -4,7 +4,6 @@ using IdlePlus.Unity;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
 using IdlePlus.Utilities.Helpers;
-using Michsky.MUIP;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
@@ -19,20 +18,21 @@ namespace IdlePlus.Settings.Types {
 		/// <summary>
 		/// The value of the setting.
 		/// </summary>
-		public int Value { get; private set; }
+		public int Value { get; protected set; }
 
 		/// <summary>
 		/// The current state of the setting, shouldn't be used to get the value
 		/// of the setting, instead the Value property should be used.
 		/// </summary>
-		public int State { get; private set; }
+		public int State { get; protected set; }
 		
 		public readonly int DefaultValue;
-		public readonly string[] Options;
+		public string[] Options { get; private set; }
 		
 		public Action<int> OnValueChanged;
+		public Action<int> OnLoad;
 
-		private DropdownSetting(string id, bool requireRestart, string description, int defaultValue, string[] options) {
+		protected DropdownSetting(string id, bool requireRestart, string description, int defaultValue, string[] options) {
 			Id = id;
 			RequireRestart = requireRestart;
 			Description = description;
@@ -44,7 +44,7 @@ namespace IdlePlus.Settings.Types {
 			Options = options;
 		}
 		
-		public void Set(int value) {
+		public virtual void Set(int value) {
 			if (value < 0 || value >= Options.Length) value = 0;
 			
 			if (!RequireRestart) {
@@ -70,6 +70,7 @@ namespace IdlePlus.Settings.Types {
 				State = state;
 				Value = State;
 				Dirty = false;
+				OnLoad?.Invoke(Value);
 				IdleLog.Info($"Deserialized dropdown setting: {Id}, value: {Value}");
 			} catch (Exception e) {
 				IdleLog.Error($"Failed to deserialize dropdown setting: {Id}", e);

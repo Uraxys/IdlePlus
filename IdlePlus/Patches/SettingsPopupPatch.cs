@@ -4,6 +4,7 @@ using Buttons;
 using HarmonyLib;
 using IdlePlus.Settings.Unity;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using IdlePlus.Utilities.Helpers;
 using Popups;
@@ -23,6 +24,7 @@ namespace IdlePlus.Patches {
 		private static bool _initialized;
 		private static bool _genericPanelInitialized;
 
+		[InitializeOnce(OnSceneLoad = "*")]
 		private static void InitializeOnce() {
 			if (_initialized) return;
 			_initialized = true;
@@ -53,7 +55,7 @@ namespace IdlePlus.Patches {
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(SettingsPopup), nameof(SettingsPopup.Setup), new Type[]{})]
 		private static void PrefixSetup(SettingsPopup __instance) {
-			InitializeOnce();
+			//InitializeOnce();
 		}
 		
 		[HarmonyPrefix]
@@ -64,7 +66,7 @@ namespace IdlePlus.Patches {
 			if (__instance.transform.parent == null || __instance.transform.parent.name != "SettingsPopup2") return;
 			_genericPanelInitialized = true;
 			
-			InitializeOnce();
+			//InitializeOnce();
 			
 			var settingsPopupObj = GameObjects.FindByPathNonNull(SettingsPopupPath);
 			var plusButton = settingsPopupObj.Find(PlusButtonPath).GetComponent<GenericHoverEdgeButton>();

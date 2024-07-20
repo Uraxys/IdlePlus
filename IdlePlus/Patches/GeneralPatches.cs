@@ -14,8 +14,15 @@ namespace IdlePlus.Patches {
 		private static void InitializeOnce() {
 			ModSettings.MarketValue.DisplayFormat.OnValueChanged += value => {
 				if (PlayerData.Instance?.Inventory?._goldAmountText == null) return;
-				PlayerData.Instance.Inventory._goldAmountText.text =
-					Numbers.FormatBasedOnSetting((long)PlayerData.Instance.Inventory.Gold, value == 0);
+				var inventory = PlayerData.Instance.Inventory;
+				
+				// Default format is the full number.
+				if (value == 0) {
+					inventory._goldAmountText.text = inventory.Gold.ToString("#,0");
+					return;
+				}
+				
+				inventory._goldAmountText.text = Numbers.FormatBasedOnSetting((long)inventory.Gold);
 			};
 		}
 		

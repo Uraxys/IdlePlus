@@ -1,26 +1,22 @@
-using Ads;
+/*using Ads;
 using Databases;
 using GameContent;
 using HarmonyLib;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
-using IdlePlus.Utilities.Helpers;
-using Popups;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Events;
-using DateTime = Il2CppSystem.DateTime;
-using Object = UnityEngine.Object;
+using IdlePlus.Utilities.Attributes;*/
 
 namespace IdlePlus.Patches {
 	
-	[HarmonyPatch(typeof(AdsViewPopup))]
+	// Will probably patch the ads view popup later to disable buttons,
+	// so I'll just leave everything commented out for now.
+	
+	//[HarmonyPatch(typeof(AdsViewPopup))]
 	public class AdsViewPopupPatch {
 
-		private static GameObject _claimBtnObj;
-		private static GameObject _claimAllBtnObj;
+		/*private static GameObject _claimBtnObj;
+		private static GameObject _claimAllBtnObj;*/
 		
-		[InitializeOnce]
+		/*[InitializeOnce]
 		public static void InitializeOnce() {
 			_claimBtnObj = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/AdsViewPopup/WatchAdButton");
 			_claimAllBtnObj = Object.Instantiate(_claimBtnObj, _claimBtnObj.transform.parent, false);
@@ -39,9 +35,9 @@ namespace IdlePlus.Patches {
 			var button = _claimAllBtnObj.GetComponent<UnityEngine.UI.Button>();
 			button.onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
 			button.onClick.AddListener((UnityAction)OnClaimAllButtonPressed);
-		}
+		}*/
 
-		private static void OnClaimAllButtonPressed() {
+		/*private static void OnClaimAllButtonPressed() {
 			// Keep original limitations, if not the server will disagree and
 			// just display a "Loading" popup.
 			
@@ -72,7 +68,7 @@ namespace IdlePlus.Patches {
 			var timeUntilNextAd = adsManager.GetTimeUntilAdCanBeWatched() - timeNow;
 			var minutes = ((int) timeUntilNextAd.TotalMinutes).ToString();
 			PopupHelper.GenericText(ModLocalization.GetValue("ads_boost_cooldown", minutes));
-		}
+		}*/
 		
 		// TODO: Settings to turn on / off.
 		
