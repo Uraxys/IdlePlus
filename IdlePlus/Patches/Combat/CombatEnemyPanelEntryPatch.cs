@@ -12,21 +12,19 @@ namespace IdlePlus.Patches.Combat {
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(CombatEnemyPanelEntry.Setup))]
 		private static void PostfixSetup(CombatEnemyPanelEntry __instance, JobTask task) {
-			if (TexturePackManager.Instance.CurrentTexturePack == null) return;
-			IdleLog.Info($"Trying to get sprite for combat task {task.IdentifiableType}/{task.Name}.");
-			var sprite = TexturePackManager.Instance.CurrentTexturePack.TryGetCombatSprite(task.Name);
+			if (TexturePackManager.CurrentPack == null) return;
+			
+			var identifier = task.IdentifiableType;
+			var name = task.Name;
+			
+			if (identifier.Length == 0) {
+				IdleLog.Warn($"Couldn't get combat task sprite for combat panel, no identifiable type for {name}.");
+				return;
+			}
+			
+			var sprite = TexturePackManager.CurrentPack.TryGetCombatSprite(identifier, task.Name);
 			if (sprite == null) return;
 			__instance._iconImage.sprite = sprite;
-		}
-	}
-
-	[HarmonyPatch(typeof(UITask))]
-	public class UITaskPatch {
-		
-		[HarmonyPostfix]
-		[HarmonyPatch(nameof(UITask.Setup))]
-		private static void PostfixSetup(UITask __instance, TaskType taskType, JobTask task) {
-			IdleLog.Info($"Trying to setup task for {taskType}, {task.IdentifiableType}/{task.Name}.");
 		}
 	}
 }

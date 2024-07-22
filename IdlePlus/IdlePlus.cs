@@ -27,7 +27,7 @@ namespace IdlePlus {
 			ModAuthor = "Uraxys",
 			ModID = "idleplus",
 			ModGuid = "dev.uraxys.idleplus",
-			ModVersion = "1.1.1"
+			ModVersion = "1.2.0"
 #if DEBUG
 			             + "-DEBUG";
 #else

@@ -143,6 +143,7 @@
         <Compile Include="Patches\GeneralPatches.cs" />
         <Compile Include="Patches\PlayerMarketOfferPatch.cs" />
         <Compile Include="Patches\SettingsPopupPatch.cs" />
+        <Compile Include="Patches\Tasks\UITaskCombatPatch.cs" />
         <Compile Include="Patches\ViewPlayerMarketOfferPopupPatch.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Settings\ModSettings.cs" />

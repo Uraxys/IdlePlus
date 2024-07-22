@@ -5,7 +5,9 @@ using UnityEngine;
 namespace IdlePlus.Utilities.Atlas {
 	public class AtlasGenerator {
 
-		public int Padding { get; set; } = 16;
+		// Pretty high default number, but if we didn't then cosmetic effects
+		// might bleed into each other.
+		public int Padding { get; set; } = 32;
 		public int AtlasSize { get; set; } = 2048;
 		
 		private readonly List<AtlasTextureEntry> _entries = new List<AtlasTextureEntry>();

@@ -1,0 +1,2 @@
+You can easily find the internal item names by going in game, opening the settings, 
+"Idle Plus > Miscellaneous > Display the internal item name instead of the display name".

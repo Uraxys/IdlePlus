@@ -1,0 +1,17 @@
+# Hashtags are used to mark the current line as a comment, and can be safely removed if
+# needed, they are just here to explain what each field is doing.
+
+# The name of the texture pack.
+# This will be displayed in game in the Idle Plus settings, so try to keep it short! :)
+# (Required)
+name=Example Pack
+
+# The author of this texture pack.
+# Isn't currently used, but will be in a later update.
+# (Optional)
+author=Uraxys
+
+# The version this texture pack supports.
+# Must match the Idle Plus pack version, if not the texture pack won't load.
+# (Required) 
+pack-version=1

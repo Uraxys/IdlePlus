@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Atlas;
+using Tasks;
 using UnityEngine;
 
 namespace IdlePlus.TexturePack {
@@ -43,8 +44,8 @@ namespace IdlePlus.TexturePack {
 			return _itemAtlas?.TryGetSprite($@"items\{name}.png");
 		}
 
-		public Sprite TryGetCombatSprite(string name) {
-			return _itemAtlas?.TryGetSprite($@"tasks\combat\{name}.png");
+		public Sprite TryGetCombatSprite(string category, string name) {
+			return _taskAtlas?.TryGetSprite($@"tasks\combat\{category}\{name}.png");
 		}
 
 		private Atlas CreateAtlas(string folder) {
@@ -59,11 +60,12 @@ namespace IdlePlus.TexturePack {
 				
 				var bytes = File.ReadAllBytes(filePath);
 				var tex = new Texture2D(2, 2);
-				tex.ignoreMipmapLimit = true;
 				tex.LoadImage(bytes);
+				tex.ignoreMipmapLimit = true;
+				tex.filterMode = FilterMode.Point;
+				tex.anisoLevel = 1;
 
 				if (generator == null) generator = new AtlasGenerator();
-				IdleLog.Info($"Adding texture {relativePath} to atlas, full path is {filePath}");
 				generator.AddTexture(tex, relativePath);
 			}
 			

@@ -1,0 +1,61 @@
+This is a list of the current supported combat textures and where to put them.
+
+The path is relative to the current folder! For example, to override the troll, you need
+to put the texture in "<TEXTURE PACK>/tasks/combat/wilderness/troll.png".
+
+
+=== Woods ===
+woods/turkey.png
+woods/fox.png
+woods/wolf.png
+woods/boar.png
+woods/bear.png
+
+=== Cave ===
+cave/scorpion.png
+cave/snake.png
+cave/crocodile.png
+cave/goblin.png
+cave/cave_dweller.png
+cave/orange_dragon.png
+
+=== Wilderness ===
+wilderness/troll.png
+wilderness/wandering_warrior.png
+wilderness/druid.png
+wilderness/gorilla.png
+wilderness/giant.png
+wilderness/green_dragon.png
+
+=== Haunted Graveyard ===
+haunted_graveyard/ghost.png
+haunted_graveyard/zombie.png
+haunted_graveyard/possessed_bear.png
+haunted_graveyard/witch.png
+haunted_graveyard/demon.png
+haunted_graveyard/red_dragon.png
+
+=== Uncharted Grounds ===
+uncharted_grounds/mad_wizard.png
+uncharted_grounds/vampire.png
+uncharted_grounds/werewolf.png
+uncharted_grounds/dark_wizard.png
+uncharted_grounds/cerberus.png
+uncharted_grounds/black_dragon.png
+
+=== Lair of Beasts ===
+lair_of_beasts/hydra.png
+lair_of_beasts/manticore.png
+lair_of_beasts/minotaur.png
+lair_of_beasts/centaur.png
+lair_of_beasts/necromancer.png
+lair_of_beasts/mutated_dragon.png
+
+=== Valley of Gods ===
+valley_of_gods/griffin.png
+valley_of_gods/devil.png
+valley_of_gods/hades.png
+valley_of_gods/zeus.png
+valley_of_gods/medusa.png
+valley_of_gods/chimera.png
+valley_of_gods/kronos.png

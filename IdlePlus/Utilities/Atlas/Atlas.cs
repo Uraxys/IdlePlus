@@ -29,14 +29,10 @@ namespace IdlePlus.Utilities.Atlas {
 		
 		public Sprite TryGetSprite(string path) {
 			if (!_sprites.TryGetValue(path, out var sprite)) return null;
-			IdleLog.Info($"Trying to get sprite for path '{path}'.");
 
 			// We need to be careful, as unity overrides the == operator,
 			// returning null if the object is destroyed.
-			if (sprite != null) {
-				IdleLog.Info($"Found sprite not null, returning.");
-				return sprite;
-			}
+			if (sprite != null) return sprite;
 			
 			// Unity... or SOMEONE... has destroyed out sprite, which
 			// DOESN'T destroy the underlying texture... So, just

@@ -15,8 +15,8 @@ namespace IdlePlus.Patches {
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(Item.LoadSpriteFromResources))]
 		private static bool PrefixLoadSpriteFromResources(Item __instance, ref Sprite __result) {
-			if (TexturePackManager.Instance.CurrentTexturePack == null) return true;
-			var sprite = TexturePackManager.Instance.CurrentTexturePack.TryGetItemSprite(__instance.Name);
+			if (TexturePackManager.CurrentPack == null) return true;
+			var sprite = TexturePackManager.CurrentPack.TryGetItemSprite(__instance.Name);
 			if (sprite == null) return true;
 			
 			__result = sprite;

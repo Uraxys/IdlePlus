@@ -11,11 +11,10 @@ namespace IdlePlus.Utilities.Atlas {
 		private readonly ImageNode _node;
 
 		public AtlasTexture(int width, int height) {
-			Texture = new Texture2D(width, height) { ignoreMipmapLimit = true };
+			Texture = new Texture2D(width, height, TextureFormat.RGBA32, 1, true);
 			Object.DontDestroyOnLoad(Texture);
 			Texture.hideFlags = HideFlags.HideAndDontSave;
 			Texture.filterMode = FilterMode.Point;
-			Texture.anisoLevel = 1;
 
 			// Set background color to transparent.
 			if (_cachedDefaultTexture == null) {

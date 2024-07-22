@@ -11,8 +11,8 @@ namespace IdlePlus.TexturePack {
 		private const string TexturePackFile = "texturepack.txt";
 		
 		public static TexturePackManager Instance;
+		public static TexturePack CurrentPack { get; private set; }
 
-		public TexturePack CurrentTexturePack { get; private set; }
 		private readonly List<TexturePack> _texturePacks = new List<TexturePack>();
 		
 		public static void Load() {
@@ -52,12 +52,12 @@ namespace IdlePlus.TexturePack {
 			ModSettings.TexturePack.CurrentPack.OnLoad = (index, value) => {
 				IdleTasks.Run(() => {
 					if (index == 0) {
-						Instance.CurrentTexturePack?.Unload();
-						Instance.CurrentTexturePack = null;
+						CurrentPack?.Unload();
+						CurrentPack = null;
 						return;
 					}
-					Instance.CurrentTexturePack = Instance._texturePacks.Find(pack => pack.Meta.Name == value);
-					Instance.CurrentTexturePack?.Load();
+					CurrentPack = Instance._texturePacks.Find(pack => pack.Meta.Name == value);
+					CurrentPack?.Load();
 				});
 			};
 		}
