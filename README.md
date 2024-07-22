@@ -4,7 +4,7 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 *Claim All* boosts, and more.
 
 ## Features
-- **Texture packs**: Change any item or combat monster with a simple texture pack.
+- **[Texture packs](https://github.com/Uraxys/IdlePlus/wiki/Texture-Pack)**: Change any item or combat monster with a simple texture pack.
 - **Edit offer**: Edit your market offers without having to cancel, claim and remake them.
 - **Lowest/Highest price on offer**: Easily see if your offer is the lowest or highest by just opening it up and looking at the price line, e.g. `Price: 122 (Lowest 121)`.
 - **Compact numbers in market**: Write your offer price with compact numbers, e.g. `1k`, `8.52m`, `1kk`, `.5b`.
