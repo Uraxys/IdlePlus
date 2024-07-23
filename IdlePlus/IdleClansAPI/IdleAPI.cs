@@ -14,10 +14,17 @@ namespace IdlePlus.IdleClansAPI {
 	public static class IdleAPI {
 		
 		private const string MarketPricesUrl = "https://query.idleclans.com/api/PlayerMarket/items/prices/latest?includeAveragePrice=true";
-		private static Dictionary<int, MarketEntry> _marketPrices = new Dictionary<int, MarketEntry>();
+		private static bool _initialized;
+
+		public static Dictionary<int, MarketEntry> MarketPrices { get; private set; } = new Dictionary<int, MarketEntry>();
+		public static Action<bool> OnMarketPricesFetched;
 		
 		public static MarketEntry GetMarketEntry(Item item) {
-			return _marketPrices.TryGetValue(item.ItemId, out var price) ? price : null;
+			return MarketPrices.TryGetValue(item.ItemId, out var price) ? price : null;
+		}
+		
+		public static bool IsInitialized() {
+			return _initialized;
 		}
 		
 		public static void UpdateMarketPrices() {
@@ -57,10 +64,14 @@ namespace IdlePlus.IdleClansAPI {
 								var itemId = (int)item["itemId"];
 								prices[itemId] = new MarketEntry(item);
 							}
-
+							
 							IdleLog.Info($"Updated market prices in {(end - start) / 10_000.0}ms\n" +
-							                 $"Prices: old={_marketPrices.Count} new={prices.Count}");
-							_marketPrices = prices;
+							                 $"Prices: old={MarketPrices.Count} new={prices.Count}");
+							MarketPrices = prices;
+							
+							var first = !_initialized;
+							_initialized = true;
+							OnMarketPricesFetched?.Invoke(first);
 						} catch (Exception e) {
 							IdleLog.Error("Failed to update market prices!", e);
 						}

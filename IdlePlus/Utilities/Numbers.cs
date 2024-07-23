@@ -31,22 +31,12 @@ namespace IdlePlus.Utilities {
 		/// <param name="number">The number to compact.</param>
 		/// <returns>The compacted number, numbers under 100,000 isn't compacted,
 		/// but are instead formatted, while anything above 100,000 will be
-		/// formatted as either 0K, 0M or 0B, depending on the amount.</returns>
+		/// formatted as either 0K, 0M, 0B or 0T, depending on the amount.</returns>
 		public static string ToCompactFormat(long number) {
-			//if (number > 2_000_000_000) return ">2B";
-
-			/*if (vanillaFormat) {
-				if (number < 1000) return number.ToString("#,0");
-				if (number < 1_000_000) return $"{TruncateToDecimalPlace((double)number / 1000, 1):0.#}K";
-				if (number < 1_000_000_000) return $"{TruncateToDecimalPlace((double)number / 1_000_000, 1):0.#}M";
-				return $"{TruncateToDecimalPlace((double)number / 1_000_000_000, 1):0.#}B";
-				/*return number < 1_000_000_000 ? $"{(double) number / 1_000_000:0.#}M" : 
-					$"{(double) number / 1_000_000_000:0.#}B";#1#
-			}*/
-			
 			if (number < 100_000) return number.ToString("#,0");
 			if (number < 1_000_000) return $"{number / 1000}K";
-			return number < 1_000_000_000 ? $"{number / 1_000_000.0:0.###}M" : $"{number / 1_000_000_000.0:0.###}B";
+			if (number < 1_000_000_000) return $"{number / 1_000_000.0:0.###}M";
+			return number < 1_000_000_000_000 ? $"{number / 1_000_000_000.0:0.###}B" : $"{number / 1_000_000_000_000.0:0.###}T";
 		}
 		
 		public static string Format(long number) => number.ToString("#,0");
