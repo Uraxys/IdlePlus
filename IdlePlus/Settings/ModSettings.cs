@@ -10,6 +10,9 @@ namespace IdlePlus.Settings {
 	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public static class ModSettings {
 		
+		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
+			Features.EnhancedInventoryStats, Features.TotalWealth);
+		
 		public static readonly SettingCategory MarketValueCategory = SettingCategory.Create("Item Value",
 			MarketValue.Enabled, MarketValue.HideForIronman, MarketValue.ShiftForTotal, 
 			MarketValue.IncludeNegotiation, MarketValue.DisplayType, MarketValue.DisplayFormat);
@@ -20,9 +23,23 @@ namespace IdlePlus.Settings {
 		public static readonly SettingCategory MiscellaneousCategory = SettingCategory.Create("Miscellaneous",
 			Miscellaneous.InternalItemNames);
 		
-		public static readonly SettingCategory[] Categories = { MarketValueCategory, TexturePackCategory,
-			MiscellaneousCategory };
-		
+		public static readonly SettingCategory[] Categories = { FeaturesCategory, MarketValueCategory,
+			TexturePackCategory, MiscellaneousCategory };
+
+		public static class Features {
+			public static readonly ToggleSetting EnhancedInventoryStats = ToggleSetting.Create(
+				"feature_enhancedInventoryStats", true,
+				"Enhanced inventory equipment stats.",
+				true
+			);
+			
+			public static readonly ToggleSetting TotalWealth = ToggleSetting.Create(
+				"feature_totalWealth", true,
+				"Total wealth displayed in the profile tab.",
+				true
+			);
+		}
+        
 		public static class MarketValue {
 			public static readonly ToggleSetting Enabled = ToggleSetting.Create(
 				"marketvalue",

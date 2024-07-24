@@ -136,6 +136,7 @@
         <Compile Include="Patches\AdsViewPopupPatch.cs" />
         <Compile Include="Patches\Combat\CombatEnemyPanelEntryPatch.cs" />
         <Compile Include="Patches\HotItemEntryPatch.cs" />
+        <Compile Include="Patches\Equipment\UIEquipmentBonusesPatch.cs" />
         <Compile Include="Patches\ItemInfoPopupPatch.cs" />
         <Compile Include="Patches\ItemPatch.cs" />
         <Compile Include="Patches\PlayerDataPatch.cs" />
@@ -163,6 +164,7 @@
         <Compile Include="Unity\DebugRender.cs" />
         <Compile Include="Unity\IdlePlusDropdown.cs" />
         <Compile Include="Unity\HotItemButton.cs" />
+        <Compile Include="Unity\MatchParentSize.cs" />
         <Compile Include="Utilities\AssetLoader.cs" />
         <Compile Include="Utilities\Atlas\Atlas.cs" />
         <Compile Include="Utilities\Atlas\AtlasGenerator.cs" />
@@ -189,6 +191,7 @@
         <Compile Include="Utilities\Numbers.cs" />
         <Compile Include="Utilities\Profiler.cs" />
         <Compile Include="Utilities\RandomUtils.cs" />
+        <Compile Include="Utilities\Scenes.cs" />
         <Compile Include="Utilities\Vec2.cs" />
         <Compile Include="Utilities\Vec3.cs" />
     </ItemGroup>

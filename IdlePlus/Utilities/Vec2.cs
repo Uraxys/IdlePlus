@@ -4,6 +4,7 @@ namespace IdlePlus.Utilities {
 	public static class Vec2 {
 		
 		public static Vector2 Zero => Vec(0);
+		public static Vector2 One => Vec(1);
 		
 		public static Vector2 Vec(float value) => new Vector2(value, value); 
 		public static Vector2 Vec(float x, float y) => new Vector2(x, y);

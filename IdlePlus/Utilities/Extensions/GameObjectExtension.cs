@@ -111,7 +111,11 @@ namespace IdlePlus.Utilities.Extensions {
 			action?.Invoke(component);
 			return component;
 		}
-		
+
+		public static T Use<T>(this Transform transform, Action<T> action = null) where T : Component {
+			return Use<T>(transform.gameObject, action);
+		}
+
 		/// <summary>
 		/// Get a component from a GameObject and perform an action on it.
 		/// </summary>

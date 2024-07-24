@@ -2,6 +2,7 @@ using System;
 using Equipment;
 using HarmonyLib;
 using IdlePlus.IdleClansAPI;
+using IdlePlus.Settings;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
@@ -18,19 +19,22 @@ namespace IdlePlus.Patches.Profile {
 		
 		private static GameObject _totalWealth;
 
-		[InitializeOnce(OnSceneLoad = "Game")]
+		[InitializeOnce(OnSceneLoad = Scenes.Game)]
 		private static void InitializeOnce() {
+			if (!ModSettings.Features.TotalWealth.Value) return;
 			IdleAPI.OnMarketPricesFetched += OnMarketPricesFetched;
 		}
         
-		[Initialize(OnSceneLoad = "MainMenu")]
+		[Initialize(OnSceneLoad = Scenes.MainMenu)]
 		private static void Initialize() {
+			if (!ModSettings.Features.TotalWealth.Value) return;
 			_totalWealth = null;
 		}
 		
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(ProfilePanel.SetupData))]
 		private static void PostfixSetupData(ProfilePanel __instance) {
+			if (!ModSettings.Features.TotalWealth.Value) return;
 			// When the object is destroyed the equals check is overriden by unity
 			// to return true even if the object isn't null.
 			if (_totalWealth == null) {
