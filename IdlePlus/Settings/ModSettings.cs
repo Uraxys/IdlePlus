@@ -10,36 +10,64 @@ namespace IdlePlus.Settings {
 	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public static class ModSettings {
 		
-		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
-			Features.EnhancedInventoryStats, Features.TotalWealth);
+		#region Categories
 		
+		// Features
+		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
+			Features.TotalWealth);
+		
+		// UI
+		public static readonly SettingCategory UICategory = SettingCategory.Create("UI",
+			UI.EnhancedInventoryStats, UI.EnhancedInventoryItemTooltip);
+		
+		// Market Value
 		public static readonly SettingCategory MarketValueCategory = SettingCategory.Create("Item Value",
 			MarketValue.Enabled, MarketValue.HideForIronman, MarketValue.ShiftForTotal, 
 			MarketValue.IncludeNegotiation, MarketValue.DisplayType, MarketValue.DisplayFormat);
 		
+		// Texture Pack
 		public static readonly SettingCategory TexturePackCategory = SettingCategory.Create("Texture Pack",
 			TexturePack.CurrentPack);
 		
+		// Miscellaneous
 		public static readonly SettingCategory MiscellaneousCategory = SettingCategory.Create("Miscellaneous",
 			Miscellaneous.InternalItemNames);
 		
-		public static readonly SettingCategory[] Categories = { FeaturesCategory, MarketValueCategory,
+		// Category registration
+		public static readonly SettingCategory[] Categories = { FeaturesCategory, UICategory, MarketValueCategory,
 			TexturePackCategory, MiscellaneousCategory };
+		
+		#endregion
 
+		#region Settings
+        
+		#region Features
 		public static class Features {
-			public static readonly ToggleSetting EnhancedInventoryStats = ToggleSetting.Create(
-				"feature_enhancedInventoryStats", true,
-				"Enhanced inventory equipment stats.",
-				true
-			);
-			
 			public static readonly ToggleSetting TotalWealth = ToggleSetting.Create(
 				"feature_totalWealth", true,
 				"Total wealth displayed in the profile tab.",
 				true
 			);
 		}
+		#endregion
+
+		#region UI
+		public static class UI {
+			public static readonly ToggleSetting EnhancedInventoryStats = ToggleSetting.Create(
+				"ui_enhancedInventoryStats", true,
+				"Enhanced inventory equipment stats.",
+				true
+			);
+			
+			public static readonly ToggleSetting EnhancedInventoryItemTooltip = ToggleSetting.Create(
+				"ui_enhancedInventoryItemTooltip", true,
+				"Enhanced inventory item tooltip.",
+				true
+			);
+		}
+		#endregion
         
+		#region MarketValue
 		public static class MarketValue {
 			public static readonly ToggleSetting Enabled = ToggleSetting.Create(
 				"marketvalue",
@@ -79,11 +107,15 @@ namespace IdlePlus.Settings {
 				"Default", "Full", "Thousands", "Millions"
 			);
 		}
+		#endregion
 
+		#region TexturePack
 		public static class TexturePack {
 			public static StringDropdownSetting CurrentPack;
 		}
+		#endregion
         
+		#region Miscellaneous
 		public static class Miscellaneous {
 			public static readonly ToggleSetting InternalItemNames = ToggleSetting.Create(
 				"misc_internalItemNames",
@@ -91,6 +123,11 @@ namespace IdlePlus.Settings {
 				false
 			);
 		}
+		#endregion
+		
+		#endregion
+		
+		#region Save/Load
 		
 		public static async void Load() {
 			await Task.Run(() => {
@@ -143,5 +180,8 @@ namespace IdlePlus.Settings {
 				data.Close();
 			});
 		}
+		
+		#endregion
+		
 	}
 }

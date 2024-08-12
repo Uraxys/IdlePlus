@@ -100,6 +100,9 @@
         <Reference Include="UnityEngine">
           <HintPath>..\libs\interop\UnityEngine.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+          <HintPath>..\libs\interop\UnityEngine.AssetBundleModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.CoreModule">
           <HintPath>..\libs\interop\UnityEngine.CoreModule.dll</HintPath>
         </Reference>
@@ -134,7 +137,10 @@
         <Compile Include="IdlePlus.cs" />
         <Compile Include="IdlePlusBehaviour.cs" />
         <Compile Include="Patches\AdsViewPopupPatch.cs" />
+        <Compile Include="Patches\ChatboxLogic\ChatboxPatch.cs" />
+        <Compile Include="Patches\Combat\CombatActiveStaticPopupPatch.cs" />
         <Compile Include="Patches\Combat\CombatEnemyPanelEntryPatch.cs" />
+        <Compile Include="Patches\Guilds\GuildMemberEntryPatch.cs" />
         <Compile Include="Patches\HotItemEntryPatch.cs" />
         <Compile Include="Patches\Equipment\UIEquipmentBonusesPatch.cs" />
         <Compile Include="Patches\ItemInfoPopupPatch.cs" />
@@ -164,6 +170,7 @@
         <Compile Include="Unity\DebugRender.cs" />
         <Compile Include="Unity\IdlePlusDropdown.cs" />
         <Compile Include="Unity\HotItemButton.cs" />
+        <Compile Include="Unity\Items\ScrollInfo.cs" />
         <Compile Include="Unity\MatchParentSize.cs" />
         <Compile Include="Utilities\AssetLoader.cs" />
         <Compile Include="Utilities\Atlas\Atlas.cs" />

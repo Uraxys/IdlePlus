@@ -31,7 +31,7 @@ namespace IdlePlus.Patches.Equipment {
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(UIEquipmentBonuses.OnEnable))]
 		private static void PrefixOnEnable(UIEquipmentBonuses __instance) {
-			if (!ModSettings.Features.EnhancedInventoryStats.Value) return;
+			if (!ModSettings.UI.EnhancedInventoryStats.Value) return;
 			if (_initialized) return;
 			_initialized = true;
 
@@ -85,7 +85,7 @@ namespace IdlePlus.Patches.Equipment {
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(UIEquipmentBonuses.OnUpdateBonuses))]
 		private static void PostfixOnUpdateBonuses() {
-			if (!ModSettings.Features.EnhancedInventoryStats.Value) return;
+			if (!ModSettings.UI.EnhancedInventoryStats.Value) return;
 			_meleeStats?.Update();
 			_archeryStats?.Update();
 			_magicStats?.Update();

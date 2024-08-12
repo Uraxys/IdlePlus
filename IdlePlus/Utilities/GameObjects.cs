@@ -118,8 +118,11 @@ namespace IdlePlus.Utilities {
 			return new GameObject(name, types);
 		}
 		
-		public static GameObject Instantiate(GameObject original, GameObject parent, bool worldPositionStays) {
-			return Object.Instantiate(original, parent.transform, worldPositionStays);
+		public static GameObject Instantiate(GameObject original, GameObject parent, bool worldPositionStays, 
+			string name = null) {
+			var obj = Object.Instantiate(original, parent.transform, worldPositionStays);
+			if (name != null) obj.name = name;
+			return obj;
 		}
 	}
 }
