@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI.ProceduralImage;
 
-namespace IdlePlus.Patches {
+namespace IdlePlus.Patches.Popups {
 	
 	/// <summary>
 	/// A patch to add an "Edit offer" button to the marker offer popup.

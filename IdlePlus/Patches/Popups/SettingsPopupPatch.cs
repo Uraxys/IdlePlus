@@ -12,7 +12,7 @@ using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace IdlePlus.Patches {
+namespace IdlePlus.Patches.Popups {
 
 	[HarmonyPatch]
 	public static class SettingsPopupPatch {

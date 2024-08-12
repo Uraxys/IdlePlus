@@ -6,6 +6,7 @@ using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Player;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,8 @@ namespace IdlePlus.Unity.Items {
 		private readonly List<Sprite> _amulets = new List<Sprite>();
 		private readonly List<Sprite> _rings = new List<Sprite>();
 		private readonly List<Sprite> _bracelets = new List<Sprite>();
-		
+
+		private TextMeshProUGUI _text;
 		private Image _earringsImage;
 		private Image _amuletsImage;
 		private Image _ringsImage;
@@ -36,10 +38,30 @@ namespace IdlePlus.Unity.Items {
 		private float _nextTick;
 
 		public void Awake() {
-			_earringsImage = transform.GetChild(1).Use<Image>();
-			_amuletsImage = transform.GetChild(2).Use<Image>();
-			_ringsImage = transform.GetChild(3).Use<Image>();
-			_braceletsImage = transform.GetChild(4).Use<Image>();
+			var scrollText = GameObjects.NewRect("Text", gameObject);
+			var earringIcon = GameObjects.NewRect<Image>("EarringIcon", gameObject);
+			var amuletIcon = GameObjects.NewRect<Image>("AmuletIcon", gameObject);
+			var ringIcon = GameObjects.NewRect<Image>("RingIcon", gameObject);
+			var braceletIcon = GameObjects.NewRect<Image>("BraceletIcon", gameObject);
+			
+			_text = scrollText.With<TextMeshProUGUI>(text => {
+				text.text = "Can be applied to\u00A0"; // Hacky fix to add a space after the "to".
+				text.fontSize = 16;
+				text.fontSizeMax = 16;
+				text.color = new Color(0.9F, 0.9F, 0.9F, 1);
+			});
+			scrollText.With<ContentSizeFitter>().SetFit(ContentSizeFitter.FitMode.PreferredSize,
+				ContentSizeFitter.FitMode.PreferredSize);
+
+			earringIcon.Use<RectTransform>().sizeDelta = Vec2.Vec(20);
+			amuletIcon.Use<RectTransform>().sizeDelta = Vec2.Vec(20);
+			ringIcon.Use<RectTransform>().sizeDelta = Vec2.Vec(20);
+			braceletIcon.Use<RectTransform>().sizeDelta = Vec2.Vec(20);
+			
+			_earringsImage = earringIcon.Use<Image>();
+			_amuletsImage = amuletIcon.Use<Image>();
+			_ringsImage = ringIcon.Use<Image>();
+			_braceletsImage = braceletIcon.Use<Image>();
 		}
 
 		public void Update() {

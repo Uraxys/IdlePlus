@@ -9,7 +9,7 @@ using Popups;
 using TMPro;
 using UnityEngine;
 
-namespace IdlePlus.Patches {
+namespace IdlePlus.Patches.Popups {
 	
 	[HarmonyPatch(typeof(ItemInfoPopup))]
 	public class ItemInfoPopupPatch {
