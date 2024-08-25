@@ -89,7 +89,7 @@ namespace IdlePlus.Patches.Profile {
             
             	if (!marketPrices.TryGetValue(item.ItemId, out var price)) {
             		if (item.CanNotBeSoldToGameShop) continue;
-            		wealth += item.BaseValue * amount;
+            		wealth += (long) item.BaseValue * amount;
             		continue;
             	}
             	
@@ -98,7 +98,7 @@ namespace IdlePlus.Patches.Profile {
             		if (item.CanNotBeSoldToGameShop) continue;
             		value = item.BaseValue;
             	}
-            	wealth += value * amount;
+            	wealth += (long) value * amount;
             }
             
             // Equipment
