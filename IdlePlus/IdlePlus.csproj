@@ -171,6 +171,7 @@
         <Compile Include="Unity\DebugRender.cs" />
         <Compile Include="Unity\IdlePlusDropdown.cs" />
         <Compile Include="Unity\HotItemButton.cs" />
+        <Compile Include="Unity\Items\EquipmentStatsInfo.cs" />
         <Compile Include="Unity\Items\ScrollInfo.cs" />
         <Compile Include="Unity\MatchParentSize.cs" />
         <Compile Include="Utilities\AssetLoader.cs" />
@@ -193,6 +194,7 @@
         <Compile Include="Utilities\Helpers\CollectionHelper.cs" />
         <Compile Include="Utilities\Helpers\PopupHelper.cs" />
         <Compile Include="Utilities\Helpers\UiHelper.cs" />
+        <Compile Include="Utilities\IdleAssets.cs" />
         <Compile Include="Utilities\IdleLog.cs" />
         <Compile Include="Utilities\IdleTasks.cs" />
         <Compile Include="Utilities\InitPriority.cs" />

@@ -71,8 +71,6 @@ namespace IdlePlus.Patches.Equipment {
 					text.alignment = TextAlignmentOptions.Left;
 					text.text = "Key: Value";
 				}
-
-				IdleLog.Info($"Setting stats for {i}... {objects[0].Use<RectTransform>()} {objects[1].Use<RectTransform>()} {objects[2].Use<RectTransform>()}");
 				
 				switch (i) {
 					case 0: _meleeStats = new StatsEntry(i, objects[0], objects[1], objects[2]); break;

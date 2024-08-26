@@ -64,8 +64,9 @@ namespace IdlePlus.Utilities.Extensions {
 			return group;
 		}
 		
-		public static HorizontalOrVerticalLayoutGroup SetChildStates(this HorizontalOrVerticalLayoutGroup group, bool controlWidth, 
-			bool controlHeight, bool forceExpandWidth, bool forceExpandHeight, bool scaleWidth, bool scaleHeight) {
+		public static HorizontalOrVerticalLayoutGroup SetChildStates(this HorizontalOrVerticalLayoutGroup group, 
+			bool controlWidth = false, bool controlHeight = false, bool forceExpandWidth = false, 
+			bool forceExpandHeight = false, bool scaleWidth = false, bool scaleHeight = false) {
 			group.childControlWidth = controlWidth;
 			group.childControlHeight = controlHeight;
 			group.childForceExpandWidth = forceExpandWidth;

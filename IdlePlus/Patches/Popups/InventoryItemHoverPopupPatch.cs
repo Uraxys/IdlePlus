@@ -20,6 +20,7 @@ namespace IdlePlus.Patches.Popups {
 	/// Patch to add in multiple new features to the item hover popup, those
 	/// being the following:<br/>
 	/// - Enhanced item tooltip<br/>
+	/// - Equipment stats info<br/>
 	/// - Market value<br/>
 	/// - Scroll info<br/>
 	/// - Internal item names<br/>
@@ -47,7 +48,6 @@ namespace IdlePlus.Patches.Popups {
 		private static GameObject _itemName;
 		private static GameObject _sellValue;
 		private static GameObject _marketValue;
-		private static ScrollInfo _scrollInfo;
 		
 		private static Image _sellValueIcon;
 		private static TextMeshProUGUI _sellValueText;
@@ -57,6 +57,10 @@ namespace IdlePlus.Patches.Popups {
 		// Only used if enhanced tooltips are enabled.
 		private static RectTransform _sellTitleRect;
 		private static GameObject _split1;
+		
+		// Features
+		private static ScrollInfo _scrollInfo;
+		private static EquipmentStatsInfo _equipmentStatsInfo;
 		
 		[InitializeOnce]
 		public static void InitializeOnce() {
@@ -112,10 +116,8 @@ namespace IdlePlus.Patches.Popups {
 				_valueContainer.Use<VerticalLayoutGroup>().SetSpacing(1);
 				
 				// Add a split between the name container and the value container.
-				_split1 = GameObjects.NewRect("Split1", _background);
+				_split1 = NewSplit(_background);
 				_split1.transform.SetSiblingIndex(1);
-				_split1.Use<RectTransform>().sizeDelta = Vec2.Vec(0, 1);
-				_split1.With<ProceduralImage, UniformModifier>().color = new Color(0.1294F, 0.549F, 0.4549F, 1F);
 				
 				// Change the sell value.
 				// - Change spacing.
@@ -128,7 +130,7 @@ namespace IdlePlus.Patches.Popups {
 					text.fontSize = 16;
 					text.fontSizeMax = 16;
 					text.color = GrayColor;
-					text.alignment = TextAlignmentOptions.Right;
+					text.alignment = TextAlignmentOptions.Left;
 					text.text = "Sell Value:";
 				});
 				sellValueTitle.transform.SetSiblingIndex(0);
@@ -148,7 +150,12 @@ namespace IdlePlus.Patches.Popups {
 			//   without restarting the game.
 			CreateScrollInfo();
 			
+			// - Equipment stats info - No need to check if it's enabled, as it can be toggled
+			//   without restarting the game.
+			CreateEquipmentStatsInfo();
+			
 			// - Popup description.
+			//   Ehh, I really don't know, keeping it here just in case.
 			
 			/*_description = GameObjects.Instantiate(name, background, false, "Description");
 			_description.Use<RectTransform>(rect => rect.sizeDelta = rect.sizeDelta.SetY(20));
@@ -201,6 +208,34 @@ namespace IdlePlus.Patches.Popups {
 			scrollInfo.With<ContentSizeFitter>().SetFit(ContentSizeFitter.FitMode.PreferredSize);
 			_scrollInfo = scrollInfo.With<ScrollInfo>();
 		}
+
+		private static void CreateEquipmentStatsInfo() {
+			if (!_enhancedTooltip) return; // Enhanced tooltip is required for equipment stats info.
+			var equipmentStatsContainer = GameObjects.NewRect("EquipmentStatsInfo", _background);
+			equipmentStatsContainer.With<VerticalLayoutGroup>().SetChildStates(true, false, true, false, false, false);
+			equipmentStatsContainer.With<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+			// Create the split before we add the EquipmentStatsInfo component, in case it
+			// awakes.
+			NewSplit(equipmentStatsContainer);
+			// Then add the component.
+			_equipmentStatsInfo = equipmentStatsContainer.With<EquipmentStatsInfo>();
+		}
+		
+		/*
+		 * Helper
+		 */
+
+		private static int _currentSplitIndex;
+		public static GameObject NewSplit(GameObject parent, bool secondary = false) {
+			var split = GameObjects.NewRect($"Split{_currentSplitIndex++}", parent);
+			split.Use<RectTransform>().sizeDelta = Vec2.Vec(0, 1);
+			split.With<ProceduralImage, UniformModifier>().color = new Color(0.1294F, 0.549F, 0.4549F, secondary ? 0.5F : 1F);
+			return split;
+		}
+		
+		/*
+		 * Patch
+		 */
 		
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(InventoryItemHoverPopup.Setup))]
@@ -215,6 +250,11 @@ namespace IdlePlus.Patches.Popups {
 			_scrollInfo.gameObject.SetActive(item.ScrollType != EnchantmentScrollType.None &&
 			                                 ModSettings.Features.ScrollInfo.Value &&
 			                                 _scrollInfo.Setup(item));
+			
+			// Enable or disable the equipment stats info depending on the item and setting.
+			_equipmentStatsInfo.gameObject.SetActive(ModSettings.Features.EquipmentStatsInfo.Value &&
+			                                         _enhancedTooltip &&
+			                                         _equipmentStatsInfo.Setup(item));
 			
 			// Update the value.
 			UpdateItemValue(__instance, item);
