@@ -16,7 +16,7 @@ namespace IdlePlus.Settings {
 		
 		// Features category
 		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
-			Features.TotalWealth, Features.ScrollInfo);
+			Features.TotalWealth, Features.ScrollInfo, Features.MaxOpenableChests);
         
 		// Feature settings
 		public static class Features {
@@ -31,6 +31,11 @@ namespace IdlePlus.Settings {
 				"Scrolls display which items that can be enchanted.",
 				true
 			);
+			
+			public static readonly ToggleSetting MaxOpenableChests = ToggleSetting.Create(
+				"feature_maxOpenableChests",
+				"Pressing 'Max' selects the maximum amount of treasure chests you can open at once.",
+				true);
 		}
 		#endregion
 

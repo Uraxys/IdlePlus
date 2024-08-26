@@ -18,12 +18,12 @@ namespace IdlePlus.Patches.Popups {
 	
 	/// <summary>
 	/// Patch to add in multiple new features to the item hover popup, those
-	/// being the following:
-	/// - Enhanced item tooltip
-	/// - Market value
-	/// - Scroll info
-	/// - Internal item names
-	/// 
+	/// being the following:<br/>
+	/// - Enhanced item tooltip<br/>
+	/// - Market value<br/>
+	/// - Scroll info<br/>
+	/// - Internal item names<br/>
+	/// <br/>
 	/// The three last features should also work with or without enhanced item
 	/// tooltip enabled.
 	/// </summary>

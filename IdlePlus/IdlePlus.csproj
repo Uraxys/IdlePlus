@@ -148,6 +148,7 @@
         <Compile Include="Patches\GeneralPatches.cs" />
         <Compile Include="Patches\PlayerMarketOfferPatch.cs" />
         <Compile Include="Patches\Popups\InventoryItemHoverPopupPatch.cs" />
+        <Compile Include="Patches\Popups\InventoryItemInteractionPopupPatch.cs" />
         <Compile Include="Patches\Popups\ItemInfoPopupPatch.cs" />
         <Compile Include="Patches\Popups\SettingsPopupPatch.cs" />
         <Compile Include="Patches\Popups\ViewPlayerMarketOfferPopupPatch.cs" />
