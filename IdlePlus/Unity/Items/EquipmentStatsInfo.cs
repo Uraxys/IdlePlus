@@ -1,12 +1,9 @@
-using System;
 using Databases;
 using Equipment;
-using IdlePlus.Patches.Popups;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Player;
-using Popups;
 using Skilling;
 using TMPro;
 using UnityEngine;
@@ -23,9 +20,6 @@ namespace IdlePlus.Unity.Items {
 		private StatEntry _meleeEntry;
 		private StatEntry _rangeEntry;
 		private StatEntry _magicEntry;
-
-		private GameObject _meleeRangeSplit;
-		private GameObject _rangeMagicSplit;
 
 		private bool _initialized;
 
@@ -83,11 +77,9 @@ namespace IdlePlus.Unity.Items {
 			if (hasMelee) _meleeEntry.Setup(meleeStrength, meleeAccuracy, meleeDefence);
 			else _meleeEntry.Enabled(false);
 			
-			_meleeRangeSplit.active = hasRange && hasMelee;
 			if (hasRange) _rangeEntry.Setup(rangeStrength, rangeAccuracy, rangeDefence);
 			else _rangeEntry.Enabled(false);
-
-			_rangeMagicSplit.active = hasMagic && (hasMelee || hasRange);
+			
 			if (hasMagic) _magicEntry.Setup(magicStrength, magicAccuracy, magicDefence);
 			else _magicEntry.Enabled(false);
 
@@ -127,10 +119,8 @@ namespace IdlePlus.Unity.Items {
 			// The stat lines.
 			_meleeEntry = new StatEntry("Melee", Skill.Rigour, statsContainer);
 			_meleeEntry.Setup(128, 10, 44);
-			_meleeRangeSplit = InventoryItemHoverPopupPatch.NewSplit(statsContainer, true);
 			_rangeEntry = new StatEntry("Range", Skill.Archery, statsContainer);
 			_rangeEntry.Setup(-27, -55, 0);
-			_rangeMagicSplit = InventoryItemHoverPopupPatch.NewSplit(statsContainer, true);
 			_magicEntry = new StatEntry("Magic", Skill.Magic, statsContainer);
 			_magicEntry.Setup(0, 0, -10);
 		}
@@ -207,9 +197,6 @@ namespace IdlePlus.Unity.Items {
 				var strNum = strength > 0 ? $"+{strength}" : strength.ToString();
 				var accNum = accuracy > 0 ? $"+{accuracy}" : accuracy.ToString();
 				var defNum = defence > 0 ? $"+{defence}" : defence.ToString();
-				//if (strength != 0) strNum = $"<b>{strNum}</b>";
-				//if (accuracy != 0) accNum = $"<b>{accNum}</b>";
-				//if (defence != 0) defNum = $"<b>{defNum}</b>";
 
 				var strText = strength == 0 ? $"<color=#{NeutralColor}>STR</color>" : "<color=#ffffff>STR</color>";
 				var accText = accuracy == 0 ? $"<color=#{NeutralColor}>ACC</color>" : "<color=#ffffff>ACC</color>";
