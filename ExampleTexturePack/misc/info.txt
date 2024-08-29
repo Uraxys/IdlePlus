@@ -1,0 +1,1 @@
+Miscellaneous textures, as of right now, only chat/clan member icons are supported.

@@ -59,3 +59,8 @@ valley_of_gods/zeus.png
 valley_of_gods/medusa.png
 valley_of_gods/chimera.png
 valley_of_gods/kronos.png
+
+=== Clan Bosses ===
+clan_boss/malignant_spider.png
+clan_boss/skeleton_warrior.png
+clan_boss/otherworldly_golem.png

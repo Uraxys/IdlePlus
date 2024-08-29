@@ -17,7 +17,15 @@ namespace IdlePlus.Patches.Combat {
 			var identifier = task.IdentifiableType;
 			var name = task.Name;
 			
-			if (identifier.Length == 0) {
+			if (identifier == null) {
+				// Clan bosses
+				if (name.Equals("malignant_spider") || name.Equals("skeleton_warrior") ||
+				    name.Equals("otherworldly_golem")) {
+					identifier = "clan_boss";
+				}
+			}
+			
+			if (string.IsNullOrEmpty(identifier)) {
 				IdleLog.Warn($"Couldn't get combat task sprite for combat panel, no identifiable type for {name}.");
 				return;
 			}
