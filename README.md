@@ -6,12 +6,15 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 ## Features
 - **[Texture packs](https://github.com/Uraxys/IdlePlus/wiki/Texture-Pack)**: Change any item or combat monster with a simple texture pack.
 - **Edit offer**: Edit your market offers without having to cancel, claim and remake them.
+- **Total wealth**: See your total wealth on your profile page.
 - **Lowest/Highest price on offer**: Easily see if your offer is the lowest or highest by just opening it up and looking at the price line, e.g. `Price: 122 (Lowest 121)`.
 - **Compact numbers in market**: Write your offer price with compact numbers, e.g. `1k`, `8.52m`, `1kk`, `.5b`.
 - **No "you need to open player marker before doing this"**: In the vanilla game, you need to open the player market before being able to create a sell offers from your inventory, this mod removes that limitation, allowing you to create a sell offer instantly after logging in.
 - **Market value**: See the market value of items while hovering over them.
 - **Shift for total value**: You can hold shift to see the total value of an item in your inventory (value * quantity).
 - **Item tweak**: Items that can't be sold to the game shop won't display a price when hovered over.
+- **Enhanced item tooltip**: Item tooltips that display equipment stats, which items a scroll can be used on, and more.
+- **Enhanced inventory stats**: A cleaner stats panel in your inventory.
 - **And much more planned!**
 
 ## Installation
