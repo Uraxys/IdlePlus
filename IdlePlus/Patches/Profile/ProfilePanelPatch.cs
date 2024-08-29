@@ -70,7 +70,10 @@ namespace IdlePlus.Patches.Profile {
             	text.text = "Total Wealth: ...";
             	return;
             }
-            
+
+			// If we're using vendor value instead of market value.
+			var vendorValue = ModSettings.Features.TotalWealthVendorValue.Value;
+			
             // Calculate total wealth.
             var inventory = PlayerData.Instance.Inventory;
             var equipment = PlayerData.Instance.Equipment;
@@ -87,7 +90,7 @@ namespace IdlePlus.Patches.Profile {
             	var amount = inventoryItem.ItemAmount;
             	if (item == null || amount <= 0) continue;
             
-            	if (!marketPrices.TryGetValue(item.ItemId, out var price)) {
+            	if (vendorValue || !marketPrices.TryGetValue(item.ItemId, out var price)) {
             		if (item.CanNotBeSoldToGameShop) continue;
             		wealth += (long) item.BaseValue * amount;
             		continue;
@@ -111,7 +114,7 @@ namespace IdlePlus.Patches.Profile {
             	var multiplier = 1;
             	if (slot == EquipmentSlot.Ammunition) multiplier = equipment._equippedAmmunitionAmount;
             	
-            	if (!marketPrices.TryGetValue(item.ItemId, out var price)) {
+            	if (vendorValue || !marketPrices.TryGetValue(item.ItemId, out var price)) {
             		if (item.CanNotBeSoldToGameShop) continue;
             		wealth += item.BaseValue * multiplier;
             		continue;

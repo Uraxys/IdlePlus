@@ -16,8 +16,8 @@ namespace IdlePlus.Settings {
 		
 		// Features category
 		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
-			Features.TotalWealth, Features.ScrollInfo, Features.EquipmentStatsInfo,
-			Features.MaxOpenableChests);
+			Features.TotalWealth, Features.TotalWealthVendorValue, Features.ScrollInfo, 
+			Features.EquipmentStatsInfo, Features.MaxOpenableChests);
         
 		// Feature settings
 		public static class Features {
@@ -25,6 +25,12 @@ namespace IdlePlus.Settings {
 				"feature_totalWealth", true,
 				"Total wealth displayed in the profile tab.",
 				true
+			);
+
+			public static readonly ToggleSetting TotalWealthVendorValue = ToggleSetting.Create(
+				"feature_totalWealthVendorValue",
+				"If total wealth should use vendor value instead of the market value.",
+				false
 			);
 			
 			public static readonly ToggleSetting ScrollInfo = ToggleSetting.Create(
