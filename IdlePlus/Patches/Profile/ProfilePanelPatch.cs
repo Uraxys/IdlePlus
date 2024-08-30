@@ -24,7 +24,7 @@ namespace IdlePlus.Patches.Profile {
 			if (!ModSettings.Features.TotalWealth.Value) return;
 			IdleAPI.OnMarketPricesFetched += OnMarketPricesFetched;
 		}
-        
+		
 		[Initialize(OnSceneLoad = Scenes.MainMenu)]
 		private static void Initialize() {
 			if (!ModSettings.Features.TotalWealth.Value) return;
@@ -67,69 +67,69 @@ namespace IdlePlus.Patches.Profile {
 			var text = _totalWealth.Use<TextMeshProUGUI>();
 
 			if (!IdleAPI.IsInitialized()) {
-            	text.text = "Total Wealth: ...";
-            	return;
-            }
+				text.text = "Total Wealth: ...";
+				return;
+			}
 
 			// If we're using vendor value instead of market value.
 			var vendorValue = ModSettings.Features.TotalWealthVendorValue.Value;
 			
-            // Calculate total wealth.
-            var inventory = PlayerData.Instance.Inventory;
-            var equipment = PlayerData.Instance.Equipment;
-            var marketPrices = IdleAPI.MarketPrices;
-            var wealth = 0L;
+			// Calculate total wealth.
+			var inventory = PlayerData.Instance.Inventory;
+			var equipment = PlayerData.Instance.Equipment;
+			var marketPrices = IdleAPI.MarketPrices;
+			var wealth = 0L;
 
-            // Gold
-            wealth += (long) inventory.Gold;
-            
-            // Inventory
-            if (inventory.InventoryItems == null) return;
-            foreach (var inventoryItem in inventory.InventoryItems) {
-            	var item = inventoryItem.Item;
-            	var amount = inventoryItem.ItemAmount;
-            	if (item == null || amount <= 0) continue;
-            
-            	if (vendorValue || !marketPrices.TryGetValue(item.ItemId, out var price)) {
-            		if (item.CanNotBeSoldToGameShop) continue;
-            		wealth += (long) item.BaseValue * amount;
-            		continue;
-            	}
-            	
-            	var value = price.GetPriceDependingOnSetting();
-            	if (value == -1) {
-            		if (item.CanNotBeSoldToGameShop) continue;
-            		value = item.BaseValue;
-            	}
-            	wealth += (long) value * amount;
-            }
-            
-            // Equipment
-            if (equipment._equippedItems == null) return;
-            foreach (var entry in equipment._equippedItems) {
-            	var slot = entry.Key;
-            	var item = entry.Value;
-            	if (item == null) continue;
+			// Gold
+			wealth += (long) inventory.Gold;
+			
+			// Inventory
+			if (inventory.InventoryItems == null) return;
+			foreach (var inventoryItem in inventory.InventoryItems) {
+				var item = inventoryItem.Item;
+				var amount = inventoryItem.ItemAmount;
+				if (item == null || amount <= 0) continue;
+			
+				if (vendorValue || !marketPrices.TryGetValue(item.ItemId, out var price)) {
+					if (item.CanNotBeSoldToGameShop) continue;
+					wealth += (long) item.BaseValue * amount;
+					continue;
+				}
+				
+				var value = price.GetPriceDependingOnSetting();
+				if (value == -1) {
+					if (item.CanNotBeSoldToGameShop) continue;
+					value = item.BaseValue;
+				}
+				wealth += (long) value * amount;
+			}
+			
+			// Equipment
+			if (equipment._equippedItems == null) return;
+			foreach (var entry in equipment._equippedItems) {
+				var slot = entry.Key;
+				var item = entry.Value;
+				if (item == null) continue;
 
-            	var multiplier = 1;
-            	if (slot == EquipmentSlot.Ammunition) multiplier = equipment._equippedAmmunitionAmount;
-            	
-            	if (vendorValue || !marketPrices.TryGetValue(item.ItemId, out var price)) {
-            		if (item.CanNotBeSoldToGameShop) continue;
-            		wealth += item.BaseValue * multiplier;
-            		continue;
-            	}
-            	
-            	var value = price.GetPriceDependingOnSetting();
-            	if (value == -1) {
-            		if (item.CanNotBeSoldToGameShop) continue;
-            		value = item.BaseValue;
-            	}
-            	wealth += value * multiplier;
-            }
-        
-            // And the total wealth is...
-            text.text = $"Total Wealth: {Numbers.Format(wealth)}";
+				var multiplier = 1;
+				if (slot == EquipmentSlot.Ammunition) multiplier = equipment._equippedAmmunitionAmount;
+				
+				if (vendorValue || !marketPrices.TryGetValue(item.ItemId, out var price)) {
+					if (item.CanNotBeSoldToGameShop) continue;
+					wealth += item.BaseValue * multiplier;
+					continue;
+				}
+				
+				var value = price.GetPriceDependingOnSetting();
+				if (value == -1) {
+					if (item.CanNotBeSoldToGameShop) continue;
+					value = item.BaseValue;
+				}
+				wealth += value * multiplier;
+			}
+		
+			// And the total wealth is...
+			text.text = $"Total Wealth: {Numbers.Format(wealth)}";
 		}
 	}
 }

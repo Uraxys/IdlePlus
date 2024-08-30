@@ -90,6 +90,9 @@
         <Reference Include="Newtonsoft.Json">
           <HintPath>..\libs\interop\Newtonsoft.Json.dll</HintPath>
         </Reference>
+        <Reference Include="PlayFab">
+          <HintPath>..\libs\interop\PlayFab.dll</HintPath>
+        </Reference>
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
