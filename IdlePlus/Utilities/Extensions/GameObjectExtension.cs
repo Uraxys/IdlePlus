@@ -81,6 +81,10 @@ namespace IdlePlus.Utilities.Extensions {
 		#endregion
 		
 		// Ehh, still not sure, it feels good, but not sure if it'll be more or less readable.
+
+		public static T With<T>(this Transform transform, Action<T> action = null) where T : Component {
+			return With<T>(transform.gameObject, action);
+		}
 		
 		/// <summary>
 		/// Get or add a component to a GameObject and perform an action on it.

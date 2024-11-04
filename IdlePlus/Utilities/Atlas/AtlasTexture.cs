@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
 namespace IdlePlus.Utilities.Atlas {
 	public class AtlasTexture {
 
-		private static Color[] _cachedDefaultTexture;
+		private static Il2CppStructArray<Color> _cachedDefaultTexture;
 
 		public readonly Texture2D Texture;
 		public readonly Dictionary<string, Rectangle> Sources = new Dictionary<string, Rectangle>();
