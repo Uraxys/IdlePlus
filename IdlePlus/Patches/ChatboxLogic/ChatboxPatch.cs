@@ -1,5 +1,6 @@
 using ChatboxLogic;
 using HarmonyLib;
+using IdlePlus.Command;
 using IdlePlus.TexturePack;
 using IdlePlus.Utilities.Extensions;
 using UnityEngine;
@@ -8,6 +9,17 @@ namespace IdlePlus.Patches.ChatboxLogic {
 	
 	[HarmonyPatch(typeof(Chatbox))]
 	public class ChatboxPatch {
+		
+		[HarmonyPrefix]
+		[HarmonyPatch(nameof(Chatbox.SendMessageToServer))]
+		private static bool PrefixSendMessageToServer(Chatbox __instance) {
+			var message = __instance._inputField.text;
+			var result = CommandManager.Handle(message);
+
+			if (!result) return true;
+			__instance._inputField.text = "";
+			return false;
+		}
 		
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(Chatbox.InsertMessageIntoChatbox))]

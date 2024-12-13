@@ -135,6 +135,9 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Command\Commands\TestCommand.cs" />
+        <Compile Include="Command\WrappedCommand.cs" />
+        <Compile Include="Command\CommandManager.cs" />
         <Compile Include="IdleClansAPI\IdleAPI.cs" />
         <Compile Include="IdleClansAPI\MarketEntry.cs" />
         <Compile Include="IdlePlus.cs" />

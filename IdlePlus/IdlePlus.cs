@@ -7,6 +7,7 @@ using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Client;
 using HarmonyLib;
+using IdlePlus.Command;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Settings;
 using IdlePlus.TexturePack;
@@ -48,6 +49,7 @@ namespace IdlePlus {
 			
 			TexturePackManager.Load();
 			ModSettings.Load();
+			CommandManager.Load();
 			RegisterIl2CppTypes();
 			LoadInitializeMethods();
 			IdlePlusBehaviour.Create();
