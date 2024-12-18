@@ -135,82 +135,21 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Command\Commands\TestCommand.cs" />
-        <Compile Include="Command\WrappedCommand.cs" />
-        <Compile Include="Command\CommandManager.cs" />
-        <Compile Include="IdleClansAPI\IdleAPI.cs" />
-        <Compile Include="IdleClansAPI\MarketEntry.cs" />
-        <Compile Include="IdlePlus.cs" />
-        <Compile Include="IdlePlusBehaviour.cs" />
-        <Compile Include="Patches\AdsViewPopupPatch.cs" />
-        <Compile Include="Patches\ChatboxLogic\ChatboxPatch.cs" />
-        <Compile Include="Patches\Combat\CombatActiveStaticPopupPatch.cs" />
-        <Compile Include="Patches\Combat\CombatEnemyPanelEntryPatch.cs" />
-        <Compile Include="Patches\Guilds\GuildMemberEntryPatch.cs" />
-        <Compile Include="Patches\HotItemEntryPatch.cs" />
-        <Compile Include="Patches\Equipment\UIEquipmentBonusesPatch.cs" />
-        <Compile Include="Patches\ItemPatch.cs" />
-        <Compile Include="Patches\PlayerDataPatch.cs" />
-        <Compile Include="Patches\GeneralPatches.cs" />
-        <Compile Include="Patches\PlayerMarketOfferPatch.cs" />
-        <Compile Include="Patches\Popups\InventoryItemHoverPopupPatch.cs" />
-        <Compile Include="Patches\Popups\InventoryItemInteractionPopupPatch.cs" />
-        <Compile Include="Patches\Popups\ItemInfoPopupPatch.cs" />
-        <Compile Include="Patches\Popups\SettingsPopupPatch.cs" />
-        <Compile Include="Patches\Popups\ViewPlayerMarketOfferPopupPatch.cs" />
-        <Compile Include="Patches\Profile\ProfilePanelPatch.cs" />
-        <Compile Include="Patches\Tasks\UITaskCombatPatch.cs" />
+        <!-- Libraries -->
+        <Compile Include="Libraries\Brigadier.NET\**\*.cs">
+            <Link>Brigadier.NET\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Compile>
+        
+        <!-- Source -->
+        <Compile Include="src\**\*.cs" />
+        
+        <!-- Properties -->
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Settings\ModSettings.cs" />
-        <Compile Include="Settings\SettingCategory.cs" />
-        <Compile Include="Settings\Types\DropdownSetting.cs" />
-        <Compile Include="Settings\Types\Setting.cs" />
-        <Compile Include="Settings\Types\StringDropdownSetting.cs" />
-        <Compile Include="Settings\Types\ToggleSetting.cs" />
-        <Compile Include="Settings\Unity\DropdownSettingsEntry.cs" />
-        <Compile Include="Settings\Unity\SettingsPopupIdlePlusTab.cs" />
-        <Compile Include="Settings\Unity\SettingsSection.cs" />
-        <Compile Include="Settings\Unity\ToggleSettingsEntry.cs" />
-        <Compile Include="TexturePack\PackMeta.cs" />
-        <Compile Include="TexturePack\TexturePack.cs" />
-        <Compile Include="TexturePack\TexturePackManager.cs" />
-        <Compile Include="Unity\DebugRender.cs" />
-        <Compile Include="Unity\IdlePlusDropdown.cs" />
-        <Compile Include="Unity\HotItemButton.cs" />
-        <Compile Include="Unity\Items\EquipmentStatsInfo.cs" />
-        <Compile Include="Unity\Items\ScrollInfo.cs" />
-        <Compile Include="Unity\MatchParentSize.cs" />
-        <Compile Include="Utilities\AssetLoader.cs" />
-        <Compile Include="Utilities\Atlas\Atlas.cs" />
-        <Compile Include="Utilities\Atlas\AtlasGenerator.cs" />
-        <Compile Include="Utilities\Atlas\AtlasTexture.cs" />
-        <Compile Include="Utilities\Atlas\AtlasTextureEntry.cs" />
-        <Compile Include="Utilities\Atlas\ImageNode.cs" />
-        <Compile Include="Utilities\Atlas\Rectangle.cs" />
-        <Compile Include="Utilities\Attributes\Initialize.cs" />
-        <Compile Include="Utilities\Attributes\InitializeOnce.cs" />
-        <Compile Include="Utilities\Attributes\RegisterIl2Cpp.cs" />
-        <Compile Include="Utilities\Extensions\ComponentExtension.cs" />
-        <Compile Include="Utilities\Extensions\DictionaryExtension.cs" />
-        <Compile Include="Utilities\Extensions\GameObjectExtension.cs" />
-        <Compile Include="Utilities\Extensions\ListExtension.cs" />
-        <Compile Include="Utilities\Extensions\UnityEventExtension.cs" />
-        <Compile Include="Utilities\Extensions\UnityUIExtension.cs" />
-        <Compile Include="Utilities\GameObjects.cs" />
-        <Compile Include="Utilities\Helpers\CollectionHelper.cs" />
-        <Compile Include="Utilities\Helpers\PopupHelper.cs" />
-        <Compile Include="Utilities\Helpers\UiHelper.cs" />
-        <Compile Include="Utilities\IdleAssets.cs" />
-        <Compile Include="Utilities\IdleLog.cs" />
-        <Compile Include="Utilities\IdleTasks.cs" />
-        <Compile Include="Utilities\InitPriority.cs" />
-        <Compile Include="Utilities\ModLocalization.cs" />
-        <Compile Include="Utilities\Numbers.cs" />
-        <Compile Include="Utilities\Profiler.cs" />
-        <Compile Include="Utilities\RandomUtils.cs" />
-        <Compile Include="Utilities\Scenes.cs" />
-        <Compile Include="Utilities\Vec2.cs" />
-        <Compile Include="Utilities\Vec3.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Libraries\Brigadier.NET\.editorconfig">
+        <Link>Brigadier.NET\.editorconfig</Link>
+      </Content>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 
