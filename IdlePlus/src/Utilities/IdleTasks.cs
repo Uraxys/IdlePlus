@@ -90,7 +90,7 @@ namespace IdlePlus.Utilities {
 			private readonly Action _action;
 			private readonly float _interval;
 			private readonly int _frameStart;
-			
+
 			private float _time;
 			private float _delay;
 			private bool _cancelled;
@@ -98,6 +98,7 @@ namespace IdlePlus.Utilities {
 			public IdleTask(Action<IdleTask> taskAction, float delay, float interval) {
 				_taskAction = taskAction;
 				_action = null;
+				_delay = delay;
 				_interval = interval;
 				_frameStart = Time.frameCount;
 			}

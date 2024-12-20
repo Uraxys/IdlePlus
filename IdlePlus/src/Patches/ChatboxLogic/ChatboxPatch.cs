@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ChatboxLogic;
-using Crosstales;
 using HarmonyLib;
 using IdlePlus.Command;
 using IdlePlus.Settings;
@@ -15,8 +13,6 @@ using IdlePlus.Utilities.Extensions;
 using Il2CppSystem.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UI.ProceduralImage;
 using Random = System.Random;
 
 namespace IdlePlus.Patches.ChatboxLogic {

@@ -24,6 +24,7 @@ namespace IdlePlus.Command.ArgumentTypes {
 		}
 		
 		private static void CacheSortItems() {
+			if (ItemDatabase.ItemList == null) return;
 			if (_sortedItems != null) return;
 			_sortedItems = new Trie(true);
 			_itemMap = new Dictionary<string, Item>();
@@ -35,10 +36,10 @@ namespace IdlePlus.Command.ArgumentTypes {
 
 		private ItemArgument(int max) {
 			this._max = max;
-			CacheSortItems();
 		}
 
 		public override Item Parse(IStringReader reader) {
+			CacheSortItems();
 			var name = reader.ReadUnquotedString();
 			var result = _sortedItems.ExactMatch(name);
 			if (result != null) return _itemMap[result];
@@ -47,6 +48,7 @@ namespace IdlePlus.Command.ArgumentTypes {
 
 		public override Task<Suggestions> ListSuggestions<TSource>(CommandContext<TSource> context, SuggestionsBuilder builder) {
 			return Task.Run(() => {
+				CacheSortItems();
 				var result = _sortedItems.Search(builder.RemainingLowerCase);
 				foreach (var item in result) {
 					builder.Suggest(item);

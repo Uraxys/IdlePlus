@@ -14,7 +14,9 @@ using IdlePlus.TexturePack;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Attributes;
 using Il2CppInterop.Runtime.Injection;
+using Player;
 using PlayerMarket;
+using Profile;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
@@ -35,6 +37,8 @@ namespace IdlePlus {
 			             ;
 #endif
 		
+		public static IntPtr WindowHandle = IntPtr.Zero;
+
 		private static bool _initializedOnce;
 		
 		private static List<MethodInfo> _initializeOnceMethods;
@@ -279,6 +283,30 @@ namespace IdlePlus {
 			
 			watch.Stop();
 			IdleLog.Info($"Ran Initialize in {watch.ElapsedMilliseconds}ms");
+		}
+		
+		// Simple implementation to detect when going back to the main menu / back in game.
+
+		[Initialize(OnSceneLoad = Scenes.Game)]
+		private static void OnGameScene() {
+			IdleTasks.Run(() => {
+				var playerName = PlayerData.Instance?.Username ?? "Null/Name";
+
+				// Update the window title to display the current player name.
+				// NOTE: Only works on windows.
+				if (WindowHandle != IntPtr.Zero) {
+					WindowUtils.SetWindowText(WindowHandle, $"Idle Clans - {playerName}");
+				}
+			});
+		}
+		
+		[Initialize(OnSceneLoad = Scenes.MainMenu)]
+		private static void OnMainMenuScene() {
+			// Update the window title to display the mod name.
+			// NOTE: Only works on windows.
+			if (WindowHandle != IntPtr.Zero) {
+				WindowUtils.SetWindowText(WindowHandle, "Idle Clans");
+			}
 		}
 	}
 }
