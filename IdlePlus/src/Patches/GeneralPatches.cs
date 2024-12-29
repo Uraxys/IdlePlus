@@ -1,7 +1,7 @@
 using HarmonyLib;
+using IdlePlus.Attributes;
 using IdlePlus.Settings;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using Player;
 using TMPro;
 

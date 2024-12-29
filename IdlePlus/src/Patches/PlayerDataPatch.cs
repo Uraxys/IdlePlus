@@ -1,6 +1,6 @@
-using System;
 using HarmonyLib;
-using IdlePlus.Utilities;
+using IdlePlus.API.Event;
+using IdlePlus.API.Event.Contexts;
 using Player;
 
 namespace IdlePlus.Patches {
@@ -11,16 +11,10 @@ namespace IdlePlus.Patches {
 	[HarmonyPatch(typeof(PlayerData))]
 	public class PlayerDataPatch {
 		
-		// TODO: Switch back to using HarmonyPostfix when the vanilla bug is fixed.
-		[HarmonyPrefix]
+		[HarmonyPostfix]
 		[HarmonyPatch(nameof(PlayerData.Start))]
-		public static void PrefixStart() {
-			try {
-				IdleLog.Info("Player has logged in.");
-				IdlePlus.OnLogin();
-			} catch (Exception e) {
-				IdleLog.Error("Error in PlayerDataPatch.PrefixStart.", e);
-			}
+		public static void PostfixStart(PlayerData __instance) {
+			Events.Player.OnLogin.Call(new PlayerLoginContext(__instance));
 		}
 	}
 }

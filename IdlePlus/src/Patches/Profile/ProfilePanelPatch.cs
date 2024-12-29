@@ -1,10 +1,11 @@
 using System;
 using Equipment;
 using HarmonyLib;
+using IdlePlus.API.Utility;
+using IdlePlus.Attributes;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Settings;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Player;
 using Profile;

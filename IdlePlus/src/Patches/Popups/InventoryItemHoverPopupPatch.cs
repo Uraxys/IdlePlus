@@ -1,10 +1,10 @@
 using Databases;
 using HarmonyLib;
+using IdlePlus.Attributes;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Settings;
 using IdlePlus.Unity.Items;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Player;
 using Popups;

@@ -1,4 +1,4 @@
-namespace IdlePlus.Utilities {
+namespace IdlePlus.API.Utility {
 	public static class Scenes {
 		
 		public const string Game = "Game";

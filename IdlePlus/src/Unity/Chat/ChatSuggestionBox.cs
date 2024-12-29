@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Brigadier.NET.Suggestion;
 using HarmonyLib;
+using IdlePlus.Attributes;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using TMPro;
 using UnityEngine;

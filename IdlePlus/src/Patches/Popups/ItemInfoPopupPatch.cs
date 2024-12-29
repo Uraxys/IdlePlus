@@ -1,9 +1,9 @@
 using Databases;
 using HarmonyLib;
+using IdlePlus.Attributes;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Settings;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using Player;
 using Popups;
 using TMPro;

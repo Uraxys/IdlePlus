@@ -1,9 +1,10 @@
 using Equipment;
 using HarmonyLib;
+using IdlePlus.API.Utility;
+using IdlePlus.Attributes;
 using IdlePlus.Settings;
 using IdlePlus.Unity;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Player;
 using TMPro;

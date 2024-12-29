@@ -1,7 +1,7 @@
 using ButtonAnimations;
 using Databases;
+using IdlePlus.Attributes;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using PlayerMarket;
 using UnityEngine;
 using UnityEngine.Events;

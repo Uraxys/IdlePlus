@@ -1,5 +1,5 @@
 using Crosstales;
-using IdlePlus.Utilities.Attributes;
+using IdlePlus.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Lean.Gui;
 using Localizations;

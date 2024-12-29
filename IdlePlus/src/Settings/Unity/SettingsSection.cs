@@ -1,5 +1,5 @@
+using IdlePlus.Attributes;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using IdlePlus.Utilities.Helpers;
 using TMPro;

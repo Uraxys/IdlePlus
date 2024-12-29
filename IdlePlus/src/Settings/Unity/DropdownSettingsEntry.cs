@@ -1,6 +1,6 @@
+using IdlePlus.Attributes;
 using IdlePlus.Settings.Types;
 using IdlePlus.Unity;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using TMPro;
 using UnityEngine;

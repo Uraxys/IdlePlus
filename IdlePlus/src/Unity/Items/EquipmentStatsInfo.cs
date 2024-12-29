@@ -1,7 +1,7 @@
 using Databases;
 using Equipment;
+using IdlePlus.Attributes;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using IdlePlus.Utilities.Extensions;
 using Player;
 using Skilling;

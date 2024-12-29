@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics;
+using IdlePlus.API.Event;
+using IdlePlus.API.Utility;
+using IdlePlus.Attributes;
 using IdlePlus.Utilities;
-using IdlePlus.Utilities.Attributes;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -26,7 +28,8 @@ namespace IdlePlus {
 		}
 
 		public void Update() {
-			IdlePlus.Update();
+			// Tick tasks.
+			IdleTasks.Tick();
 			
 			// I hate Unity, I really do, the pain of some things, in my other engines I have
 			// implemented these easy methods, just change the window title, maybe the icon, or
@@ -38,9 +41,12 @@ namespace IdlePlus {
 				var title = Process.GetCurrentProcess().MainWindowTitle;
 				var handle = Process.GetCurrentProcess().MainWindowHandle;
 
-				if (!title.StartsWith("BepInEx")) {
+				if (title.StartsWith("Idle Clans") && !title.Contains("BepInEx")) {
 					IdlePlus.WindowHandle = handle;
 					IdleLog.Info($"Found main Unity window handle! title: '{title}', handle: 0x{handle.ToInt32():X8}");
+				}
+				else {
+					IdleLog.Info($"Found title: '{title}', handle: 0x{handle.ToInt32():X8}");
 				}
 			}
 			
@@ -51,7 +57,15 @@ namespace IdlePlus {
 		}
 
 		public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-			IdlePlus.OnSceneLoaded(scene, mode);
+			GameObjects.InitializeCache();
+			InitializeAttributeHandler.Initialize(scene.name);
+			InitializeOnceAttributeHandler.InitializeOnce(scene.name);
+
+			// Call the scene loaded event.
+			switch (scene.name) {
+				case Scenes.MainMenu: Events.Scene.OnLobby.Call(); break;
+				case Scenes.Game: Events.Scene.OnGame.Call(); break;
+			}
 		}
 	}
 }
