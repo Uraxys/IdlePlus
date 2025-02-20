@@ -17,7 +17,7 @@ namespace IdlePlus.Settings {
 		// Features category
 		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
 			Features.TotalWealth, Features.TotalWealthVendorValue, Features.ScrollInfo, 
-			Features.EquipmentStatsInfo, Features.MaxOpenableChests, Features.PotionTime);
+			Features.EquipmentStatsInfo, Features.PotionTime);
         
 		// Feature settings
 		public static class Features {
@@ -42,12 +42,6 @@ namespace IdlePlus.Settings {
 			public static readonly ToggleSetting EquipmentStatsInfo = ToggleSetting.Create(
 				"feature_equipmentStatsInfo",
 				"Equipment displays their stat differences if equipped.",
-				true
-			);
-			
-			public static readonly ToggleSetting MaxOpenableChests = ToggleSetting.Create(
-				"feature_maxOpenableChests",
-				"Pressing 'Max' selects the maximum amount of treasure chests you can open at once.",
 				true
 			);
 
