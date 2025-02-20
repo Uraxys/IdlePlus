@@ -19,7 +19,7 @@ namespace IdlePlus.Attributes {
 		private static List<MethodInfo> _initializeMethods;
 		private static Dictionary<MethodInfo, string> _initializeMethodsOnScene;
 		
-		public static void Load() {
+		internal static void Load() {
 			if (_loaded) throw new InvalidOperationException("Initialize methods have already been loaded!");
 			_loaded = true;
 			

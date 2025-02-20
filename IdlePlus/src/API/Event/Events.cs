@@ -30,7 +30,17 @@ namespace IdlePlus.API.Event {
 			/// <summary>
 			/// Called after the player has logged in and is in the game scene.
 			/// </summary>
-			public static readonly EventAction<PlayerLoginContext> OnLogin = new EventAction<PlayerLoginContext>("OnLogin");
+			public static readonly EventAction<PlayerLoginEventContext> OnLogin = new EventAction<PlayerLoginEventContext>("OnLogin");
+		}
+
+		/// <summary>
+		/// Chat events.
+		/// </summary>
+		public static class Chat {
+			/// <summary>
+			/// Called when a chat message has been received from the chat server.
+			/// </summary>
+			public static readonly EventAction<ChatMessageEventContext> OnMessage = new EventAction<ChatMessageEventContext>("OnMessage");
 		}
 	}
 	

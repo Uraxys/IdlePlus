@@ -66,7 +66,7 @@ namespace IdlePlus {
 			IdleLog.Info($"Idle Plus v{ModVersion} loaded!");
 		}
 		
-		private static void OnLogin(PlayerLoginContext ctx) {
+		private static void OnLogin(PlayerLoginEventContext ctx) {
 			// Do one time initialization for objects that are only created once.
 			InitializeOnceAttributeHandler.InitializeOnce();
 			

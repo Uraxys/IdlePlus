@@ -1,9 +1,9 @@
 using Player;
 
 namespace IdlePlus.API.Event.Contexts {
-	public class PlayerLoginContext : EventContext {
+	public class PlayerLoginEventContext : EventContext {
 		public PlayerData PlayerData { get; }
-		public PlayerLoginContext(PlayerData playerData) {
+		public PlayerLoginEventContext(PlayerData playerData) {
 			this.PlayerData = playerData;
 		}
 	}

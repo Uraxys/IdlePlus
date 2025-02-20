@@ -14,7 +14,7 @@ namespace IdlePlus.Patches {
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(PlayerData.Start))]
 		public static void PostfixStart(PlayerData __instance) {
-			Events.Player.OnLogin.Call(new PlayerLoginContext(__instance));
+			Events.Player.OnLogin.Call(new PlayerLoginEventContext(__instance));
 		}
 	}
 }

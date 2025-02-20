@@ -21,7 +21,7 @@ namespace IdlePlus.Attributes {
 
 		private static bool _registered;
 
-		public static void Register() {
+		internal static void Register() {
 			if (_registered) throw new InvalidOperationException("RegisterIl2Cpp has already been called!");
 			_registered = true;
 			

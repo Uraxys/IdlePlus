@@ -31,9 +31,9 @@ namespace IdlePlus.Command.ArgumentTypes {
 			});
 			
 			// Add usernames to the known names list.
-			/*Events.Chat.OnMessage.Register(context => {
-				AddKnownUsername(context.sender);
-			});*/
+			Events.Chat.OnMessage.Register(context => {
+				AddKnownUsername(context.Sender);
+			});
 		}
 
 		internal static void AddKnownUsername(string username) {
