@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using IdlePlus.API.Event;
 using IdlePlus.API.Popup;
+using IdlePlus.API.Popup.Popups;
 using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Utilities;
@@ -54,8 +55,7 @@ namespace IdlePlus {
 			
 			// Used for testing.
 			/*if (Input.GetKeyDown(KeyCode.Space)) {
-				var popup = PopupManager.Instance.SetupHardPopup((HardPopup)TestPopup.TEST_POPUP).Cast<TestPopup>();
-				IdleLog.Info($"Popup?: {popup}");
+				var popup = CustomPopupManager.Setup<TestPopupTwo>(TestPopupTwo.Popup);
 				popup.Setup();
 			}*/
 		}

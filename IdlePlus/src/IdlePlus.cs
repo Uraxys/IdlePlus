@@ -5,6 +5,8 @@ using Client;
 using HarmonyLib;
 using IdlePlus.API.Event;
 using IdlePlus.API.Event.Contexts;
+using IdlePlus.API.Popup;
+using IdlePlus.API.Popup.Popups;
 using IdlePlus.Attributes;
 using IdlePlus.Command;
 using IdlePlus.IdleClansAPI;
@@ -56,6 +58,9 @@ namespace IdlePlus {
 			// Events
 			Events.Scene.OnLobby.Register(OnSceneLobby);
 			Events.Player.OnLogin.Register(OnLogin);
+			
+			// Popup testing
+			CustomPopupManager.OnRegister(TestPopupTwo.CreateTestPopupTwo);
 			
 			// Create the market prices update task.
 			IdleTasks.Repeat(0, 60, task => {
