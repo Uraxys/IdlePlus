@@ -2,12 +2,10 @@
 
 namespace Brigadier.NET.Builder
 {
-	public static class LiteralArgumentBuilderExtensions
-{
-	// ReSharper disable once UnusedParameter.Global
-	// context is used to infer generic parameters in API
-	public static LiteralArgumentBuilder<TSource> Literal<TSource>(this IArgumentContext<TSource> context, string name)
-		{
+	public static class LiteralArgumentBuilderExtensions {
+		// ReSharper disable once UnusedParameter.Global
+		// context is used to infer generic parameters in API
+		public static LiteralArgumentBuilder<TSource> Literal<TSource>(this IArgumentContext<TSource> context, string name) {
 			return new LiteralArgumentBuilder<TSource>(name);
 		}
 	}

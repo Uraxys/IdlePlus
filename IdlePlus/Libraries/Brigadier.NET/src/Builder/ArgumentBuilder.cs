@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Brigadier.NET.Context;
 using Brigadier.NET.Tree;
 
 namespace Brigadier.NET.Builder
@@ -54,6 +55,14 @@ namespace Brigadier.NET.Builder
 		public TThis Executes(Command<TSource> command)
 		{
 			Command = command;
+			return This;
+		}
+
+		public TThis Executes(Action<CommandContext<TSource>> command) {
+			Command = context => {
+				command.Invoke(context);
+				return 1;
+			};
 			return This;
 		}
 

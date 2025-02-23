@@ -43,10 +43,10 @@ namespace IdlePlus {
 
 				if (title.StartsWith("Idle Clans") && !title.Contains("BepInEx")) {
 					IdlePlus.WindowHandle = handle;
-					IdleLog.Info($"Found main Unity window handle! title: '{title}', handle: 0x{handle.ToInt32():X8}");
+					//IdleLog.Info($"Found main Unity window handle! title: '{title}', handle: 0x{handle.ToInt32():X8}");
 				}
 				else {
-					IdleLog.Info($"Found title: '{title}', handle: 0x{handle.ToInt32():X8}");
+					//IdleLog.Info($"Found title: '{title}', handle: 0x{handle.ToInt32():X8}");
 				}
 			}
 			

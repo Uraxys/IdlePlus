@@ -46,6 +46,8 @@ namespace IdlePlus.Command {
 		public static void Load() {
 			Register(typeof(TestCommand));
 
+			_dispatcher.Register(DevelopmentCommand.Register());
+			
 			_dispatcher.Register(a =>
 				a.Literal("run").Executes(context => {
 					IdleLog.Info("Run executed.");
@@ -324,9 +326,5 @@ namespace IdlePlus.Command {
 		public int UsageStartIndex;
 		public List<string> Usage;
 		public Suggestions Suggestions;
-	}
-	
-	public class CommandSender {
-		
 	}
 }
