@@ -48,14 +48,14 @@ namespace IdlePlus {
 					IdlePlus.WindowHandle = handle;
 					//IdleLog.Info($"Found main Unity window handle! title: '{title}', handle: 0x{handle.ToInt32():X8}");
 				}
-				else {
+				/*else {
 					//IdleLog.Info($"Found title: '{title}', handle: 0x{handle.ToInt32():X8}");
-				}
+				}*/
 			}
 			
 			// Used for testing.
-			/*if (Input.GetKeyDown(KeyCode.Space)) {
-				var popup = CustomPopupManager.Setup<TestPopupTwo>(TestPopupTwo.Popup);
+			/*if (Input.GetKeyDown(KeyCode.F12)) {
+				var popup = CustomPopupManager.Setup<TestPopupTwo>(TestPopupTwo.PopupKey);
 				popup.Setup();
 			}*/
 		}

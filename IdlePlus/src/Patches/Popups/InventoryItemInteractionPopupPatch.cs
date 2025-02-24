@@ -1,5 +1,6 @@
 using HarmonyLib;
 using IdlePlus.API.Utility;
+using IdlePlus.API.Utility.Game;
 using IdlePlus.Attributes;
 using IdlePlus.Settings;
 using IdlePlus.Utilities;

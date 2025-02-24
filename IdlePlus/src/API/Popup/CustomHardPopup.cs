@@ -1,12 +1,10 @@
 using System;
-using IdlePlus.Attributes;
-using Il2CppInterop.Runtime.Attributes;
-using Popups;
 using UnityEngine;
 
 namespace IdlePlus.API.Popup {
 	public abstract class CustomHardPopup : MonoBehaviour {
-		
+
+		internal PopupKey InternalKey;
 		internal InternalPopup InternalPopup;
 		
 		/// <summary>
@@ -32,44 +30,14 @@ namespace IdlePlus.API.Popup {
 		public virtual float Animation => 0.1f;
 		
 		/// <summary>
-		/// Called when this CustomHardPopup is being registered and moved to
-		/// the correct position in the hierarchy.
-		/// </summary>
-		public virtual void OnRegister() {}
-		
-		/// <summary>
 		/// Called when the popup is closed.
 		/// </summary>
 		public virtual void OnClose() {}
 
-		public void Display() {
+		protected void Display() {
+			if (this.InternalPopup == null) throw new Exception("Popup isn't registered.");
 			this.InternalPopup.Show();
 		}
 
-	}
-	
-	[RegisterIl2Cpp]
-	internal class InternalPopup : BaseHardPopup {
-
-		internal CustomHardPopup CustomPopup;
-
-		public InternalPopup(IntPtr pointer) : base(pointer) { }
-
-		[HideFromIl2Cpp]
-		internal void Initialize(CustomHardPopup popup, PopupKey key) {
-			this.CustomPopup = popup;
-			this.CustomPopup.InternalPopup = this;
-			// BaseHardPopup settings.
-			_popup = (HardPopup) key.Key;
-			_useBlockingBackground = this.CustomPopup.BlockingBackground || this.CustomPopup.CloseWithBackground;
-			
-			CanCloseWithEsc = this.CustomPopup.CloseWithEsc;
-			CloseFromBackgroundClick = this.CustomPopup.CloseWithBackground;
-			CanCloseAtAll = this.CustomPopup.CloseWithEsc || this.CustomPopup.CloseWithBackground;
-
-			_animationTime = this.CustomPopup.Animation;
-			_doHideAnimation = this.CustomPopup.Animation > 0f;
-			OnClose += (Action) delegate { this.CustomPopup.OnClose(); };
-		}
 	}
 }

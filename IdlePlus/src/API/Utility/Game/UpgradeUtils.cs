@@ -1,7 +1,7 @@
 using Guilds;
 using Upgrades;
 
-namespace IdlePlus.API.Utility {
+namespace IdlePlus.API.Utility.Game {
 	public static class UpgradeUtils {
 		
 		/// <summary>

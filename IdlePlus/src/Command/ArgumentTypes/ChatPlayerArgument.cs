@@ -9,6 +9,7 @@ using Brigadier.NET.Exceptions;
 using Brigadier.NET.Suggestion;
 using IdlePlus.API.Event;
 using IdlePlus.API.Utility;
+using IdlePlus.API.Utility.Game;
 using IdlePlus.Attributes;
 
 namespace IdlePlus.Command.ArgumentTypes {

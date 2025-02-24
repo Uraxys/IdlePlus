@@ -7,6 +7,7 @@ using IdlePlus.API.Event;
 using IdlePlus.API.Event.Contexts;
 using IdlePlus.API.Popup;
 using IdlePlus.API.Popup.Popups;
+using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Command;
 using IdlePlus.IdleClansAPI;
@@ -60,7 +61,7 @@ namespace IdlePlus {
 			Events.Player.OnLogin.Register(OnLogin);
 			
 			// Popup testing
-			CustomPopupManager.OnRegister(TestPopupTwo.CreateTestPopupTwo);
+			TestPopupTwo.PopupKey = CustomPopupManager.Register("IdlePlus:TestPopupTwo", TestPopupTwo.Create);
 			
 			// Create the market prices update task.
 			IdleTasks.Repeat(0, 60, task => {

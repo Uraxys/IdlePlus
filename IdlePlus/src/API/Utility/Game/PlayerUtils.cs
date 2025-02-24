@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace IdlePlus.API.Utility {
+namespace IdlePlus.API.Utility.Game {
 	public static class PlayerUtils {
 
 		/// <summary>

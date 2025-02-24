@@ -1,18 +1,33 @@
+using IdlePlus.API.Utility;
 using Popups;
 
 namespace IdlePlus.API.Popup {
 	
 	/// <summary>
-	/// An ID that is obtained after registering a CustomHardPopup, which can
-	/// then be used to display the popup.
+	/// Represents a unique identifier for a <see cref="CustomHardPopup"/>,
+	/// which can be used to easily identify the popup without relying on
+	/// workarounds.
 	/// </summary>
 	public class PopupKey {
-		
-		public readonly int Key;
-		public HardPopup Type => (HardPopup) Key;
 
-		public PopupKey(int key) {
-			Key = key;
+		/// <summary>
+		/// The <see cref="NamespacedKey"/> of this <see cref="PopupKey"/>.
+		/// </summary>
+		public readonly NamespacedKey NamespacedKey;
+		
+		/// <summary>
+		/// The internal number id of this <see cref="PopupKey"/>.
+		/// </summary>
+		public readonly int InternalId;
+		
+		/// <summary>
+		/// The <see cref="HardPopup"/> type matching the internal number id.
+		/// </summary>
+		public HardPopup Type => (HardPopup) InternalId;
+
+		internal PopupKey(NamespacedKey key, int internalId) {
+			this.NamespacedKey = key;
+			this.InternalId = internalId;
 		}
 	}
 }
