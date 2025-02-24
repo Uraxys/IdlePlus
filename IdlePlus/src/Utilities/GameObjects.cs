@@ -8,7 +8,8 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace IdlePlus.Utilities {
-	internal static class GameObjects {
+	// TODO: Refactor and move to APIs.
+	public static class GameObjects {
 		
 		private static readonly Dictionary<string, GameObject> CachedObjectPaths = new Dictionary<string, GameObject>();
 		

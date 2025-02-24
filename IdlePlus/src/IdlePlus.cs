@@ -7,7 +7,6 @@ using IdlePlus.API.Event;
 using IdlePlus.API.Event.Contexts;
 using IdlePlus.API.Popup;
 using IdlePlus.API.Popup.Popups;
-using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Command;
 using IdlePlus.IdleClansAPI;
