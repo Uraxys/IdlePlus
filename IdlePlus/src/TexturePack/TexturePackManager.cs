@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using IdlePlus.API.Event;
 using IdlePlus.Settings;
 using IdlePlus.Settings.Types;
 using IdlePlus.Utilities;
@@ -56,8 +57,11 @@ namespace IdlePlus.TexturePack {
 						CurrentPack = null;
 						return;
 					}
+					
 					CurrentPack = Instance._texturePacks.Find(pack => pack.Meta.Name == value);
 					CurrentPack?.Load();
+					
+					Events.IdlePlus.OnTexturepackLoaded.Call();
 				});
 			};
 		}

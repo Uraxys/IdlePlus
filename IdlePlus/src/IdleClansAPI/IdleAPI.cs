@@ -29,8 +29,8 @@ namespace IdlePlus.IdleClansAPI {
 		}
 		
 		public static void UpdateMarketPrices() {
-			//var start = DateTime.Now.Ticks;
-			/*IdleClansAPIManager.HttpClient.GetAsync(MarketPricesUrl)
+			var start = DateTime.Now.Ticks;
+			IdleClansAPIManager.HttpClient.GetAsync(MarketPricesUrl)
 				.ContinueWith((Action<Task>) delegate(Task t1) {
 					var webTask = new Task<HttpResponseMessage>(t1.Pointer);
 					if (webTask.ExceptionRecorded) {
@@ -77,7 +77,7 @@ namespace IdlePlus.IdleClansAPI {
 							IdleLog.Error("Failed to update market prices!", e);
 						}
 					});
-				});*/
+				});
 		}
 	}
 }

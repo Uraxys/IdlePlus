@@ -42,6 +42,16 @@ namespace IdlePlus.API.Event {
 			/// </summary>
 			public static readonly EventAction<ChatMessageEventContext> OnMessage = new EventAction<ChatMessageEventContext>("OnMessage");
 		}
+
+		/// <summary>
+		/// Idle Plus related events.
+		/// </summary>
+		public static class IdlePlus {
+			/// <summary>
+			/// Called after a texture pack has been loaded.
+			/// </summary>
+			public static readonly SimpleEventAction OnTexturepackLoaded = new SimpleEventAction("OnTexturepackLoaded");
+		}
 	}
 	
 	#region Event Action
