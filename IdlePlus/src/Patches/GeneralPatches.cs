@@ -1,3 +1,4 @@
+using ChatboxLogic;
 using HarmonyLib;
 using IdlePlus.Attributes;
 using IdlePlus.Settings;

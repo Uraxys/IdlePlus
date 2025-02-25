@@ -5,6 +5,7 @@ using IdlePlus.API.Popup;
 using IdlePlus.API.Popup.Popups;
 using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
+using IdlePlus.Unity;
 using IdlePlus.Utilities;
 using Popups;
 using UnityEngine;
@@ -58,6 +59,11 @@ namespace IdlePlus {
 				var popup = CustomPopupManager.Setup<TestPopupTwo>(TestPopupTwo.PopupKey);
 				popup.Setup();
 			}*/
+
+			/*if (Time.frameCount < DebugAwake.StartFrame + 10) {
+				var time = DebugAwake.Watch?.ElapsedMilliseconds ?? -1;
+				IdleLog.Info($"Frame: {Time.frameCount} / {time}ms");
+			}*/
 		}
 
 		public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
@@ -68,7 +74,25 @@ namespace IdlePlus {
 			// Call the scene loaded event.
 			switch (scene.name) {
 				case Scenes.MainMenu: Events.Scene.OnLobby.Call(); break;
-				case Scenes.Game: Events.Scene.OnGame.Call(); break;
+				case Scenes.Game: 
+					Events.Scene.OnGame.Call();
+
+					if (DebugAwake.Watch != null) DebugAwake.Watch.Stop();
+					DebugAwake.Watch = new Stopwatch();
+					DebugAwake.Watch.Start();
+					
+					Transform[] objs = Resources.FindObjectsOfTypeAll<Transform>();
+					foreach (var entry in objs) {
+						
+						var _name = entry.name;
+						if (entry.parent != null) _name = $"{entry.parent.name}/{_name}";
+						if (_name != "ChatButton/ChatNotification") continue;
+						
+						if (entry.gameObject.GetComponent<DebugAwake>() != null) continue;
+						entry.gameObject.AddComponent<DebugAwake>();
+					}
+					
+					break;
 			}
 		}
 	}

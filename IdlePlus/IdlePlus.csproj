@@ -93,6 +93,9 @@
         <Reference Include="PlayFab">
           <HintPath>..\libs\interop\PlayFab.dll</HintPath>
         </Reference>
+        <Reference Include="Sirenix.Serialization">
+          <HintPath>..\libs\interop\Sirenix.Serialization.dll</HintPath>
+        </Reference>
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
@@ -150,6 +153,9 @@
       <Content Include="Libraries\Brigadier.NET\.editorconfig">
         <Link>Brigadier.NET\.editorconfig</Link>
       </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="src\Features\" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 

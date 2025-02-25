@@ -19,57 +19,35 @@ using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
 
 namespace IdlePlus.Command {
-
-	public enum IdleArgs { // testing stuff
-		Word,
-		String,
-		GreedyString,
+	public static class CommandManager {
 		
-		PlayerName,
-		CachedPlayerName,
-		
-		Item,
-		Integer,
-	}
-	
-	public static class IdleArguments { // more testing stuff
-		public static readonly int WordArgument = CommandManager.RegisterArgument(typeof(StringArgumentType));
-		public static int StringArgument = CommandManager.RegisterArgument(typeof(StringArgumentType));
-		public static int GreedyStringArgument = CommandManager.RegisterArgument(typeof(StringArgumentType));
-	}
-	
-	public class CommandManager {
-
-		private static Dictionary<string, WrappedCommand> _commands = new Dictionary<string, WrappedCommand>();
-		private static CommandDispatcher<CommandSender> _dispatcher = new CommandDispatcher<CommandSender>();
+		private static readonly CommandDispatcher<CommandSender> Dispatcher = new CommandDispatcher<CommandSender>();
 		
 		public static void Load() {
-			Register(typeof(TestCommand));
-
-			_dispatcher.Register(DevelopmentCommand.Register());
+			Dispatcher.Register(DevelopmentCommand.Register());
 			
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("run").Executes(context => {
 					IdleLog.Info("Run executed.");
 					return 1;
 				})
 			);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("register").Executes(context => {
 					IdleLog.Info("Register executed.");
 					return 1;
 				})
 			);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("reset").Executes(context => {
 					IdleLog.Info("Reset executed.");
 					return 1;
 				})
 			);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("mod").Executes(context => {
 					IdleLog.Info("Mod executed.");
 					return 1;
@@ -83,7 +61,7 @@ namespace IdlePlus.Command {
 				)
 			);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("spawn")
 					.Then(b =>
 						b.Literal("item").Then(c =>
@@ -110,7 +88,7 @@ namespace IdlePlus.Command {
 					)
 				);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("test").Executes(context => {
 					IdleLog.Info("Test executed.");
 					return 1;
@@ -125,7 +103,7 @@ namespace IdlePlus.Command {
 				)
 			);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("set").Then(b =>
 					b.Literal("config").Then(c => 
 						c.Argument("key", Arguments.Word()).Executes(context => {
@@ -143,7 +121,7 @@ namespace IdlePlus.Command {
 				)
 			);
 
-			_dispatcher.Register(a =>
+			Dispatcher.Register(a =>
 				a.Literal("say").Then(b =>
 					b.Argument("message", Arguments.String()).Executes(context => {
 						IdleLog.Info("Say executed.");
@@ -153,40 +131,7 @@ namespace IdlePlus.Command {
 			);
 		}
 		
-		public static int RegisterArgument(Type type) { // testing - ignore
-			return 1;
-		}
-
-		public static void Register(Type type) { // will be removed.
-			foreach (var method in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance |
-			                                       BindingFlags.Static | BindingFlags.Public)) {
-				var info = method.GetCustomAttribute<CommandInfo>();
-				if (info == null) continue;
-
-				if (!method.IsStatic) {
-					IdleLog.Warn($"Couldn't register command {info.Name}, method isn't static!");
-					continue;
-				}
-
-				if (method.GetParameters().Length != 1 || method.GetParameters()[0].ParameterType != typeof(string[])) {
-					IdleLog.Warn($"Couldn't register command {info.Name}, method has invalid parameters!");
-					continue;
-				}
-
-				// "Register" the command.
-				var command = new WrappedCommand(method);
-
-				if (_commands.ContainsKey(command.Command))
-					IdleLog.Warn("Command {0} is already registered, overriding.", command.Command);
-				_commands.Add(command.Command, command);
-
-				foreach (var alias in command.Aliases) {
-					if (_commands.ContainsKey(alias))
-						IdleLog.Warn("Alias {0} is already registered, overriding.", alias);
-					_commands.Add(alias, command);
-				}
-			}
-		}
+		#region Internal
 
 		internal static async Task<CommandSuggestResult> HandleSuggestion(string command, int cursor, 
 			CancellationToken token) { 
@@ -200,9 +145,9 @@ namespace IdlePlus.Command {
 			var commandSender = new CommandSender();
 			
 			// Start parsing the command and getting suggestions.
-			var parsed = _dispatcher.Parse(reader, commandSender);
+			var parsed = Dispatcher.Parse(reader, commandSender);
 			token.ThrowIfCancellationRequested();
-			var suggestions = await _dispatcher.GetCompletionSuggestions(parsed, cursor);
+			var suggestions = await Dispatcher.GetCompletionSuggestions(parsed, cursor);
 			token.ThrowIfCancellationRequested();
 			
 			var resultUsageStartIndex = 0;
@@ -229,7 +174,7 @@ namespace IdlePlus.Command {
 			// If we haven't added any usage information, then try to find command suggestions.
 			if (resultUsage.IsEmpty()) {
 				var suggestionContext = parsed.Context.FindSuggestionContext(cursor);
-				var usages = _dispatcher.GetSmartUsage(suggestionContext.Parent, commandSender);
+				var usages = Dispatcher.GetSmartUsage(suggestionContext.Parent, commandSender);
 				token.ThrowIfCancellationRequested();
 				
 				var foundUsage = false;
@@ -271,48 +216,15 @@ namespace IdlePlus.Command {
 			// Custom handling.
 			
 			try {
-				var result = _dispatcher.Execute(command.Substring(1), new CommandSender());
+				var result = Dispatcher.Execute(command.Substring(1), new CommandSender());
 				IdleLog.Info("Command {0} executed with result {1}.", command, result);
 				return new CommandResult { Success = result == 1, Response = null };
 			} catch (CommandSyntaxException e) {
 				return new CommandResult { Success = false, Response = e.Message };
 			}
 		}
-	}
-
-	/*
-	 * Most, if not all, of this will be removed / changed, as most of it is WIP or
-	 * for testing.
-	 */
-	
-	[AttributeUsage(AttributeTargets.Method)]
-	public class CommandInfo : Attribute {
 		
-		/// <summary>
-		/// The name of the command, this is what the user will type to execute the command.
-		/// </summary>
-		public string Name;
-		
-		/// <summary>
-		/// The aliases this command has, these are shortcuts for the command.
-		/// </summary>
-		public string[] Aliases = new string[0];
-		
-		/// <summary>
-		/// The required arguments of the command, more is allowed, but not less.
-		/// </summary>
-		public int RequiredArguments = 0;
-	}
-
-	[AttributeUsage(AttributeTargets.Method)]
-	public class IdleCommand : Attribute {
-		public string Name;
-		public string[] Aliases = new string[0];
-		public IdleArgs[] Arguments;
-	}
-
-	public class ArgumentDefinition {
-		
+		#endregion
 	}
 
 	internal class CommandResult {

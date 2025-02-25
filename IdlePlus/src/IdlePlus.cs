@@ -10,6 +10,7 @@ using IdlePlus.API.Popup.Popups;
 using IdlePlus.Attributes;
 using IdlePlus.Command;
 using IdlePlus.IdleClansAPI;
+using IdlePlus.Patches;
 using IdlePlus.Settings;
 using IdlePlus.TexturePack;
 using IdlePlus.Utilities;
@@ -54,6 +55,7 @@ namespace IdlePlus {
 			// Load harmony patches.
 			var harmony = new Harmony(ModGuid);
 			harmony.PatchAll();
+			PerformanceTestPatch.Patch(harmony);
 			
 			// Events
 			Events.Scene.OnLobby.Register(OnSceneLobby);
