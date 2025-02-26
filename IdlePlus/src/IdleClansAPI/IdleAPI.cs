@@ -29,8 +29,10 @@ namespace IdlePlus.IdleClansAPI {
 		}
 		
 		public static void UpdateMarketPrices() {
-			IdleLog.Info("Fetching market price.");
+#pragma warning disable CS0162 // Unreachable code detected
 			if (IdlePlus.PerformanceTest) return;
+#pragma warning restore CS0162 // Unreachable code detected
+			
 			var start = DateTime.Now.Ticks;
 			IdleClansAPIManager.HttpClient.GetAsync(MarketPricesUrl)
 				.ContinueWith((Action<Task>) delegate(Task t1) {

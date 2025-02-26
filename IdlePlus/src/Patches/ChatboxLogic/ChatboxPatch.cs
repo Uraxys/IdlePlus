@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using ChatboxLogic;
 using HarmonyLib;
+using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Command;
 using IdlePlus.Settings;
@@ -34,7 +35,7 @@ namespace IdlePlus.Patches.ChatboxLogic {
 		private static CommandSuggestResult _commandSuggestResult;
 		private static CancellationTokenSource _commandSuggestCancellationToken;
 
-		[InitializeOnce]
+		[InitializeOnce(OnSceneLoad = Scenes.MainMenu)]
 		private static void Initialize() {
 			if (!ModSettings.UI.EnhancedChatCommands.Value) return;
 			_chatbox = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/ChatboxPopup/Chatbox").Use<Chatbox>();
@@ -71,6 +72,12 @@ namespace IdlePlus.Patches.ChatboxLogic {
 				// Make sure it's the command we're currently trying to suggest.
 				if (inputField.text != result.RequestedCommand) return;
 				
+				/*IdleLog.Info("Usage:");
+				result.Usage.ForEach(u => IdleLog.Info($"- {u}"));
+				IdleLog.Info("Suggestions:");
+				result.Suggestions.List.ForEach(s => IdleLog.Info($"- {s}"));
+				IdleLog.Info("");*/
+				
 				// If we didn't get any suggestions or usage, then disable the boxes.
 				if (result.Usage.IsEmpty() && result.Suggestions.IsEmpty()) {
 					_suggestionBox.SetEnabled(false);
@@ -83,7 +90,6 @@ namespace IdlePlus.Patches.ChatboxLogic {
 				//IdleLog.Info("Suggestions:");
 				//result.Suggestions.List.ForEach(s => IdleLog.Info($"- {s}"));
 				//IdleLog.Info("");
-				//IdleLog.Info("Result:");
 				
 				//_suggestionBox.SetEnabled(!result.Suggestions.IsEmpty());
 				
@@ -103,6 +109,8 @@ namespace IdlePlus.Patches.ChatboxLogic {
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(Chatbox.Update))]
 		private static void PrefixUpdate(Chatbox __instance) {
+			if (!ModSettings.UI.EnhancedChatCommands.Value) return;
+			
 			var inputField = __instance._inputField;
 			if (inputField.caretPosition == _lastCursorPos && inputField.text == _lastMessage) return;
 			_lastCursorPos = inputField.caretPosition;
@@ -136,22 +144,31 @@ namespace IdlePlus.Patches.ChatboxLogic {
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(Chatbox.SendMessageToServer))]
 		private static bool PrefixSendMessageToServer(Chatbox __instance) {
+			if (!ModSettings.UI.EnhancedChatCommands.Value) return true;
+			
 			var message = __instance._inputField.text;
 			var result = CommandManager.Handle(message);
 
 			if (result == null) return true;
 			if (!result.Success) {
-				if (result.Response != null) IdleLog.Error(result.Response);
+				if (result.Response != null) {
+					IdleLog.Error(result.Response);
+					_usageBox.SetupError(result.UnknownCommand ? 1 : 0, result.Response);
+				}
+				__instance._inputField.ActivateInputField();
+				__instance._inputField.caretPosition = __instance._inputField.text.Length;
 				return false;
 			}
 			
 			__instance._inputField.text = "";
+			__instance._inputField.ActivateInputField();
+			__instance._inputField.caretPosition = __instance._inputField.text.Length;
 			return false;
 		}
 		
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(Chatbox.InsertMessageIntoChatbox))]
-		private static void PrefixSetup(Chatbox __instance, Transform parent, GameMode gameMode, bool isPremium,
+		private static void PrefixInsertMessageIntoChatbox(Chatbox __instance, Transform parent, GameMode gameMode, bool isPremium,
 			bool isPremiumPlus) {
 			if (TexturePackManager.CurrentPack == null) return;
 			

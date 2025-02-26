@@ -40,7 +40,7 @@ namespace IdlePlus.API.Event {
 			/// <summary>
 			/// Called when a chat message has been received from the chat server.
 			/// </summary>
-			public static readonly EventAction<ChatMessageEventContext> OnMessage = new EventAction<ChatMessageEventContext>("OnMessage");
+			public static readonly EventAction<ChatMessageEventContext> OnPublicMessage = new EventAction<ChatMessageEventContext>("OnPublicMessage");
 		}
 
 		/// <summary>

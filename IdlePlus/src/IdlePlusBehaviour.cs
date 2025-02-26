@@ -58,17 +58,24 @@ namespace IdlePlus {
 			}
 			
 			// Used for testing.
+			/*if (Input.GetKeyDown(KeyCode.F11)) {
+				var chatbox = PopupManager.Instance.SetupHardPopup<ChatboxPopup>();
+				chatbox.Show();
+			}*/
+			
 			/*if (Input.GetKeyDown(KeyCode.F12)) {
 				var popup = CustomPopupManager.Setup<TestPopupTwo>(TestPopupTwo.PopupKey);
 				popup.Setup();
 			}*/
 
+#pragma warning disable CS0162 // Unreachable code detected
 			if (IdlePlus.PerformanceTest) {
 				if (Time.frameCount < DebugAwake.StartFrame + 25) {
 					var time = DebugAwake.Watch?.ElapsedMilliseconds ?? -1;
 					IdleLog.Info($"Frame: {Time.frameCount} / {time}ms");
 				}
 			}
+#pragma warning restore CS0162 // Unreachable code detected
 		}
 
 		public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
@@ -85,6 +92,7 @@ namespace IdlePlus {
 					// TODO: Remove later.
 					
 					if (!IdlePlus.PerformanceTest) break;
+#pragma warning disable CS0162 // Unreachable code detected
 					if (DebugAwake.Watch != null) DebugAwake.Watch.Stop();
 					DebugAwake.Watch = new Stopwatch();
 					DebugAwake.Watch.Start();
@@ -101,6 +109,7 @@ namespace IdlePlus {
 					}
 					
 					break;
+#pragma warning restore CS0162 // Unreachable code detected
 			}
 		}
 	}

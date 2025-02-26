@@ -53,6 +53,7 @@ using Action = Il2CppSystem.Action;
 using Debug = UnityEngine.Debug;
 using Exception = Il2CppSystem.Exception;
 using Object = Il2CppSystem.Object;
+#pragma warning disable CS0162 // Unreachable code detected
 
 namespace IdlePlus.Patches {
 	public static class PerformanceTestPatch {

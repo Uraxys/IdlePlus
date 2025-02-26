@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,7 +16,8 @@ using IdlePlus.Attributes;
 namespace IdlePlus.Command.ArgumentTypes {
 	public class ChatPlayerArgument : ArgumentType<string> {
 
-		private static readonly DynamicCommandExceptionType Exception = new DynamicCommandExceptionType(o => new LiteralMessage($"Invalid name {o}"));
+		private static readonly DynamicCommandExceptionType ExceptionInvalid = new DynamicCommandExceptionType(o => new LiteralMessage($"Invalid name {o}"));
+		private static readonly SimpleCommandExceptionType ExceptionSelf = new SimpleCommandExceptionType(new LiteralMessage($"Can't target self"));
 		private static readonly IEnumerable<string> ExampleValues = new[] { "utesty1", "utesty2", "utesty3" };
 
 		private static string _currentUsername;
@@ -32,12 +34,15 @@ namespace IdlePlus.Command.ArgumentTypes {
 			});
 			
 			// Add usernames to the known names list.
-			Events.Chat.OnMessage.Register(context => {
+			Events.Chat.OnPublicMessage.Register(context => {
+				if (context.Sender == null) return;
 				AddKnownUsername(context.Sender);
 			});
 		}
 
-		internal static void AddKnownUsername(string username) {
+		private static void AddKnownUsername(string username) {
+			if (username.Equals(_currentUsername, StringComparison.OrdinalIgnoreCase)) return;
+			
 			ReadWriteLock.EnterWriteLock();
 			try {
 				if (UsernameIndex.Contains(username)) {
@@ -69,12 +74,26 @@ namespace IdlePlus.Command.ArgumentTypes {
 				ReadWriteLock.ExitWriteLock();
 			}
 		}
+
+		public static ChatPlayerArgument Of(bool allowSelf = true) {
+			return new ChatPlayerArgument(allowSelf);
+		}
+
+		private readonly bool _allowSelf;
 		
+		public ChatPlayerArgument(bool allowSelf = true) {
+			this._allowSelf = allowSelf;
+		}
+
 		public override string Parse(IStringReader reader) {
 			ReadWriteLock.EnterReadLock();
 			try {
 				var name = reader.ReadUnquotedString();
-				if (!PlayerUtils.IsValidUsername(name)) throw Exception.CreateWithContext(reader, name);
+				if (!PlayerUtils.IsValidUsername(name)) throw ExceptionInvalid.CreateWithContext(reader, name);
+				if (_currentUsername != null && !_allowSelf &&
+				    name.Equals(_currentUsername, StringComparison.OrdinalIgnoreCase)) {
+					throw ExceptionSelf.CreateWithContext(reader);
+				}
 				return name;
 			} finally {
 				ReadWriteLock.ExitReadLock();
@@ -86,7 +105,8 @@ namespace IdlePlus.Command.ArgumentTypes {
 				ReadWriteLock.EnterReadLock();
 				try {
 					var current = builder.Remaining;
-					if (_currentUsername != null && _currentUsername.StartsWith(current)) builder.Suggest(current);
+					if (_currentUsername != null && this._allowSelf && _currentUsername.StartsWith(current)) 
+						builder.Suggest(current);
 					foreach (var name in Usernames.Where(name => name.StartsWith(current))) {
 						builder.Suggest(name);
 					}

@@ -22,9 +22,11 @@ namespace IdlePlus.Command {
 	public static class CommandManager {
 		
 		private static readonly CommandDispatcher<CommandSender> Dispatcher = new CommandDispatcher<CommandSender>();
+		private static readonly string[] OverridenCommands = new[] { "/pm", "/dm" };
 		
 		public static void Load() {
 			Dispatcher.Register(DevelopmentCommand.Register());
+			PrivateMessageCommand.Register(Dispatcher);
 			
 			Dispatcher.Register(a =>
 				a.Literal("run").Executes(context => {
@@ -206,21 +208,26 @@ namespace IdlePlus.Command {
 		}
 		
 		internal static CommandResult Handle(string command) {
-			if (!command.StartsWith("/")) return null;
+			var reader = new StringReader(command);
+			if (!reader.CanRead() || reader.Peek() != '/') return null; // Make sure it's a command.
+			reader.Skip(); // Skip over the slash.
 			
 			// Check if it's a vanilla command, if it is, don't do anything.
-			var commandName = command.Split(' ')[0];
-			if (ChatboxManager.Instance._chatboxPopup.Chatbox._messagePrefixes.Contains(commandName))
+			var commandName = command.ToLower().Split(' ')[0];
+			if (ChatboxManager.Instance._chatboxPopup.Chatbox._messagePrefixes.Contains(commandName) &&
+			    !OverridenCommands.Contains(commandName)) {
 				return null;
+			}
 			
 			// Custom handling.
 			
 			try {
-				var result = Dispatcher.Execute(command.Substring(1), new CommandSender());
+				var result = Dispatcher.Execute(reader, new CommandSender());
 				IdleLog.Info("Command {0} executed with result {1}.", command, result);
 				return new CommandResult { Success = result == 1, Response = null };
 			} catch (CommandSyntaxException e) {
-				return new CommandResult { Success = false, Response = e.Message };
+				var unknownCommand = e.Message.StartsWith("Unknown command at position");
+				return new CommandResult { Success = false, UnknownCommand = unknownCommand, Response = e.Message };
 			}
 		}
 		
@@ -229,6 +236,7 @@ namespace IdlePlus.Command {
 
 	internal class CommandResult {
 		public bool Success;
+		public bool UnknownCommand;
 		public string Response;
 	}
 
