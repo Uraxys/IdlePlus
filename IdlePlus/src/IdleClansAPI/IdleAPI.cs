@@ -29,6 +29,8 @@ namespace IdlePlus.IdleClansAPI {
 		}
 		
 		public static void UpdateMarketPrices() {
+			IdleLog.Info("Fetching market price.");
+			if (IdlePlus.PerformanceTest) return;
 			var start = DateTime.Now.Ticks;
 			IdleClansAPIManager.HttpClient.GetAsync(MarketPricesUrl)
 				.ContinueWith((Action<Task>) delegate(Task t1) {

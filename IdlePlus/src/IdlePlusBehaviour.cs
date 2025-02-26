@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using IdlePlus.API.Event;
 using IdlePlus.API.Popup;
@@ -31,6 +32,8 @@ namespace IdlePlus {
 			SceneManager.sceneLoaded += (UnityAction<Scene, LoadSceneMode>) Instance.OnSceneLoaded;
 		}
 
+		private static readonly HashSet<int> StartingObjects = new HashSet<int>();
+
 		public void Update() {
 			// Tick tasks.
 			IdleTasks.Tick();
@@ -60,10 +63,12 @@ namespace IdlePlus {
 				popup.Setup();
 			}*/
 
-			/*if (Time.frameCount < DebugAwake.StartFrame + 10) {
-				var time = DebugAwake.Watch?.ElapsedMilliseconds ?? -1;
-				IdleLog.Info($"Frame: {Time.frameCount} / {time}ms");
-			}*/
+			if (IdlePlus.PerformanceTest) {
+				if (Time.frameCount < DebugAwake.StartFrame + 25) {
+					var time = DebugAwake.Watch?.ElapsedMilliseconds ?? -1;
+					IdleLog.Info($"Frame: {Time.frameCount} / {time}ms");
+				}
+			}
 		}
 
 		public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
@@ -77,6 +82,9 @@ namespace IdlePlus {
 				case Scenes.Game: 
 					Events.Scene.OnGame.Call();
 
+					// TODO: Remove later.
+					
+					if (!IdlePlus.PerformanceTest) break;
 					if (DebugAwake.Watch != null) DebugAwake.Watch.Stop();
 					DebugAwake.Watch = new Stopwatch();
 					DebugAwake.Watch.Start();

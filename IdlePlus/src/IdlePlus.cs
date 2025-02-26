@@ -21,7 +21,7 @@ namespace IdlePlus {
 	
 	[BepInPlugin(ModGuid, ModName, ModVersion)]
 	public class IdlePlus : BasePlugin {
-
+		
 		public const string
 			ModName = "Idle Plus",
 			ModAuthor = "Uraxys",
@@ -33,7 +33,8 @@ namespace IdlePlus {
 #else
 			             ;
 #endif
-		
+
+		public static bool PerformanceTest = true;
 		public static IntPtr WindowHandle = IntPtr.Zero;
 		
 		public override void Load() {

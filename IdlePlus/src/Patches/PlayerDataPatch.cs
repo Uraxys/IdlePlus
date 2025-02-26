@@ -17,9 +17,6 @@ namespace IdlePlus.Patches {
 		[HarmonyPatch(nameof(PlayerData.Start))]
 		public static void PostfixStart(PlayerData __instance) {
 			Events.Player.OnLogin.Call(new PlayerLoginEventContext(__instance));
-
-			// TODO: Remove later.
-			DebugAwake.StartFrame = Time.frameCount;
 		}
 	}
 }
