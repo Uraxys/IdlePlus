@@ -34,7 +34,7 @@ namespace IdlePlus {
 			             ;
 #endif
 
-		public static bool PerformanceTest = true;
+		public const bool PerformanceTest = false;
 		public static IntPtr WindowHandle = IntPtr.Zero;
 		
 		public override void Load() {
