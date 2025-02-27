@@ -135,19 +135,16 @@ namespace IdlePlus.Command {
 		
 		#region Internal
 
-		internal static async Task<CommandSuggestResult> HandleSuggestion(string command, int cursor, 
-			CancellationToken token) { 
+		internal static async Task<CommandSuggestResult> HandleSuggestion(CommandSender sender, string command,
+			int cursor, CancellationToken token) { 
 			
 			if (cursor < 1) return null; // No need to parse anything if we're in front of the command.
 			var reader = new StringReader(command);
 			if (!reader.CanRead() || reader.Peek() != '/') return null; // Make sure it's a command.
 			reader.Skip(); // Skip over the slash.
 			
-			// TODO: Create a real CommandSender.
-			var commandSender = new CommandSender();
-			
 			// Start parsing the command and getting suggestions.
-			var parsed = Dispatcher.Parse(reader, commandSender);
+			var parsed = Dispatcher.Parse(reader, sender);
 			token.ThrowIfCancellationRequested();
 			var suggestions = await Dispatcher.GetCompletionSuggestions(parsed, cursor);
 			token.ThrowIfCancellationRequested();
@@ -176,7 +173,7 @@ namespace IdlePlus.Command {
 			// If we haven't added any usage information, then try to find command suggestions.
 			if (resultUsage.IsEmpty()) {
 				var suggestionContext = parsed.Context.FindSuggestionContext(cursor);
-				var usages = Dispatcher.GetSmartUsage(suggestionContext.Parent, commandSender);
+				var usages = Dispatcher.GetSmartUsage(suggestionContext.Parent, sender);
 				token.ThrowIfCancellationRequested();
 				
 				var foundUsage = false;
@@ -207,7 +204,7 @@ namespace IdlePlus.Command {
 				UsageStartIndex = resultUsageStartIndex, Usage = resultUsage };
 		}
 		
-		internal static CommandResult Handle(string command) {
+		internal static CommandResult Handle(CommandSender sender, string command) {
 			var reader = new StringReader(command);
 			if (!reader.CanRead() || reader.Peek() != '/') return null; // Make sure it's a command.
 			reader.Skip(); // Skip over the slash.
@@ -222,7 +219,7 @@ namespace IdlePlus.Command {
 			// Custom handling.
 			
 			try {
-				var result = Dispatcher.Execute(reader, new CommandSender());
+				var result = Dispatcher.Execute(reader, sender);
 				IdleLog.Info("Command {0} executed with result {1}.", command, result);
 				return new CommandResult { Success = result == 1, Response = null };
 			} catch (CommandSyntaxException e) {

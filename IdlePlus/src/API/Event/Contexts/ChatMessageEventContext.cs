@@ -48,7 +48,8 @@ namespace IdlePlus.API.Event.Contexts {
 			this.Gilded = message.IsGilded;
 			this.Moderator = message.IsModerator;
 
-			if (!IsPlayerMessage(message.Message, out var tag, out var name, out var content)) {
+			if (this.GameMode == GameMode.NotSelected ||
+			    !IsPlayerMessage(message.Message, out var tag, out var name, out var content)) {
 				this.Message = message.Message;
 				this.Sender = null;
 				this.GuildTag = null;
@@ -74,7 +75,7 @@ namespace IdlePlus.API.Event.Contexts {
 
 		// Internal
 		
-		private static bool IsPlayerMessage(string input, out string tag, out string name, out string message) {
+		internal static bool IsPlayerMessage(string input, out string tag, out string name, out string message) {
 			tag = null;
 			name = null;
 			message = null;

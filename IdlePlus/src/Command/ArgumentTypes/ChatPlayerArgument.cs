@@ -17,7 +17,7 @@ namespace IdlePlus.Command.ArgumentTypes {
 	public class ChatPlayerArgument : ArgumentType<string> {
 
 		private static readonly DynamicCommandExceptionType ExceptionInvalid = new DynamicCommandExceptionType(o => new LiteralMessage($"Invalid name {o}"));
-		private static readonly SimpleCommandExceptionType ExceptionSelf = new SimpleCommandExceptionType(new LiteralMessage($"Can't target self"));
+		private static readonly SimpleCommandExceptionType ExceptionSelf = new SimpleCommandExceptionType(new LiteralMessage("Can't target self"));
 		private static readonly IEnumerable<string> ExampleValues = new[] { "utesty1", "utesty2", "utesty3" };
 
 		private static string _currentUsername;

@@ -1,26 +1,37 @@
+using ChatboxLogic;
+using IdlePlus.API.Utility.Data;
+using IdlePlus.Utilities.Extensions;
+
 namespace IdlePlus.Command {
 	public class CommandSender {
-
-		private const string ErrorColor = "fff";
 		
+		private static ChatboxManager ChatManager => ChatboxManager.Instance;
+		private static ChannelType CurrentChannel => (ChannelType) ChatManager.ActiveChannel.Channel;
+
 		/// <summary>
-		/// Sends a pre formated red message to this client.
-		/// Chat colors and styling is allowed using TMP rich syntax, example:
-		/// "Hello this next part is &lt;color=red&gt;RED&lt;/color&gt;!".
+		/// Sends a message in chat for this client.
 		/// </summary>
-		/// <param name="message">The message to send in the players chat.</param>
-		public void SendErrorMessage(string message) {
-			this.SendMessage($"<color={ErrorColor}>{message}</color>");
+		/// <param name="message">The message to send in the chat.</param>
+		/// <param name="mode">The mode icon to display, or <c>GameMode.NotSelected</c>
+		/// if this is a system message.</param>
+		/// <param name="premium">If the premium icon should be displayed.</param>
+		/// <param name="gilded">If the gilded icon should be displayed.</param>
+		/// <param name="moderator">If the moderator icon should be displayed.</param>
+		public void SendMessage(string message, GameMode mode = GameMode.NotSelected, bool premium = false, 
+			bool gilded = false, bool moderator = false) {
+			SendMessage(CurrentChannel.ToChannelId(), message, mode, premium, gilded, moderator);
 		}
 		
-		/// <summary>
-		/// Sends a message to this client.
-		/// Chat colors and styling is allowed using TMP rich syntax, example:
-		/// "Hello this next part is &lt;color=red&gt;RED&lt;/color&gt;!".
-		/// </summary>
-		/// <param name="message">The message to send in the players chat.</param>
-		public void SendMessage(string message) {
-			// TODO: Implement
+		private static void SendMessage(ChannelId channelId, string message, GameMode gameMode, bool premium, bool gilded,
+			bool moderator) {
+			
+			var channelInstance = ChatManager._chatboxContentInstances[channelId];
+			var messageEntryObj = channelInstance.GetChild(0);
+			var messageEntry = messageEntryObj.Use<ChatboxMessageEntry>();
+			
+			messageEntry.transform.SetAsLastSibling();
+			messageEntry.Setup(ChatManager._serialization, message, channelId, gameMode, premium, gilded, 
+				moderator);
 		}
 	}
 }

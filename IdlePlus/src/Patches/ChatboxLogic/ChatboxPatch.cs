@@ -133,7 +133,8 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			_commandSuggestCancellationToken = token;
 
 			Task.Run((System.Action) delegate {
-				var resultTask = CommandManager.HandleSuggestion(_lastMessage, _lastCursorPos, token.Token);
+				var sender = new CommandSender();
+				var resultTask = CommandManager.HandleSuggestion(sender, _lastMessage, _lastCursorPos, token.Token);
 				resultTask.Wait(token.Token);
 				var result = resultTask.Result;
 				if (token.IsCancellationRequested) return;
@@ -147,7 +148,10 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			if (!ModSettings.UI.EnhancedChatCommands.Value) return true;
 			
 			var message = __instance._inputField.text;
-			var result = CommandManager.Handle(message);
+			if (message.Length <= 0 || message[0] != '/') return true;
+
+			var sender = new CommandSender();
+			var result = CommandManager.Handle(sender, message);
 
 			if (result == null) return true;
 			if (!result.Success) {

@@ -24,6 +24,17 @@ namespace IdlePlus.API.Event {
 		}
 
 		/// <summary>
+		/// Game events.
+		/// </summary>
+		public static class Game {
+			/// <summary>
+			/// Called after the config data has been loaded and is ready to be
+			/// used.
+			/// </summary>
+			public static readonly SimpleEventAction OnConfigDataLoaded = new SimpleEventAction("OnConfigDataLoaded");
+		}
+		
+		/// <summary>
 		/// Player events.
 		/// </summary>
 		public static class Player {

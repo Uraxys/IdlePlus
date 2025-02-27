@@ -22,7 +22,6 @@ namespace IdlePlus.Command.Commands {
 		private static void HandlePrivateMessage(CommandContext<CommandSender> context) {
 			var target = context.GetArgument<string>("name");
 			var message = context.GetArgument<string>("message");
-			IdleLog.Info($"Send message: {target} > {message}");
 
 			var packet = new ChatboxPrivateMessage { ReceivingPlayer = target, Message = message };
 			NetworkClientChatService.Instance.SendData(packet);

@@ -47,7 +47,7 @@ namespace IdlePlus.Utilities.Collections {
 			return current.IsEndOfWord ? current.Entries[0] : null;
 		}
 		
-		public void PrintMemoryFootprint() {
+		/*public void PrintMemoryFootprint() {
 			var bytes = GetMemoryFootprint();
 			var sizeInKb = bytes / 1024d;
 			var sizeInMb = sizeInKb / 1024d;
@@ -80,7 +80,7 @@ namespace IdlePlus.Utilities.Collections {
 			}
 
 			return size;
-		}
+		}*/
 	}
 	
 	internal class TrieNode {
