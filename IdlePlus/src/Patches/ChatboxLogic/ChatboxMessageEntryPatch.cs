@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using ChatboxLogic;
 using HarmonyLib;
-using IdlePlus.API.Event.Contexts;
 using IdlePlus.API.Utility.Game;
+using IdlePlus.Settings;
 using IdlePlus.Unity.Chat;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
@@ -14,8 +13,14 @@ namespace IdlePlus.Patches.ChatboxLogic {
 	[HarmonyPatch(typeof(ChatboxMessageEntry))]
 	internal class ChatboxMessageEntryPatch {
 		
+		/// <summary>
+		/// Characters allowed in front of an item name.
+		/// </summary>
 		private static readonly HashSet<char> AllowedPrefixes = new HashSet<char> 
 			{ ' ', '(', '[', '{', '/' };
+		/// <summary>
+		/// Characters allowed behind an item name.
+		/// </summary>
 		private static readonly HashSet<char> AllowedPostfixes = new HashSet<char>
 			{ ' ', ',', '.', '\'', '?', '!', ')', ']', '}', '/' };
 		
@@ -30,19 +35,16 @@ namespace IdlePlus.Patches.ChatboxLogic {
 				return;
 			}
 			
+			// Make sure we've enabled chat items.
+			if (!ModSettings.Features.ChatItems.Value) return;
+			
 			// By default, players shouldn't be able to use rich tags.
-			__instance._text.richText = true; // TODO: Should be false.
+			__instance._text.richText = false;
 			
 			// Make sure this is a valid player message, and get the content.
-			if (!ChatMessageEventContext.IsPlayerMessage(message, out var tag, out var name, 
-				    out var content)) return;
-			
-			IdleLog.Info("Searching for items in message.");
-			
-			var watch = new Stopwatch();
-			watch.Start();
+			if (!PlayerUtils.IsPlayerMessage(message, out var tag, out var name, out var content)) return;
 
-			// Do search to detect the words.
+			// Do a search to detect items in the sentence.
 			var escaped = content.Replace("<", "<noparse><</noparse>");
 			var lowered = escaped.ToLower();
 			var result = ItemUtils.ItemSearcher.Search(lowered, true);
@@ -67,22 +69,13 @@ namespace IdlePlus.Patches.ChatboxLogic {
 					t.MutableEndIndex += 1;
 					return true;
 				}).ToList();
-			
-			watch.Stop();
-			IdleLog.Info($"AhoCorasick search took {watch.ElapsedMilliseconds}ms");
-			IdleLog.Info("Result:");
-			result.ForEach(s => IdleLog.Info($"- {s.StartIndex} / {s.Word} / {lowered.Substring(s.StartIndex, s.MutableLength)}"));
-			
-			var markerDebug = "";
-			foreach (var entry in result) {
-				if (entry.MutableStartIndex > markerDebug.Length) markerDebug += new string('.', entry.StartIndex - markerDebug.Length);
-				markerDebug += new string('^', entry.MutableLength);
-			}
-			IdleLog.Info(lowered);
-			IdleLog.Info(markerDebug);
+
+			// If we didn't find any words then don't do anything, but if we did,
+			// then enable rich text.
+			if (result.IsEmpty()) return;
+			__instance._text.richText = true;
 			
 			// Insert color into the escaped message.
-
 			for (var i = result.Count - 1; i >= 0; i--) {
 				var entry = result[i];
 				
@@ -93,9 +86,7 @@ namespace IdlePlus.Patches.ChatboxLogic {
 				}
 				
 				var pre = $"<color=#4dd8ff><link=\"ITEM:{item.ItemId}\">";
-				//var pre = $"<color=#4dd8ff><b><link=\"ITEM:{item.ItemId}\">";
-				var post = "</link></color>";
-				//var post = "</link></b></color>";
+				const string post = "</link></color>";
 				
 				// Color the name
 				escaped = escaped.Substring(0, entry.MutableEndIndex) + post + escaped.Substring(entry.MutableEndIndex);
@@ -108,10 +99,9 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			}
 			
 			// Update the message.
-			var linkHoverable = __instance._text.transform.parent.With<ChatItemLinkHoverable>();
+			var linkHoverable = __instance._text.transform.parent.With<ChatItemLinkDisplay>();
 			linkHoverable.Setup(__instance._text);
 			message = message.Substring(0, message.Length - content.Length) + escaped;
 		}
-		
 	}
 }

@@ -154,9 +154,6 @@
         <Link>Brigadier.NET\.editorconfig</Link>
       </Content>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="src\Features\" />
-    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 
 </Project>

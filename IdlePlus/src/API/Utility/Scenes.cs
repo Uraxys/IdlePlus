@@ -1,5 +1,10 @@
 namespace IdlePlus.API.Utility {
 	public static class Scenes {
+
+		/// <summary>
+		/// Any scene.
+		/// </summary>
+		public const string Anything = "*";
 		
 		/// <summary>
 		/// The name of the scene used when the user is logged in and playing

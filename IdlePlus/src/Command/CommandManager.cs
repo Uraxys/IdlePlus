@@ -28,7 +28,7 @@ namespace IdlePlus.Command {
 			Dispatcher.Register(DevelopmentCommand.Register());
 			PrivateMessageCommand.Register(Dispatcher);
 			
-			Dispatcher.Register(a =>
+			/*Dispatcher.Register(a =>
 				a.Literal("run").Executes(context => {
 					IdleLog.Info("Run executed.");
 					return 1;
@@ -130,7 +130,7 @@ namespace IdlePlus.Command {
 						return 1;
 					})
 				)
-			);
+			);*/
 		}
 		
 		#region Internal

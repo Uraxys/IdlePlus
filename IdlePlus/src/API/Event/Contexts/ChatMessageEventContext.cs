@@ -1,5 +1,6 @@
 using IdlePlus.API.Utility;
 using IdlePlus.API.Utility.Data;
+using IdlePlus.API.Utility.Game;
 using Networking.Chat;
 
 namespace IdlePlus.API.Event.Contexts {
@@ -25,7 +26,8 @@ namespace IdlePlus.API.Event.Contexts {
 		// Icons
 		
 		/// <summary>
-		/// The <see cref="GameMode"/> of the sender.
+		/// <para>The <see cref="GameMode"/> of the sender.</para>
+		/// If this is a system message, then the game mode will be <see cref="GameMode.NotSelected"/>.
 		/// </summary>
 		public GameMode GameMode { get; }
 		/// <summary>
@@ -49,7 +51,7 @@ namespace IdlePlus.API.Event.Contexts {
 			this.Moderator = message.IsModerator;
 
 			if (this.GameMode == GameMode.NotSelected ||
-			    !IsPlayerMessage(message.Message, out var tag, out var name, out var content)) {
+			    !PlayerUtils.IsPlayerMessage(message.Message, out var tag, out var name, out var content)) {
 				this.Message = message.Message;
 				this.Sender = null;
 				this.GuildTag = null;
@@ -71,41 +73,6 @@ namespace IdlePlus.API.Event.Contexts {
 			       $"Premium = {Premium}, " +
 			       $"Gilded = {Gilded}, " +
 			       $"Moderator = {Moderator} }}";
-		}
-
-		// Internal
-		
-		internal static bool IsPlayerMessage(string input, out string tag, out string name, out string message) {
-			tag = null;
-			name = null;
-			message = null;
-			
-			var reader = new GeneralStringReader(input);
-			if (!reader.CanRead(11)) return false;
-			// Check the time "[xx:xx:xx]".
-			if (reader.Next() != '[' || reader.Next(2) != ':' || reader.Next(2) != ':' || 
-			    reader.Next(2) != ']') return false;
-			// Check the space.
-			if (reader.Next() != ' ') return false;
-			
-			// Check if we have a guild tag or not.
-			if (reader.Peek() == '[') {
-				reader.Skip();
-				// If we don't have a closing bracket then it isn't a player
-				// message.
-				if (reader.Peek(3) != ']' || reader.Peek(4) != ' ') return false;
-				tag = reader.ReadStr(3);
-				reader.Skip(2);
-			}
-			
-			// Get the player name.
-			var nameLength = reader.IndexOf(':') - reader.Index;
-			if (nameLength <= 0) return false; // Name can't be 0.
-			name = reader.ReadStr(nameLength);
-			
-			reader.Skip(2); // Skipping the ": ".
-			message = reader.ReadStr();
-			return true;
 		}
 	}
 }

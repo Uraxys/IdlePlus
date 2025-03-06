@@ -21,8 +21,6 @@ namespace IdlePlus.Patches.ChatboxLogic {
 	[HarmonyPatch(typeof(Chatbox))]
 	public class ChatboxPatch {
 		
-		private static readonly Random Random = new Random();
-
 		private static Chatbox _chatbox;
 		private static GameObject _inputFieldObject;
 		
@@ -72,34 +70,17 @@ namespace IdlePlus.Patches.ChatboxLogic {
 				// Make sure it's the command we're currently trying to suggest.
 				if (inputField.text != result.RequestedCommand) return;
 				
-				/*IdleLog.Info("Usage:");
-				result.Usage.ForEach(u => IdleLog.Info($"- {u}"));
-				IdleLog.Info("Suggestions:");
-				result.Suggestions.List.ForEach(s => IdleLog.Info($"- {s}"));
-				IdleLog.Info("");*/
-				
 				// If we didn't get any suggestions or usage, then disable the boxes.
 				if (result.Usage.IsEmpty() && result.Suggestions.IsEmpty()) {
 					_suggestionBox.SetEnabled(false);
 					_usageBox.SetEnabled(false);
 					return;
 				}
-
-				//IdleLog.Info("Usage:");
-				//result.Usage.ForEach(u => IdleLog.Info($"- {u}"));
-				//IdleLog.Info("Suggestions:");
-				//result.Suggestions.List.ForEach(s => IdleLog.Info($"- {s}"));
-				//IdleLog.Info("");
-				
-				//_suggestionBox.SetEnabled(!result.Suggestions.IsEmpty());
 				
 				if (!result.Suggestions.IsEmpty()) {
-					//IdleLog.Info(result.Suggestions.List.Join());
 					_usageBox.SetEnabled(false);
 					_suggestionBox.Setup(result.Suggestions.Range.Start, result.Suggestions.List);
-				}
-				else if (!result.Usage.IsEmpty()) {
-					//IdleLog.Info(result.Usage.First());
+				} else if (!result.Usage.IsEmpty()) {
 					_suggestionBox.SetEnabled(false);
 					_usageBox.Setup(result.UsageStartIndex, result.Usage.First());
 				}
@@ -183,8 +164,12 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			var ironmanIcon = chatEntry._ironmanIconGO;
 			var premiumIcon = chatEntry._premiumGO;
 			var gildedIcon = chatEntry._premiumPlusGO;
-			
-			if (gameMode == GameMode.Ironman) pack.TryApplyMiscSprite("ironman_icon", ironmanIcon);
+
+			if (gameMode == GameMode.Ironman) 
+				pack.TryApplyMiscSprite("ironman_icon", ironmanIcon);
+			else if (gameMode == GameMode.GroupIronman)
+				pack.TryApplyMiscSprite("group_ironman_icon", ironmanIcon);
+
 			if (isPremium) pack.TryApplyMiscSprite("premium_icon", premiumIcon);
 			if (isPremiumPlus) pack.TryApplyMiscSprite("gilded_icon", gildedIcon);
 		}

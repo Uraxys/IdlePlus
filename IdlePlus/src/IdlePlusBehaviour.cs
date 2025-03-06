@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using IdlePlus.API.Event;
-using IdlePlus.API.Popup;
-using IdlePlus.API.Popup.Popups;
+using IdlePlus.API.Unity;
 using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Unity;
 using IdlePlus.Utilities;
-using Popups;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -19,6 +17,7 @@ namespace IdlePlus {
 	public class IdlePlusBehaviour : MonoBehaviour {
 		
 		public static IdlePlusBehaviour Instance;
+		private static bool _stopSearchingForWindow = false;
 
 		public IdlePlusBehaviour(IntPtr pointer) : base(pointer) { }
 
@@ -37,6 +36,7 @@ namespace IdlePlus {
 		public void Update() {
 			// Tick tasks.
 			IdleTasks.Tick();
+			MouseEventManager.Tick();
 			
 			// I hate Unity, I really do, the pain of some things, in my other engines I have
 			// implemented these easy methods, just change the window title, maybe the icon, or
@@ -44,17 +44,13 @@ namespace IdlePlus {
 			//
 			// NOTE: Only works on windows, but that shouldn't be a problem as BepInEx only
 			// supports windows when modding IL2CPP games.
-			if (IdlePlus.WindowHandle == IntPtr.Zero) {
+			if (IdlePlus.WindowHandle == IntPtr.Zero && !_stopSearchingForWindow) {
 				var title = Process.GetCurrentProcess().MainWindowTitle;
 				var handle = Process.GetCurrentProcess().MainWindowHandle;
 
 				if (title.StartsWith("Idle Clans") && !title.Contains("BepInEx")) {
 					IdlePlus.WindowHandle = handle;
-					//IdleLog.Info($"Found main Unity window handle! title: '{title}', handle: 0x{handle.ToInt32():X8}");
 				}
-				/*else {
-					//IdleLog.Info($"Found title: '{title}', handle: 0x{handle.ToInt32():X8}");
-				}*/
 			}
 			
 			// Used for testing.
@@ -82,6 +78,12 @@ namespace IdlePlus {
 			GameObjects.InitializeCache();
 			InitializeAttributeHandler.Initialize(scene.name);
 			InitializeOnceAttributeHandler.InitializeOnce(scene.name);
+
+			// Safeguard in case we don't find the window handle, then
+			// we don't want to keep checking every frame.
+			if (scene.name == Scenes.Game && !_stopSearchingForWindow) {
+				_stopSearchingForWindow = true;
+			}
 
 			// Call the scene loaded event.
 			switch (scene.name) {

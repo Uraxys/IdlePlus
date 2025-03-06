@@ -74,8 +74,9 @@ namespace IdlePlus.API.Utility.Game {
 		/// <returns>The <see cref="Item"/> that was found, if not null.</returns>
 		public static Item TryGetItemFromLocalizedName(string name) {
 			Asserts.NotNull(name, "name");
-			if (ItemsByLocalizedNameLowered.TryGetValue(name.ToLower(), out var i1)) return i1;
-			return !ItemsByLocalizedNameLowered.TryGetValue(name.ToLower().Replace("'", ""), out var i2) ? null : i2;
+			var loweredName = name.ToLower();
+			if (ItemsByLocalizedNameLowered.TryGetValue(loweredName, out var i1)) return i1;
+			return !ItemsByLocalizedNameLowered.TryGetValue(loweredName.Replace("'", ""), out var i2) ? null : i2;
 		}
 		
 		// Extensions
@@ -92,7 +93,7 @@ namespace IdlePlus.API.Utility.Game {
 				var part = LocalizationManager.GetLocalizedValue("completionist", Language.English);
 				name = LocalizationManager.GetLocalizedValue("mastery_cape_name", Language.English);
 				return String.Format(name, part, tier);
-			}else {
+			} else {
 				var skill = item.SkillBoost.Skill.ToString().ToLower();
 				var part = LocalizationManager.GetLocalizedValue(skill, Language.English);
 				name = LocalizationManager.GetLocalizedValue("mastery_cape_name", Language.English);

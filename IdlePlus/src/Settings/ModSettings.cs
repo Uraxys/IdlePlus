@@ -17,7 +17,7 @@ namespace IdlePlus.Settings {
 		// Features category
 		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
 			Features.TotalWealth, Features.TotalWealthVendorValue, Features.ScrollInfo, 
-			Features.EquipmentStatsInfo, Features.PotionTime);
+			Features.EquipmentStatsInfo, Features.PotionTime, Features.ChatItems);
         
 		// Feature settings
 		public static class Features {
@@ -50,6 +50,11 @@ namespace IdlePlus.Settings {
 				"Display the total time a potion will last when drinking it.",
 				true
 			);
+			
+			public static readonly ToggleSetting ChatItems = ToggleSetting.Create(
+				"feature_chatItem", true,
+				"Item names in chat that can be hovered over to display the item.",
+				true);
 		}
 		#endregion
 

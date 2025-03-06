@@ -1,8 +1,16 @@
+using System;
+using System.Diagnostics;
+using System.IO;
 using Brigadier.NET;
 using Brigadier.NET.Builder;
 using Brigadier.NET.Context;
+using Databases;
 using IdlePlus.Utilities;
+using IdlePlus.Utilities.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Player;
+using Tasks;
 
 namespace IdlePlus.Command.Commands {
 	internal static class DevelopmentCommand {
@@ -30,11 +38,48 @@ namespace IdlePlus.Command.Commands {
 		 */
 
 		private static void HandleExportItems(CommandContext<CommandSender> context) {
-			IdleLog.Info("// TODO: Export items.");
+			context.Source.SendMessage("Exporting item data, this might take a second...");
+			
+			var path = Path.Combine(BepInEx.Paths.PluginPath, "IdlePlus", "export");
+			Directory.CreateDirectory(path);
+
+			var root = new JObject();
+			root.Add("exported_at", new JValue($"{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.FFFZ}"));
+			root.Add("version", new JObject(
+				new JProperty("config", SettingsDatabase.SharedSettings.ConfigVersion),
+				new JProperty("latest_build", SettingsDatabase.SharedSettings.LatestBuildVersion),
+				new JProperty("required_build", SettingsDatabase.SharedSettings.RequiredBuildVersion))
+			);
+			root.Add("items", new JArray().Do(arr => {
+				foreach (var item in ItemDatabase.ItemList._values) {
+					arr.Add(item.ToJson());
+				}
+			}));
+
+			var json = root.ToString(Formatting.Indented);
+			File.WriteAllText(Path.Combine(path, "items.json"), json);
+			
+			context.Source.SendMessage("Exported item data to 'IdlePlus/export/items.json'.");
 		}
 
 		private static void HandleExportTasks(CommandContext<CommandSender> context) {
-			IdleLog.Info("// TODO: Export tasks.");
+			if (true) return;
+			var path = Path.Combine(BepInEx.Paths.PluginPath, "IdlePlus", "export");
+			Directory.CreateDirectory(path);
+
+			var root = new JObject();
+			root.Add("exported_at", new JValue($"{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.FFFZ}"));
+			root.Add("version", new JObject(
+				new JProperty("config", SettingsDatabase.SharedSettings.ConfigVersion),
+				new JProperty("latest_build", SettingsDatabase.SharedSettings.LatestBuildVersion),
+				new JProperty("required_build", SettingsDatabase.SharedSettings.RequiredBuildVersion))
+			);
+			
+			root.Add("tasks", new JArray().Do(arr => {
+				foreach (var entry in TaskDatabase.Tasks) {
+					var type = entry.key;
+				}
+			}));
 		}
 		
 		/*
