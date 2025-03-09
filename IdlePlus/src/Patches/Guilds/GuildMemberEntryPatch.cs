@@ -1,8 +1,6 @@
 using Guilds;
 using HarmonyLib;
 using IdlePlus.TexturePack;
-using IdlePlus.Utilities.Extensions;
-using UnityEngine.UI;
 
 namespace IdlePlus.Patches.Guilds {
 	
@@ -20,7 +18,11 @@ namespace IdlePlus.Patches.Guilds {
 			var premiumIcon = __instance._premiumIconGO;
 			var gildedIcon = __instance._premiumPlusIconGO;
 			
-			if (gameMode == GameMode.Ironman) pack.TryApplyMiscSprite("ironman_icon", ironmanIcon);
+			if (gameMode == GameMode.Ironman) 
+				pack.TryApplyMiscSprite("ironman_icon", ironmanIcon);
+			else if (gameMode == GameMode.GroupIronman) 
+				pack.TryApplyMiscSprite("group_ironman_icon", ironmanIcon);
+			
 			if (premium) pack.TryApplyMiscSprite("premium_icon", premiumIcon);
 			if (premiumPlus) pack.TryApplyMiscSprite("gilded_icon", gildedIcon);
 		}
