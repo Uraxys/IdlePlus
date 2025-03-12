@@ -8,7 +8,6 @@ using IdlePlus.API.Event.Contexts;
 using IdlePlus.API.Popup;
 using IdlePlus.API.Popup.Popups;
 using IdlePlus.Attributes;
-using IdlePlus.Command;
 using IdlePlus.IdleClansAPI;
 using IdlePlus.Patches;
 using IdlePlus.Settings;
@@ -22,7 +21,7 @@ namespace IdlePlus {
 	[BepInPlugin(ModGuid, ModName, ModVersion)]
 	public class IdlePlus : BasePlugin {
 		
-		public const string
+		internal const string
 			ModName = "Idle Plus",
 			ModAuthor = "Uraxys",
 			ModID = "idleplus",
@@ -34,8 +33,8 @@ namespace IdlePlus {
 			             ;
 #endif
 
-		public const bool PerformanceTest = false;
-		public static IntPtr WindowHandle = IntPtr.Zero;
+		internal const bool PerformanceTest = false;
+		internal static IntPtr WindowHandle = IntPtr.Zero;
 		
 		public override void Load() {
 			IdleLog.Logger = Log;
@@ -43,8 +42,7 @@ namespace IdlePlus {
 			
 			TexturePackManager.Load();
 			ModSettings.Load();
-			CommandManager.Load();
-			
+
 			// Attributes
 			RegisterIl2CppAttributeHandler.Register();
 			InitializeAttributeHandler.Load();

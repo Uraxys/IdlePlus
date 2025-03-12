@@ -1,5 +1,6 @@
 using System;
 using IdlePlus.API.Event.Contexts;
+using IdlePlus.API.Event.Contexts.IdlePlus;
 using IdlePlus.Utilities;
 
 namespace IdlePlus.API.Event {
@@ -29,7 +30,8 @@ namespace IdlePlus.API.Event {
 		public static class Game {
 			/// <summary>
 			/// Called after the config data has been loaded and is ready to be
-			/// used.
+			/// used. Might be called multiple times if the config data is reloaded
+			/// or updated at runtime
 			/// </summary>
 			public static readonly SimpleEventAction OnConfigDataLoaded = new SimpleEventAction("OnConfigDataLoaded");
 		}
@@ -62,6 +64,11 @@ namespace IdlePlus.API.Event {
 			/// Called after a texture pack has been loaded.
 			/// </summary>
 			public static readonly SimpleEventAction OnTexturepackLoaded = new SimpleEventAction("OnTexturepackLoaded");
+			/// <summary>
+			/// Called when commands should be registered.
+			/// For documentation on how to use the event, see <see cref="CommandRegisterContext"/>.
+			/// </summary>
+			public static readonly EventAction<CommandRegisterContext> OnRegisterCommand = new EventAction<CommandRegisterContext>("OnRegisterCommand");
 		}
 	}
 	

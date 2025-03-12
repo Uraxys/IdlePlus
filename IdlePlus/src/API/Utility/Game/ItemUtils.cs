@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Databases;
 using GameContent;
 using IdlePlus.API.Event;
@@ -19,6 +18,10 @@ namespace IdlePlus.API.Utility.Game {
 		[InitializeOnce(OnSceneLoad = "*")]
 		private static void InitializeOnce() {
 			Events.Game.OnConfigDataLoaded.Register(() => {
+				ItemSearcher.Clear();
+				ItemsByLocalizedName.Clear();
+				ItemsByLocalizedNameLowered.Clear();
+				
 				foreach (var item in ItemDatabase.ItemList._values) {
 					if (item.CosmeticScrollEffect != WeaponEffectType.None) continue;
 

@@ -2,7 +2,6 @@ using Brigadier.NET;
 using Brigadier.NET.Context;
 using Client;
 using IdlePlus.Command.ArgumentTypes;
-using IdlePlus.Utilities;
 using Networking.Chat;
 
 namespace IdlePlus.Command.Commands {

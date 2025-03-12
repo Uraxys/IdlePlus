@@ -1,20 +1,18 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Brigadier.NET;
-using Brigadier.NET.ArgumentTypes;
-using Brigadier.NET.Builder;
 using Brigadier.NET.Exceptions;
 using Brigadier.NET.Suggestion;
 using Brigadier.NET.Tree;
 using ChatboxLogic;
-using Databases;
-using IdlePlus.Command.ArgumentTypes;
+using IdlePlus.API.Event;
+using IdlePlus.API.Event.Contexts.IdlePlus;
+using IdlePlus.API.Utility;
+using IdlePlus.Attributes;
 using IdlePlus.Command.Commands;
+using IdlePlus.Settings;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
 
@@ -22,115 +20,19 @@ namespace IdlePlus.Command {
 	public static class CommandManager {
 		
 		private static readonly CommandDispatcher<CommandSender> Dispatcher = new CommandDispatcher<CommandSender>();
-		private static readonly string[] OverridenCommands = new[] { "/pm", "/dm" };
-		
-		public static void Load() {
-			Dispatcher.Register(DevelopmentCommand.Register());
-			PrivateMessageCommand.Register(Dispatcher);
+		private static readonly string[] OverridenCommands = { "/pm", "/dm", "/block", "/unblock", "/commands" };
+
+		[InitializeOnce(OnSceneLoad = Scenes.MainMenu)]
+		private static void InitializeOnce() {
+			if (ModSettings.Miscellaneous.DeveloperTools.Value) {
+				DevelopmentCommand.Register(Dispatcher);
+			}
 			
-			/*Dispatcher.Register(a =>
-				a.Literal("run").Executes(context => {
-					IdleLog.Info("Run executed.");
-					return 1;
-				})
-			);
+			PrivateMessageCommand.Register(Dispatcher);
+			BlockCommand.Register(Dispatcher);
+			CommandsCommand.Register(Dispatcher);
 
-			Dispatcher.Register(a =>
-				a.Literal("register").Executes(context => {
-					IdleLog.Info("Register executed.");
-					return 1;
-				})
-			);
-
-			Dispatcher.Register(a =>
-				a.Literal("reset").Executes(context => {
-					IdleLog.Info("Reset executed.");
-					return 1;
-				})
-			);
-
-			Dispatcher.Register(a =>
-				a.Literal("mod").Executes(context => {
-					IdleLog.Info("Mod executed.");
-					return 1;
-				})
-				.Then(b =>
-					b.Argument("name", Arguments.Word()).Executes(context => {
-						var name = context.GetArgument<string>("name");
-						IdleLog.Info("Mod name {0} executed.", name);
-						return 1;
-					})
-				)
-			);
-
-			Dispatcher.Register(a =>
-				a.Literal("spawn")
-					.Then(b =>
-						b.Literal("item").Then(c =>
-							c.Argument("item", ItemArgument.Of()).Executes(context => {
-								var item = context.GetArgument<Item>("item");
-								IdleLog.Info("Spawn item {0} executed.", item.Name);
-								return 1;
-							}).Then(d =>
-								d.Argument("amount", Arguments.Integer(1, 999)).Executes(context => {
-									var item = context.GetArgument<Item>("item");
-									var amount = context.GetArgument<int>("amount");
-									IdleLog.Info("Spawn item {0} with amount {1} executed.", item.Name, amount);
-									return 1;
-								})
-							))
-					).Then(b =>
-						b.Literal("xp").Then(c =>
-							c.Argument("amount", Arguments.Integer(1, 999)).Executes(context => {
-								var amount = context.GetArgument<int>("amount");
-								IdleLog.Info("Spawn xp with amount {0} executed.", amount);
-								return 1;
-							})
-						)
-					)
-				);
-
-			Dispatcher.Register(a =>
-				a.Literal("test").Executes(context => {
-					IdleLog.Info("Test executed.");
-					return 1;
-				}).Then(b =>
-					b.Literal("run").Then(c =>
-						c.Argument("name", Arguments.Word()).Executes(context => {
-							var name = context.GetArgument<string>("name");
-							IdleLog.Info("Test run name {0} executed.", name);
-							return 1;
-						})
-					)
-				)
-			);
-
-			Dispatcher.Register(a =>
-				a.Literal("set").Then(b =>
-					b.Literal("config").Then(c => 
-						c.Argument("key", Arguments.Word()).Executes(context => {
-							IdleLog.Info("Set config key executed.");
-							return 1;
-						})
-					)
-				).Then(b =>
-					b.Literal("value").Then(c =>
-						c.Argument("key", Arguments.Word()).Executes(context => {
-							IdleLog.Info("Set value key executed.");
-							return 1;
-						})
-					)
-				)
-			);
-
-			Dispatcher.Register(a =>
-				a.Literal("say").Then(b =>
-					b.Argument("message", Arguments.String()).Executes(context => {
-						IdleLog.Info("Say executed.");
-						return 1;
-					})
-				)
-			);*/
+			Events.IdlePlus.OnRegisterCommand.Call(new CommandRegisterContext(builder => Dispatcher.Register(builder)));
 		}
 		
 		#region Internal
@@ -220,7 +122,7 @@ namespace IdlePlus.Command {
 			
 			try {
 				var result = Dispatcher.Execute(reader, sender);
-				IdleLog.Info("Command {0} executed with result {1}.", command, result);
+				IdleLog.Debug("Command {0} executed with result {1}.", command, result);
 				return new CommandResult { Success = result == 1, Response = null };
 			} catch (CommandSyntaxException e) {
 				var unknownCommand = e.Message.StartsWith("Unknown command at position");

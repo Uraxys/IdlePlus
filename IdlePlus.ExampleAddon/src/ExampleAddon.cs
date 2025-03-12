@@ -1,7 +1,9 @@
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
+using IdlePlus.API.Event;
 using IdlePlus.API.Popup;
 using IdlePlus.API.Utility;
+using IdlePlus.Command;
 using IdlePlus.ExampleAddon.Popups;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
@@ -44,6 +46,19 @@ namespace IdlePlus.ExampleAddon {
 				var text = GameObjects.NewRect<TextMeshProUGUI>("text", obj).Use<TextMeshProUGUI>();
 				text.text = "My Awesome Popup";
 				text.color = Color.white;
+			});
+			
+			// Register a command that will be added to the chat.
+			// Note: The command will only show up and work if enhanced chat commands
+			// are enabled.
+			Events.IdlePlus.OnRegisterCommand.Register(context => {
+				// Create the command.
+				var myCommand = Literal.Of("mycommand")
+					.Executes(ctx => {
+						ctx.Source.SendMessage("You just ran the /mycommand command.");
+					});
+				// Register it.
+				context.Register(myCommand);
 			});
 		}
 	}

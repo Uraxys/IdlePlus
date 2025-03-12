@@ -1,4 +1,3 @@
-using IdlePlus.API.Utility;
 using IdlePlus.API.Utility.Data;
 using IdlePlus.API.Utility.Game;
 using Networking.Chat;

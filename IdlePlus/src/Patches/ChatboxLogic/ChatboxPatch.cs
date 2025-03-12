@@ -151,13 +151,13 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			return false;
 		}
 		
-		[HarmonyPrefix]
+		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Chatbox.InsertMessageIntoChatbox))]
-		private static void PrefixInsertMessageIntoChatbox(Chatbox __instance, Transform parent, GameMode gameMode, bool isPremium,
+		private static void PostfixInsertMessageIntoChatbox(Chatbox __instance, Transform parent, GameMode gameMode, bool isPremium,
 			bool isPremiumPlus) {
 			if (TexturePackManager.CurrentPack == null) return;
 			
-			var chatObject = parent.GetChild(0);
+			var chatObject = parent.GetChild(parent.GetChildCount() - 1);
 			var chatEntry = chatObject.Use<ChatboxMessageEntry>();
 			
 			var pack = TexturePackManager.CurrentPack;

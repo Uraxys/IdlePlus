@@ -15,12 +15,12 @@ using Tasks;
 namespace IdlePlus.Command.Commands {
 	internal static class DevelopmentCommand {
 
-		internal static LiteralArgumentBuilder<CommandSender> Register() {
+		internal static void Register(CommandDispatcher<CommandSender> registry) {
 			var command = Literal.Of("dev");
 
 			command.Then(Literal.Of("export")
-				.Then(Literal.Of("items").Executes(HandleExportItems))
-				.Then(Literal.Of("tasks").Executes(HandleExportTasks)));
+				.Then(Literal.Of("items").Executes(HandleExportItems)));
+				//.Then(Literal.Of("tasks").Executes(HandleExportTasks)));
 
 			command.Then(Literal.Of("print")
 				.Then(Argument.Of("message", Arguments.GreedyString())
@@ -29,8 +29,8 @@ namespace IdlePlus.Command.Commands {
 			command.Then(Literal.Of("say")
 				.Then(Argument.Of("message", Arguments.GreedyString())
 					.Executes(HandleSay)));
-			
-			return command;
+
+			registry.Register(command);
 		}
 		
 		/*
@@ -38,8 +38,6 @@ namespace IdlePlus.Command.Commands {
 		 */
 
 		private static void HandleExportItems(CommandContext<CommandSender> context) {
-			context.Source.SendMessage("Exporting item data, this might take a second...");
-			
 			var path = Path.Combine(BepInEx.Paths.PluginPath, "IdlePlus", "export");
 			Directory.CreateDirectory(path);
 

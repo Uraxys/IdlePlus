@@ -6,6 +6,7 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 ## Features
 - **[Texture packs](https://github.com/Uraxys/IdlePlus/wiki/Texture-Pack)**: Change any item or combat monster with a simple texture pack.
 - **Edit offer**: Edit your market offers without having to cancel, claim and remake them.
+- **Display items in chat**: You can hover over item names in chat to see the item's tooltip.
 - **Total wealth**: See your total wealth on your profile page.
 - **Lowest/Highest price on offer**: Easily see if your offer is the lowest or highest by just opening it up and looking at the price line, e.g. `Price: 122 (Lowest 121)`.
 - **Compact numbers in market**: Write your offer price with compact numbers, e.g. `1k`, `8.52m`, `1kk`, `.5b`.
@@ -13,8 +14,10 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 - **Market value**: See the market value of items while hovering over them.
 - **Shift for total value**: You can hold shift to see the total value of an item in your inventory (value * quantity).
 - **Item tweak**: Items that can't be sold to the game shop won't display a price when hovered over.
+- **Potion Drink Timer**: See how much time you'll get from drinking a potion.
 - **Enhanced item tooltip**: Item tooltips that display equipment stats, which items a scroll can be used on, and more.
 - **Enhanced inventory stats**: A cleaner stats panel in your inventory.
+- **Enhanced chat commands**: Chat commands using Brigadier, with tab completion and user feedback.
 - **And much more planned!**
 
 ## Installation
@@ -51,6 +54,7 @@ Feel free to open a pull request with your changes, I'll be happy to review them
 
 **Q**: Why isn't the mod / X working?
 <br>**A**: Make sure you have the latest version of the mod installed, if you do, and it still isn't working, please open an issue [here](https://github.com/Uraxys/IdlePlus/issues).
+Remember that most features can be disabled, so if a feature is breaking your game, try disabling it.
 
 **Q**: Can I use this mod as a base for my own mod?
 <br>**A**: Yes, you can use this mod as a base for your own mod, just remember to follow the license :)

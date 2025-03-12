@@ -151,13 +151,19 @@ namespace IdlePlus.Settings {
 		
 		// Miscellaneous category
 		public static readonly SettingCategory MiscellaneousCategory = SettingCategory.Create("Miscellaneous",
-			Miscellaneous.InternalItemNames);
+			Miscellaneous.InternalItemNames, Miscellaneous.DeveloperTools);
 		
 		// Miscellaneous settings
 		public static class Miscellaneous {
 			public static readonly ToggleSetting InternalItemNames = ToggleSetting.Create(
 				"misc_internalItemNames",
 				"Display the internal item name instead of the display name.",
+				false
+			);
+
+			public static readonly ToggleSetting DeveloperTools = ToggleSetting.Create(
+				"misc_developerTools", true,
+				"Enable developer tools, for example /dev.",
 				false
 			);
 		}
@@ -172,30 +178,28 @@ namespace IdlePlus.Settings {
 		
 		#region Save/Load
 		
-		public static async void Load() {
-			await Task.Run(() => {
-				var path = Path.Combine(BepInEx.Paths.PluginPath, "IdlePlus");
-				if (!Directory.Exists(path)) return;
+		public static void Load() {
+			var path = Path.Combine(BepInEx.Paths.PluginPath, "IdlePlus");
+			if (!Directory.Exists(path)) return;
 				
-				var filePath = Path.Combine(path, "settings.dat");
-				if (!File.Exists(filePath)) return;
-				var file = File.Open(filePath, FileMode.Open, FileAccess.Read);
-				var data = new BinaryReader(file);
+			var filePath = Path.Combine(path, "settings.dat");
+			if (!File.Exists(filePath)) return;
+			var file = File.Open(filePath, FileMode.Open, FileAccess.Read);
+			var data = new BinaryReader(file);
 				
-				var entries = data.ReadInt32();
+			var entries = data.ReadInt32();
 				
-				for (var i = 0; i < entries; i++) {
-					var id = data.ReadString();
-					var length = data.ReadByte();
-					var bytes = data.ReadBytes(length);
+			for (var i = 0; i < entries; i++) {
+				var id = data.ReadString();
+				var length = data.ReadByte();
+				var bytes = data.ReadBytes(length);
 					
-					var setting = Categories.SelectMany(category => category.Settings)
-						.FirstOrDefault(s => s.Id == id);
-					setting?.Deserialize(bytes);
-				}
+				var setting = Categories.SelectMany(category => category.Settings)
+					.FirstOrDefault(s => s.Id == id);
+				setting?.Deserialize(bytes);
+			}
 				
-				data.Close();
-			});
+			data.Close();
 		}
 
 		public static async void Save() {

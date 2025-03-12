@@ -1,0 +1,7 @@
+List of valid background texture names.
+Max width and height is 2048, but it should ideally match the default window resolution of 1280x720.
+
+default.png
+minigame.png
+raid.png
+boss_fight.png

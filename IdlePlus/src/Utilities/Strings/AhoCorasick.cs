@@ -10,7 +10,7 @@ namespace IdlePlus.Utilities.Strings {
 			public readonly List<string> Outputs = new List<string>();
 		}
 		
-		private readonly TrieNode _root = new TrieNode();
+		private TrieNode _root = new TrieNode();
 		
 		public void Insert(string word) {
 			var node = this._root;
@@ -19,6 +19,10 @@ namespace IdlePlus.Utilities.Strings {
 				node = node.Children[ch];
 			}
 			node.Outputs.Add(word);
+		}
+
+		public void Clear() {
+			this._root = new TrieNode();
 		}
 		
 		public void BuildFailureLinks() {
