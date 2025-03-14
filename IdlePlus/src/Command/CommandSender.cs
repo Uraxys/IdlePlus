@@ -30,8 +30,7 @@ namespace IdlePlus.Command {
 			var messageEntry = messageEntryObj.Use<ChatboxMessageEntry>();
 			
 			messageEntry.transform.SetAsLastSibling();
-			messageEntry.Setup(ChatManager._serialization, message, channelId, gameMode, premium, gilded, 
-				moderator);
+			messageEntry.Setup(message, channelId, gameMode, premium, gilded, moderator);
 		}
 	}
 }

@@ -147,7 +147,6 @@ namespace IdlePlus.Patches {
 			
 			targets.Add(typeof(NetworkClient), Methods(nameof(NetworkClient.MessageReceived), nameof(NetworkClient.HandleReceivedMessage),
 				nameof(NetworkClient.DeserializeMessage)));
-			targets.Add(typeof(ChatboxMessageSerialization), Methods(nameof(ChatboxMessageSerialization.Start)));
 			targets.Add(typeof(NotificationsManager), Methods(nameof(NotificationsManager.Awake), nameof(NotificationsManager.ProcessOfflineProgressNotifications)));
 			targets.Add(typeof(HolidayEventGameManager), Methods(nameof(HolidayEventGameManager.Awake)));
 			targets.Add(typeof(ReviewPromptingManager), Methods(nameof(ReviewPromptingManager.OnEnable)));
@@ -163,10 +162,12 @@ namespace IdlePlus.Patches {
 			targets.Add(typeof(RaidCitadelBattleManager), Methods(nameof(RaidCitadelBattleManager.Awake)));
 			targets.Add(typeof(MinigameManagerCombatEvents), Methods(nameof(MinigameManagerCombatEvents.Awake)));
 			targets.Add(typeof(NetworkClientChatService), Methods(nameof(NetworkClientChatService.Awake)));
+			
+			targets.Add(typeof(Resources), Methods(nameof(Resources.UnloadUnusedAssets)));
 
 
 
-			var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+			/*var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 			var monoTypes = allAssemblies
 				.Where(a => a.GetName().Name == "Assembly-CSharp")
 				.SelectMany(a => a.GetTypes())
@@ -188,10 +189,10 @@ namespace IdlePlus.Patches {
 				"InAppPurchasing.", "DebugTools.", "Inventory.", "Main.",
 				"Minigames.", "Network.", "Notifications.", "Platforms.",
 				"Player."
-			};
+			};*/
 			
-			IdleLog.Info($"Found {patchableMethods.Count} targets.");
-			List<MethodInfo> infos = new List<MethodInfo>();
+			//IdleLog.Info($"Found {patchableMethods.Count} targets.");
+			/*List<MethodInfo> infos = new List<MethodInfo>();
 			foreach (var method in patchableMethods) {
 				var type = method.DeclaringType;
 				var name = method.Name;
@@ -244,24 +245,24 @@ namespace IdlePlus.Patches {
 				}
 				
 				infos.Add(method);
-			}
+			}*/
 
-			var countAfter = infos.Count;
+			/*var countAfter = infos.Count;
 			IdleLog.Info($"Found {countAfter} after targets.");
 
 
 			foreach (var e in infos) {
 				harmony.Patch(e, new HarmonyMethod(prefix), new HarmonyMethod(postfix));
 				IdleLog.Info($"Doing {e.DeclaringType.FullName}#{e.Name}()");
-			}
+			}*/
 			
 
 			// STOP
-			stopTargets.Add(typeof(InAppPurchaseManager), Methods(nameof(InAppPurchaseManager.OnLoggedIn)));
+			/*stopTargets.Add(typeof(InAppPurchaseManager), Methods(nameof(InAppPurchaseManager.OnLoggedIn)));
 			stopTargets.Add(typeof(LoginTracker), Methods(nameof(LoginTracker.Start)));
 			stopTargets.Add(typeof(ChatboxManager), Methods(nameof(ChatboxManager.Start), nameof(ChatboxManager.InitializePublicChatHistory)));
 			stopTargets.Add(typeof(ProfilePanel), Methods(nameof(ProfilePanel.SetupData)));
-			stopTargets.Add(typeof(GuildListener), Methods(nameof(GuildListener.Awake), nameof(GuildListener.OnLoginDataReceived)));
+			stopTargets.Add(typeof(GuildListener), Methods(nameof(GuildListener.Awake), nameof(GuildListener.OnLoginDataReceived)));*/
 			//stopTargets.Add(typeof(PlayerInventory), Methods(nameof(PlayerInventory.Setup)));
 			
 			foreach (var entry in targets) {
