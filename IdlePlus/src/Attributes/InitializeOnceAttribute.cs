@@ -8,6 +8,13 @@ using IdlePlus.Utilities.Extensions;
 
 namespace IdlePlus.Attributes {
 	
+	/// <summary>
+	/// <para>Mark the method to be run once at certain points in the game.
+	/// If <c>OnSceneLoad</c> is set, then the method will only run
+	/// if the scene that is specified is loaded. Otherwise, it'll
+	/// run when the player has logged in.</para>
+	/// <para>The method will only run once per game session.</para>
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Method)]
 	public class InitializeOnceAttribute : Attribute {
 		public int Priority = 0;

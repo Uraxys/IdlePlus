@@ -2,6 +2,7 @@ using HarmonyLib;
 using IdlePlus.API.Event;
 using IdlePlus.API.Event.Contexts;
 using IdlePlus.Unity;
+using IdlePlus.Utilities;
 using Player;
 using UnityEngine;
 
@@ -13,9 +14,9 @@ namespace IdlePlus.Patches {
 	[HarmonyPatch(typeof(PlayerData))]
 	public class PlayerDataPatch {
 		
-		[HarmonyPostfix]
+		[HarmonyFinalizer]
 		[HarmonyPatch(nameof(PlayerData.Start))]
-		public static void PostfixStart(PlayerData __instance) {
+		private static void FinalizerStart(PlayerData __instance) {
 			Events.Player.OnLogin.Call(new PlayerLoginEventContext(__instance));
 		}
 	}

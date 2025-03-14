@@ -7,6 +7,12 @@ using IdlePlus.Utilities;
 
 namespace IdlePlus.Attributes {
 	
+	/// <summary>
+	/// Mark the method to be run at certain points in the game.
+	/// If <c>OnSceneLoad</c> is set, then the method will only run
+	/// if the scene that is specified is loaded. Otherwise, it'll
+	/// run when the player has logged in.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Method)]
 	public class InitializeAttribute : Attribute {
 		public int Priority = 0;
