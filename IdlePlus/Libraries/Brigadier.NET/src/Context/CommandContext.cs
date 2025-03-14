@@ -54,6 +54,16 @@ namespace Brigadier.NET.Context
 
 		public TSource Source { get; }
 
+		public T GetOptionalArgument<T>(string name, T def) {
+			if (!_arguments.TryGetValue(name, out var argument)) {
+				return def;
+			}
+			
+			var result = argument.Result;
+			if (result is T v) return v;
+			throw new InvalidOperationException($"Argument {name}' is defined as {result.GetType().Name}, not {typeof(T).Name}");
+		}
+		
 		public T GetArgument<T>(string name)
 		{
 			if (!_arguments.TryGetValue(name, out var argument))

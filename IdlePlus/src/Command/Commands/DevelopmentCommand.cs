@@ -1,16 +1,12 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Brigadier.NET;
-using Brigadier.NET.Builder;
 using Brigadier.NET.Context;
 using Databases;
-using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Player;
-using Tasks;
 
 namespace IdlePlus.Command.Commands {
 	internal static class DevelopmentCommand {
