@@ -15,6 +15,7 @@ namespace IdlePlus.Utilities.Helpers {
 		public static GameObject PrefabContainer;
 		private static GameObject _baseDropdown;
 		private static GameObject _baseToggle;
+		private static GameObject _baseInputField;
 		
 		[InitializeOnce(Priority = InitPriority.UiHelper, OnSceneLoad = "*")]
 		private static void InitializeOnce() {
@@ -25,6 +26,7 @@ namespace IdlePlus.Utilities.Helpers {
 			
 			InitializeDropdown();
 			InitializeToggle();
+			InitializeInputField();
 		}
 
 		private static void InitializeDropdown() {
@@ -64,7 +66,19 @@ namespace IdlePlus.Utilities.Helpers {
 			leanToggle.onOff = new UnityEvent();
 			leanToggle.onOn = new UnityEvent();
 		}
-		
+
+		private static void InitializeInputField() {
+			var copyInputField = GameObjects.FindByPathNonNull("PopupManager/Canvas/HardPopups/SettingsPopup2/Panels/BlocksSection/BlockPlayerInputField");
+			if (copyInputField != null) {
+				_baseInputField = Object.Instantiate(copyInputField, PrefabContainer.transform, false);
+				_baseInputField.name = "IdlePlusInputField";
+			} else {
+				IdleLog.Info("InputField prefab not found by path!");
+			}
+		}
+
+
+
 		public static GameObject CreateDropdown(string name, Transform parent = null) {
 			var dropdown = Object.Instantiate(_baseDropdown);
 			dropdown.name = name;
@@ -81,6 +95,23 @@ namespace IdlePlus.Utilities.Helpers {
 			toggle.name = name;
 			if (parent != null) toggle.transform.SetParent(parent, false);
 			return toggle;
+		}
+
+		public static GameObject CreateInputField(string name, Transform parent = null) {
+			if (_baseInputField == null) {
+				InitializeInputField();
+			}
+			if (_baseInputField == null) {
+				var fallback = new GameObject(name);
+				fallback.AddComponent<RectTransform>();
+				return fallback;
+			}
+			var inputField = Object.Instantiate(_baseInputField);
+			inputField.name = name;
+			if (parent != null) {
+				inputField.transform.SetParent(parent, false);
+			}
+			return inputField;
 		}
 	}
 }
