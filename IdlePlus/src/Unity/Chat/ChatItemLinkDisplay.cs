@@ -3,8 +3,6 @@ using IdlePlus.API.Unity;
 using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Utilities;
-using Navigation;
-using PlayerMarket;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -14,16 +12,13 @@ using UnityEngine.SceneManagement;
 namespace IdlePlus.Unity.Chat {
 	
 	[RegisterIl2Cpp]
-	public class ChatItemLinkDisplay : MonoBehaviour, IMouseEnterHandler, IMouseExitHandler, IMouseMoveHandler, IMouseClickHandler {
+	public class ChatItemLinkDisplay : MonoBehaviour, IMouseEnterHandler, IMouseExitHandler, IMouseMoveHandler {
 		
 		private static Camera _camera;
-		private static PlayerMarketPage _market;
 		
 		private InventoryItemHoverPopup _popup;
 		private TextMeshProUGUI _text;
-		
 		private string _selected;
-		private Item _selectedItem;
 
 		[InitializeOnce(OnSceneLoad = Scenes.Anything)]
 		private static void InitializeOnce() {
@@ -41,27 +36,6 @@ namespace IdlePlus.Unity.Chat {
 		
 		public void Awake() {
 			if (!_camera) _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		}
-		
-		public void HandleMouseClick(MouseEventData data) {
-			if (this._selected == null || this._selectedItem == null) return;
-			if (!data.LeftClickPressed) return;
-
-			if (_market == null) {
-				_market = FindObjectOfType<PlayerMarketPage>(true);
-				if (_market == null) {
-					IdleLog.Warn("Couldn't find PlayerMarketPage.");
-					return;
-				}
-			}
-
-			PopupManager.Instance.CloseAllActivePopups();
-			NavigationManager.Instance.SelectTab(Content.PlayerMarket);
-
-			_market.OnSearchButtonPressed();
-			_market._frontPageContainer.SetActive(false);
-			_market._offerPage.gameObject.SetActive(false);
-			_market._searchPage.SelectItemAsync(this._selectedItem);
 		}
 
 		public void HandleMouseEnter(MouseEventData data) {
@@ -129,7 +103,6 @@ namespace IdlePlus.Unity.Chat {
 			
 			var itemId = int.Parse(linkId.Substring(5));
 			var item = ItemDatabase.ItemList[itemId];
-			this._selectedItem = item;
 			
 			PopupManager.Instance.SetupHardPopup(HardPopup.InventoryItemHoverPopup, false, false);
 			var worldPos = _camera.ScreenToWorldPoint(data.MousePosition);

@@ -1,9 +1,12 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IdlePlus.Settings.Types;
 using Path = System.IO.Path;
+using IdlePlus.Utilities;
+using System.Collections.Generic;
 
 namespace IdlePlus.Settings {
 	
@@ -146,6 +149,54 @@ namespace IdlePlus.Settings {
 			public static StringDropdownSetting CurrentPack;
 		}
 		#endregion
+
+
+		#region Hooks
+		public static readonly SettingCategory HooksCategory = SettingCategory.Create(
+			"WebHooks",
+			new Setting[] { Hooks.BackendHookServer, Hooks.BackendHookBarrer }
+				.Concat(Hooks.WebhookToggles.Values.Cast<Setting>())
+				.ToArray()
+		);
+
+		public static class Hooks {
+			public static readonly StringSetting BackendHookServer = StringSetting.Create(
+				"hook_backendUrl",
+				"The URL for the backend hook server.",
+				"",
+				@"^(http:\/\/|https:\/\/).{4,}$",
+				"Invalid URL. It must start with http:// or https:// and be a valid domain."
+			);
+
+			public static readonly StringSetting BackendHookBarrer = StringSetting.Create(
+				"hook_backendBarrer",
+				"Security Barrer for Backend API",
+				"",
+				@"^[A-Za-z0-9]{8,}$",
+				"Invalid token format. Please enter at least 8 alphanumeric characters."
+			);
+
+			public static readonly Dictionary<WebhookType, ToggleSetting> WebhookToggles = CreateWebhookToggles();
+
+			/// <summary>
+			/// Creates a dictionary that maps each WebhookType to its corresponding ToggleSetting.
+			/// The ToggleSetting is generated based on the configuration obtained from the WebhookConfigProvider.
+			/// The setting ID is formed by appending "WebHook" to the webhook type's name, and the display name is built by combining
+			/// the configured settings name, the request method, and the URL path.
+			/// </summary>
+			/// <returns>A dictionary mapping each WebhookType to a ToggleSetting.</returns>
+			private static Dictionary<WebhookType, ToggleSetting> CreateWebhookToggles() {
+				var toggles = new Dictionary<WebhookType, ToggleSetting>();
+				foreach (WebhookType webhook in Enum.GetValues(typeof(WebhookType))) {
+					var config = WebhookConfigProvider.GetConfig(webhook);
+					string id = webhook.ToString() + "WebHook";
+					string displayName = $"{config.SettingsName}\n{config.RequestMethod} {config.UrlPath}";
+					toggles[webhook] = ToggleSetting.Create(id, displayName, false);
+				}
+				return toggles;
+			}
+		}
+		#endregion
         
 		#region Miscellaneous
 		
@@ -174,7 +225,7 @@ namespace IdlePlus.Settings {
 		// Category registration, each category must be registered here, if not
 		// it won't be loaded or saved.
 		public static readonly SettingCategory[] Categories = { FeaturesCategory, UICategory, MarketValueCategory,
-			TexturePackCategory, MiscellaneousCategory };
+			TexturePackCategory, HooksCategory, MiscellaneousCategory };
 		
 		#region Save/Load
 		
@@ -228,7 +279,6 @@ namespace IdlePlus.Settings {
 			});
 		}
 		
-		#endregion
-		
+		#endregion		
 	}
 }

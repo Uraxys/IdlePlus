@@ -97,6 +97,7 @@
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
         <Reference Include="System.Xml"/>
+        <Reference Include="System.Net.Http"/>
         <Reference Include="Unity.TextMeshPro">
           <HintPath>..\libs\interop\Unity.TextMeshPro.dll</HintPath>
         </Reference>

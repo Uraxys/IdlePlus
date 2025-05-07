@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using IdlePlus.Utilities;
 using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Type = Il2CppSystem.Type;
@@ -52,16 +54,9 @@ namespace IdlePlus.API.Unity {
 				break;
 			}
 
-			var leftPressed = Input.GetMouseButtonDown(0);
-			var rightPressed = Input.GetMouseButtonDown(1);
-						
-			MouseEventData eventData = new MouseEventData(Input.mousePosition, leftPressed, rightPressed);
+			MouseEventData eventData = new MouseEventData(Input.mousePosition);
 			ProcessEnterExit(eventData, result?.gameObject);
 			ProcessMove(eventData);
-			
-			if (leftPressed || rightPressed) {
-				ExecuteEvent(Selected.GameObject, eventData, MouseEventFunctions.MouseClickFunc);
-			}
 		}
 
 		private static void ProcessEnterExit(MouseEventData data, GameObject current) {
@@ -175,7 +170,6 @@ namespace IdlePlus.API.Unity {
 
 			public RegisteredType(System.Type type, RegisteredTypeFactory factory) {
 				this._factory = factory;
-				if (typeof(IMouseClickHandler).IsAssignableFrom(type)) this._supports.Add(typeof(IMouseClickHandler));
 				if (typeof(IMouseEnterHandler).IsAssignableFrom(type)) this._supports.Add(typeof(IMouseEnterHandler));
 				if (typeof(IMouseExitHandler).IsAssignableFrom(type)) this._supports.Add(typeof(IMouseExitHandler));
 				if (typeof(IMouseMoveHandler).IsAssignableFrom(type)) this._supports.Add(typeof(IMouseMoveHandler));
@@ -191,20 +185,9 @@ namespace IdlePlus.API.Unity {
 	public class MouseEventData {
 		
 		public readonly Vector3 MousePosition;
-
-		/// <summary>
-		/// If the left mouse button was just pressed.
-		/// </summary>
-		public readonly bool LeftClickPressed;
-		/// <summary>
-		/// If the right mouse button was just pressed.
-		/// </summary>
-		public readonly bool RightClickPressed;
 		
-		public MouseEventData(Vector3 mousePosition, bool leftClickPressed, bool rightClickPressed) {
+		public MouseEventData(Vector3 mousePosition) {
 			this.MousePosition = mousePosition;
-			this.LeftClickPressed = leftClickPressed;
-			this.RightClickPressed = rightClickPressed;
 		}
 	}
 
@@ -218,16 +201,9 @@ namespace IdlePlus.API.Unity {
 
 		internal static readonly MouseEventFunc<IMouseExitHandler> MouseExitFunc =
 			(handler, data) => handler.HandleMouseExit(data);
-		
-		internal static readonly MouseEventFunc<IMouseClickHandler> MouseClickFunc =
-			(handler, data) => handler.HandleMouseClick(data);
 	}
 
 	public interface IMouseEvent {}
-	
-	public interface IMouseClickHandler : IMouseEvent {
-		void HandleMouseClick(MouseEventData data);
-	}
 	
 	public interface IMouseEnterHandler : IMouseEvent {
 		void HandleMouseEnter(MouseEventData data);

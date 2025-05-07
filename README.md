@@ -18,6 +18,7 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 - **Enhanced item tooltip**: Item tooltips that display equipment stats, which items a scroll can be used on, and more.
 - **Enhanced inventory stats**: A cleaner stats panel in your inventory.
 - **Enhanced chat commands**: Chat commands using Brigadier, with tab completion and user feedback.
+- **[Webhooks for developers](./WEBHOOKS.md)**: Integrate with external systems via webhooks to receive real-time notifications about in-game events.
 - **And much more planned!**
 
 ## Installation
