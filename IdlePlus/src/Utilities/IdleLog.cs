@@ -17,11 +17,11 @@ namespace IdlePlus.Utilities {
 		}
 		
 		public static void Error(object message, Il2CppSystem.Exception exception) {
-			Log(LogLevel.Error, "{}\n{}", message, exception.ToString());
+			Log(LogLevel.Error, "{}\n{}", message, exception?.ToString());
 		}
 		
 		public static void Error(object message, Exception exception) {
-			Log(LogLevel.Error, "{}\n{}", message, exception.ToString());
+			Log(LogLevel.Error, "{}\n{}", message, exception?.ToString());
 		}
 		
 		public static void Warn(object message, params object[] args) {

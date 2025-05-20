@@ -1,6 +1,7 @@
 using IdlePlus.Attributes;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
+using Il2CppInterop.Runtime.Attributes;
 using Michsky.MUIP;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,7 @@ namespace IdlePlus.Unity {
 			}
 		}
 
+		[HideFromIl2Cpp]
 		public string[] Items {
 			get => _items;
 			set {

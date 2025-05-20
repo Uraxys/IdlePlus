@@ -56,6 +56,7 @@ using Object = Il2CppSystem.Object;
 #pragma warning disable CS0162 // Unreachable code detected
 
 namespace IdlePlus.Patches {
+	[HarmonyPatch]
 	public static class PerformanceTestPatch {
 		
 		internal static List<T> Methods<T>(params T[] items) => new List<T>(items);
@@ -66,9 +67,9 @@ namespace IdlePlus.Patches {
 			//if (true) return;
 			if (!IdlePlus.PerformanceTest) return;
 
-			var prefix = typeof(PerformanceTestPatch).GetMethod("Prefix");
+			var prefix = typeof(PerformanceTestPatch).GetMethod("ManualPrefix");
 			var prefixStop = typeof(PerformanceTestPatch).GetMethod("PrefixStop");
-			var postfix = typeof(PerformanceTestPatch).GetMethod("Postfix");
+			var postfix = typeof(PerformanceTestPatch).GetMethod("ManualPostfix");
 			
 			Dictionary<Type, List<string>> targets = new Dictionary<Type, List<string>>();
 			Dictionary<Type, List<string>> stopTargets = new Dictionary<Type, List<string>>();
@@ -325,7 +326,7 @@ namespace IdlePlus.Patches {
 			IdleLog.Warn($"Stack: {new Exception()._stackTraceString}");
 			return false;
 		}
-		public static void Prefix(out Stopwatch __state, MethodInfo __originalMethod) {
+		public static void ManualPrefix(out Stopwatch __state, MethodInfo __originalMethod) {
 			__state = new Stopwatch();
 			__state.Start();
 
@@ -337,11 +338,17 @@ namespace IdlePlus.Patches {
 			}
 		}
 
-		public static void Postfix(Stopwatch __state, MethodInfo __originalMethod) {
+		public static void ManualPostfix(Stopwatch __state, MethodInfo __originalMethod) {
 			__state.Stop();
 			var second = DebugAwake.Watch?.ElapsedMilliseconds ?? -1;
 			if (second == 0) return;
 			IdleLog.Info($"{__originalMethod.DeclaringType}#{__originalMethod.Name} - Took {__state.ElapsedMilliseconds}ms ({Time.frameCount} / {second}ms)");
 		}
+		
+		/*[HarmonyPrefix]
+		[HarmonyPatch(typeof(PlayerEquipment), nameof(PlayerEquipment.OnLoadoutMessageReceived))]
+		public static void SetupPostfix(PlayerEquipment __instance) {
+			IdleLog.Error("PlayerEquipment#OnLoadoutMessageReceived - Called");
+		}*/
 	}
 }

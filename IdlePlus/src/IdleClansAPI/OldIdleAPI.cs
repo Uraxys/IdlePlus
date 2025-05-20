@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 namespace IdlePlus.IdleClansAPI {
 	
 	// TODO: Refactor, I want a handler for every API endpoint, easy to use and understand.
-	public static class IdleAPI {
+	public static class OldIdleAPI {
 		
 		private const string MarketPricesUrl = "https://query.idleclans.com/api/PlayerMarket/items/prices/latest?includeAveragePrice=true";
 		private static bool _initialized;

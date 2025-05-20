@@ -304,7 +304,7 @@ namespace IdlePlus.Patches.Popups {
 			// Disable the market value if the item can't be sold.
 			if (canNotBeTraded) _marketValue.SetActive(false);
 			else {
-				var price = IdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
+				var price = OldIdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
 				var text = price == null || price <= 0 ? "???" : !shift ? 
 						Numbers.FormatBasedOnSetting(price.Value) : 
 						$"{Numbers.FormatBasedOnSetting(price.Value * amount)} = {amountText} x " +

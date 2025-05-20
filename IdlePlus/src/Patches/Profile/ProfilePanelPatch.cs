@@ -23,7 +23,7 @@ namespace IdlePlus.Patches.Profile {
 		[InitializeOnce(OnSceneLoad = Scenes.Game)]
 		private static void InitializeOnce() {
 			if (!ModSettings.Features.TotalWealth.Value) return;
-			IdleAPI.OnMarketPricesFetched += OnMarketPricesFetched;
+			OldIdleAPI.OnMarketPricesFetched += OnMarketPricesFetched;
 		}
 		
 		[Initialize(OnSceneLoad = Scenes.MainMenu)]
@@ -67,7 +67,7 @@ namespace IdlePlus.Patches.Profile {
 			if (_totalWealth == null) return;
 			var text = _totalWealth.Use<TextMeshProUGUI>();
 
-			if (!IdleAPI.IsInitialized()) {
+			if (!OldIdleAPI.IsInitialized()) {
 				text.text = "Total Wealth: ...";
 				return;
 			}
@@ -78,7 +78,7 @@ namespace IdlePlus.Patches.Profile {
 			// Calculate total wealth.
 			var inventory = PlayerData.Instance.Inventory;
 			var equipment = PlayerData.Instance.Equipment;
-			var marketPrices = IdleAPI.MarketPrices;
+			var marketPrices = OldIdleAPI.MarketPrices;
 			var wealth = 0L;
 
 			// Gold

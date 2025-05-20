@@ -62,11 +62,12 @@ namespace IdlePlus {
 			
 			// Popup testing
 			TestPopupTwo.PopupKey = CustomPopupManager.Register("IdlePlus:TestPopupTwo", TestPopupTwo.Create);
+			PlayerProfilePopup.PopupKey = CustomPopupManager.Register("IdlePlus:PlayerProfilePopup", PlayerProfilePopup.Create);
 			
 			// Create the market prices update task.
 			IdleTasks.Repeat(0, 60, task => {
 				if (!NetworkClient.IsConnected()) return;
-				IdleAPI.UpdateMarketPrices();
+				OldIdleAPI.UpdateMarketPrices();
 			});
 			
 			IdleLog.Info($"Idle Plus v{ModVersion} loaded!");
@@ -84,7 +85,7 @@ namespace IdlePlus {
 			InitializeAttributeHandler.Initialize();
 				
 			// Update market prices.
-			IdleAPI.UpdateMarketPrices();
+			OldIdleAPI.UpdateMarketPrices();
 			
 			// Update the window title to display the current player name.
 			// NOTE: Only works on windows.

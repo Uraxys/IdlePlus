@@ -115,7 +115,7 @@ namespace IdlePlus.Patches.Popups {
 			
 			// Add the current lowest price to the "Price: " text.
 			var prefix = __instance._isBuyOffer ? "Highest" : "Lowest";
-			var marketEntry = IdleAPI.GetMarketEntry(__instance._item);
+			var marketEntry = OldIdleAPI.GetMarketEntry(__instance._item);
 			var price = marketEntry == null ? "???" : __instance._isBuyOffer ? 
 				Numbers.Format(marketEntry.GetBuyPrice()) : Numbers.Format(marketEntry.GetSellPrice());
 			__instance._priceText.m_text += $" <color=#aaa>({prefix} {price})</color>";

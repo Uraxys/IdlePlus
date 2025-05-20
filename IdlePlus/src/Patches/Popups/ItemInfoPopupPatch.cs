@@ -63,7 +63,7 @@ namespace IdlePlus.Patches.Popups {
 			
 			if (canNotBeTraded) _marketValue.SetActive(false);
 			else {
-				var price = IdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
+				var price = OldIdleAPI.GetMarketEntry(item)?.GetPriceDependingOnSetting();
 				var text = price > 0 ? Numbers.ToCompactFormat(price.Value) : "???";
 				
 				_marketValue.SetActive(true);

@@ -4,6 +4,7 @@ using HarmonyLib;
 using IdlePlus.Attributes;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
+using Il2CppInterop.Runtime.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -186,6 +187,7 @@ namespace IdlePlus.Unity.Chat {
 			this._selected = index;
 		}
 		
+		[HideFromIl2Cpp]
 		internal void Setup(int index, List<Suggestion> entries) {
 			this._suggestions = entries;
 			this._selected = 0;
@@ -331,6 +333,7 @@ namespace IdlePlus.Unity.Chat {
 			this.SetEnabled(false);
 		}
 		
+		[HideFromIl2Cpp]
 		internal void Setup(Suggestion suggestion, bool selected = false) {
 			this._suggestion = suggestion;
 			this._selected = selected;
