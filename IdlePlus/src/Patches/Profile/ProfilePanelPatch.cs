@@ -1,4 +1,3 @@
-using System;
 using Equipment;
 using HarmonyLib;
 using IdlePlus.API.Utility;
@@ -40,19 +39,21 @@ namespace IdlePlus.Patches.Profile {
 			// to return true even if the object isn't null.
 			if (_totalWealth == null) {
 				var userInfoObj = __instance._usernameText.transform.parent;
+				var startingPosition = 120;
+				const int spacing = 23;
 				
 				// Move all the fields up.
 				var pos = __instance._usernameText.transform.localPosition;
-				__instance._usernameText.transform.localPosition = pos.SetY(90);
-				__instance._modeText.transform.localPosition = pos.SetY(65);
-				__instance._currentActivityText.transform.localPosition = pos.SetY(40);
-				__instance._offlineProgressCapText.transform.localPosition = pos.SetY(15);
-				__instance._totalLevelText.transform.localPosition = pos.SetY(-10);
+				__instance._usernameText.transform.localPosition = pos.SetY(startingPosition);
+				__instance._modeText.transform.localPosition = pos.SetY(startingPosition -= spacing);
+				__instance._currentActivityText.transform.localPosition = pos.SetY(startingPosition -= spacing);
+				__instance._offlineProgressCapText.transform.localPosition = pos.SetY(startingPosition -= spacing);
+				__instance._totalLevelText.transform.localPosition = pos.SetY(startingPosition -= spacing);
 				
 				// Create the total wealth field.
 				_totalWealth = Object.Instantiate(__instance._totalLevelText.gameObject, userInfoObj.transform, false);
 				_totalWealth.name = "TotalWealthText";
-				_totalWealth.transform.localPosition = pos.SetY(-35);
+				_totalWealth.transform.localPosition = pos.SetY(startingPosition - spacing);
 			}
 
 			UpdateTotalWealth();

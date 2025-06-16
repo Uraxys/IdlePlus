@@ -244,11 +244,10 @@ namespace IdlePlus.API.Popup.Popups {
 			this._gameMode = Enum.TryParse<GameMode>(profile.GameMode, true, out var mode) ? mode : GameMode.NotSelected;
 			
 			// TODO: REMOVE THIS!
-			if (!this._isOnline) this._isOnline = profile.HoursOffline == 0;
+			//if (!this._isOnline) this._isOnline = profile.HoursOffline == 0;
 			
 			// Only set up the inventory if we don't expect the player to be online.
-			/*if (!expectOnline) */ // Uncomment when the server always responds to our packet.
-			if (!this._serverResponse) {
+			if (!this._serverResponse && !expectOnline) {
 				this.SetupEquipment(profile.Equipment);
 				this.SetupSkills(profile.SkillExperiences);
 			}

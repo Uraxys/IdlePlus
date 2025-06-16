@@ -15,6 +15,7 @@ using IdlePlus.API.Popup.Popups;
 using Lobby;
 using Login;
 using Popups;
+using Tasks;
 using MulticastDelegate = Il2CppSystem.MulticastDelegate;
 
 namespace IdlePlus.Command.Commands {
