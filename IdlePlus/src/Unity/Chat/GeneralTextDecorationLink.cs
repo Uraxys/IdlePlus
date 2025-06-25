@@ -40,6 +40,10 @@ namespace IdlePlus.Unity.Chat {
 		public void Setup(TextMeshProUGUI text, Action<string, MouseEventData> onClick = null) {
 			this._text = text;
 			this._onClick = onClick;
+
+			this._selectedId = null;
+			this._originalText = null;
+			this._clickId = null;
 		}
 		
 		public void Awake() {
