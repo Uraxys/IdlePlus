@@ -3,6 +3,9 @@ using IdlePlus.API.Unity;
 using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
 using IdlePlus.Utilities;
+using Il2CppInterop.Runtime.Attributes;
+using Navigation;
+using PlayerMarket;
 using Popups;
 using TMPro;
 using UnityEngine;
@@ -12,22 +15,26 @@ using UnityEngine.SceneManagement;
 namespace IdlePlus.Unity.Chat {
 	
 	[RegisterIl2Cpp]
-	public class ChatItemLinkDisplay : MonoBehaviour, IMouseEnterHandler, IMouseExitHandler, IMouseMoveHandler {
+	public class ChatItemDisplayLink : MonoBehaviour, IMouseEnterHandler, IMouseExitHandler, IMouseMoveHandler, IMouseClickHandler {
 		
 		private static Camera _camera;
+		private static PlayerMarketPage _market;
 		
 		private InventoryItemHoverPopup _popup;
 		private TextMeshProUGUI _text;
+		
 		private string _selected;
+		private Item _selectedItem;
 
 		[InitializeOnce(OnSceneLoad = Scenes.Anything)]
 		private static void InitializeOnce() {
-			MouseEventManager.Register<ChatItemLinkDisplay>(component => component.Cast<ChatItemLinkDisplay>());
+			MouseEventManager.Register<ChatItemDisplayLink>(component => component.Cast<ChatItemDisplayLink>());
 			SceneManager.sceneLoaded += (UnityAction<Scene, LoadSceneMode>)delegate(Scene scene, LoadSceneMode mode) {
 				if (!_camera) _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 			};
 		}
 		
+		[HideFromIl2Cpp]
 		public void Setup(TextMeshProUGUI text) {
 			var popup = PopupManager.Instance.GetPopup(HardPopup.InventoryItemHoverPopup);
 			this._popup = popup.Cast<InventoryItemHoverPopup>();
@@ -37,12 +44,36 @@ namespace IdlePlus.Unity.Chat {
 		public void Awake() {
 			if (!_camera) _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		}
+		
+		[HideFromIl2Cpp]
+		public void HandleMouseClick(MouseEventData data) {
+			if (this._selected == null || this._selectedItem == null) return;
+			if (!data.LeftClickPressed) return;
 
+			if (_market == null) {
+				_market = FindObjectOfType<PlayerMarketPage>(true);
+				if (_market == null) {
+					IdleLog.Warn("Couldn't find PlayerMarketPage.");
+					return;
+				}
+			}
+
+			PopupManager.Instance.CloseAllActivePopups();
+			NavigationManager.Instance.SelectTab(Content.PlayerMarket);
+
+			_market.OnSearchButtonPressed();
+			_market._frontPageContainer.SetActive(false);
+			_market._offerPage.gameObject.SetActive(false);
+			_market._searchPage.SelectItemAsync(this._selectedItem);
+		}
+
+		[HideFromIl2Cpp]
 		public void HandleMouseEnter(MouseEventData data) {
 			if (!this._text) return;
 			this.SearchAndSetup(data);
 		}
 
+		[HideFromIl2Cpp]
 		public void HandleMouseExit(MouseEventData data) {
 			if (!this._text) return;
 			if (this._selected == null) return;
@@ -51,6 +82,7 @@ namespace IdlePlus.Unity.Chat {
 			this._popup.Hide();
 		}
 
+		[HideFromIl2Cpp]
 		public void HandleMouseMove(MouseEventData data) {
 			if (!this._text) return;
 			if (this._selected == null) {
@@ -78,6 +110,7 @@ namespace IdlePlus.Unity.Chat {
 				return;
 			}
 			
+			if (!linkId.StartsWith("ITEM:")) return;
 			this._selected = linkId;
 			var itemId = int.Parse(linkId.Substring(5));
 			var item = ItemDatabase.ItemList[itemId];
@@ -88,6 +121,7 @@ namespace IdlePlus.Unity.Chat {
 			this._popup.Show();
 		}
 
+		[HideFromIl2Cpp]
 		private void SearchAndSetup(MouseEventData data) {
 			string linkId = this.TryToGetLink(data);
 			if (linkId == null) {
@@ -103,6 +137,7 @@ namespace IdlePlus.Unity.Chat {
 			
 			var itemId = int.Parse(linkId.Substring(5));
 			var item = ItemDatabase.ItemList[itemId];
+			this._selectedItem = item;
 			
 			PopupManager.Instance.SetupHardPopup(HardPopup.InventoryItemHoverPopup, false, false);
 			var worldPos = _camera.ScreenToWorldPoint(data.MousePosition);
@@ -110,6 +145,7 @@ namespace IdlePlus.Unity.Chat {
 			this._popup.Show();
 		}
 
+		[HideFromIl2Cpp]
 		private string TryToGetLink(MouseEventData data) {
 			int intersectingLink = TMP_TextUtilities.FindIntersectingLink(this._text, data.MousePosition, _camera);
 			if (intersectingLink <= -1) return null;

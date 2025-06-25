@@ -20,7 +20,7 @@ namespace IdlePlus.Settings {
 		// Features category
 		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
 			Features.TotalWealth, Features.TotalWealthVendorValue, Features.ScrollInfo, 
-			Features.EquipmentStatsInfo, Features.PotionTime, Features.ChatItems);
+			Features.EquipmentStatsInfo, Features.PotionTime, Features.EnhancedChat, Features.DetailedRaidPlayer);
         
 		// Feature settings
 		public static class Features {
@@ -54,9 +54,15 @@ namespace IdlePlus.Settings {
 				true
 			);
 			
-			public static readonly ToggleSetting ChatItems = ToggleSetting.Create(
+			// TODO: Move this to the UI category.
+			public static readonly ToggleSetting EnhancedChat = ToggleSetting.Create(
 				"feature_chatItem", true,
 				"Item names in chat that can be hovered over to display the item.",
+				true);
+			
+			public static readonly ToggleSetting DetailedRaidPlayer = ToggleSetting.Create(
+				"feature_detailedRaidPlayer", false,
+				"Display detailed information about a player when selected in a raid.",
 				true);
 		}
 		#endregion
@@ -149,9 +155,9 @@ namespace IdlePlus.Settings {
 			public static StringDropdownSetting CurrentPack;
 		}
 		#endregion
-
-
+		
 		#region Hooks
+		
 		public static readonly SettingCategory HooksCategory = SettingCategory.Create(
 			"WebHooks",
 			new Setting[] { Hooks.BackendHookServer, Hooks.BackendHookBarrer }

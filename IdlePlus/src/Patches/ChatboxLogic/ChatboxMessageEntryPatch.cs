@@ -1,12 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ChatboxLogic;
 using HarmonyLib;
+using IdlePlus.API;
+using IdlePlus.API.Popup;
+using IdlePlus.API.Popup.Popups;
 using IdlePlus.API.Utility.Game;
 using IdlePlus.Settings;
 using IdlePlus.Unity.Chat;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
+using Il2CppSystem.Threading.Tasks;
+using Popups;
+using UnityEngine;
 
 namespace IdlePlus.Patches.ChatboxLogic {
 	
@@ -36,16 +43,18 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			}
 			
 			// Make sure we've enabled chat items.
-			if (!ModSettings.Features.ChatItems.Value) return;
+			if (!ModSettings.Features.EnhancedChat.Value) return;
 			
-			// By default, players shouldn't be able to use rich tags.
-			__instance._text.richText = false;
+			// We require rich text tags.
+			__instance._text.richText = true;
 			
 			// Make sure this is a valid player message, and get the content.
-			if (!PlayerUtils.IsPlayerMessage(message, out var tag, out var name, out var content)) return;
+			if (!PlayerUtils.IsPlayerMessage(message, out _, out _, out var content)) return;
 
-			// Do a search to detect items in the sentence.
+			// Escape any rich text tags currently in the message.
 			var escaped = content.Replace("<", "<noparse><</noparse>");
+			
+			// Do a search to detect items in the sentence.
 			var lowered = escaped.ToLower();
 			var result = ItemUtils.ItemSearcher.Search(lowered, true);
 			// Make sure it's valid, e.g. nothing in the middle of a word.
@@ -69,11 +78,8 @@ namespace IdlePlus.Patches.ChatboxLogic {
 					t.MutableEndIndex += 1;
 					return true;
 				}).ToList();
-
-			// If we didn't find any words then don't do anything, but if we did,
-			// then enable rich text.
+			
 			if (result.IsEmpty()) return;
-			__instance._text.richText = true;
 			
 			// Insert color into the escaped message.
 			for (var i = result.Count - 1; i >= 0; i--) {
@@ -99,9 +105,58 @@ namespace IdlePlus.Patches.ChatboxLogic {
 			}
 			
 			// Update the message.
-			var linkHoverable = __instance._text.transform.parent.With<ChatItemLinkDisplay>();
+			var linkHoverable = __instance._text.transform.parent.With<ChatItemDisplayLink>();
 			linkHoverable.Setup(__instance._text);
+			
 			message = message.Substring(0, message.Length - content.Length) + escaped;
+		}
+
+		[HarmonyPostfix]
+		[HarmonyPatch(nameof(ChatboxMessageEntry.Setup))]
+		private static void PostfixSetup(ChatboxMessageEntry __instance, string message, GameMode gameMode) {
+			if (gameMode == GameMode.NotSelected) return;
+			if (!ModSettings.Features.EnhancedChat.Value) return;
+			
+			if (!PlayerUtils.IsPlayerMessageIndex(message, out var tagIndex, out var tag, out var nameIndex, 
+				    out var name, out _, out _)) return;
+			
+			// Decorate both the name and clan tag if it exists.
+			__instance._text.transform.parent.With<GeneralTextDecorationLink>().Setup(__instance._text, (id, data) => {
+				switch (id) {
+					case "onName":
+						if (data.RightClickPressed) {
+							GUIUtility.systemCopyBuffer = name;
+							PopupUtils.ShowSoftPopup("Copied!", "Username copied to clipboard.", time: 1f);
+							return;
+						}
+
+						if (!data.LeftClickPressed) return;
+						var profilePopup = CustomPopupManager.Setup<PlayerProfilePopup>(PlayerProfilePopup.PopupKey);
+						profilePopup.Setup(name);
+						break;
+					case "onTag":
+						if (!data.LeftClickPressed) return;
+						ClanApiManager.Instance.GetClanRecruitmentPage(tag).AcceptSync(page => { 
+							var popup = PopupManager.Instance.SetupHardPopup<ClanRecruitmentResultPopup>();
+							popup.Setup(page);
+						}, exception => {
+							IdleLog.Error("Failed to fetch clan recruitment page.", exception);
+						});
+						break;
+				}
+			});
+			
+			// Name
+			var updatedName = $"<link=\"decorate:underline&color:e0e0e0&click:onName\">{name}</link>";
+			message = message.Substring(0, nameIndex) + updatedName + message.Substring(nameIndex + name.Length);
+			
+			// Clan tag
+			if (tag != null) {
+				var updatedTag = $"<link=\"decorate:underline&color:e0e0e0&click:onTag\">{tag}</link>";
+				message = message.Substring(0, tagIndex) + updatedTag + message.Substring(tagIndex + tag.Length);
+			}
+			
+			__instance._text.text = message;
 		}
 	}
 }

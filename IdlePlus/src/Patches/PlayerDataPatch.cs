@@ -1,10 +1,7 @@
 using HarmonyLib;
 using IdlePlus.API.Event;
 using IdlePlus.API.Event.Contexts;
-using IdlePlus.Unity;
-using IdlePlus.Utilities;
 using Player;
-using UnityEngine;
 
 namespace IdlePlus.Patches {
 	

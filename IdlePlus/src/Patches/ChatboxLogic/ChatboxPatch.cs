@@ -14,7 +14,6 @@ using IdlePlus.Utilities.Extensions;
 using Il2CppSystem.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using Random = System.Random;
 
 namespace IdlePlus.Patches.ChatboxLogic {
 	

@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using IdlePlus.Utilities;
+using Il2CppInterop.Runtime.Attributes;
 
 namespace IdlePlus.Settings.Unity {
 	[RegisterIl2Cpp]
@@ -87,6 +88,7 @@ namespace IdlePlus.Settings.Unity {
 			}
 		}
 
+		[HideFromIl2Cpp]
 		public void SetSetting(StringSetting setting) {
 			Setting = setting;
 			Setup();

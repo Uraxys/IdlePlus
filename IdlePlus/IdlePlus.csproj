@@ -12,6 +12,8 @@
         <AssemblyName>IdlePlus</AssemblyName>
         <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
+        <!-- Annoying warnings for using Jetbrains Annotations, as it's also included in Unity. -->
+        <NoWarn>0436</NoWarn>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>

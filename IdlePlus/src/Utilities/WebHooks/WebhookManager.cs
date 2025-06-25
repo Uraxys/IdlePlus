@@ -7,6 +7,7 @@ using Guilds;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using IdlePlus.Utilities.Helpers;
 
 namespace IdlePlus.Utilities {
 	/// <summary>

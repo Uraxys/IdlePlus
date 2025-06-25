@@ -2,6 +2,7 @@ using IdlePlus.Attributes;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
 using IdlePlus.Utilities.Helpers;
+using Il2CppInterop.Runtime.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ namespace IdlePlus.Settings.Unity {
 		private GameObject _container;
 		private bool _initialized;
 
+		[HideFromIl2Cpp]
 		public void Initialize(SettingCategory category) {
 			if (_initialized) return;
 			_initialized = true;
