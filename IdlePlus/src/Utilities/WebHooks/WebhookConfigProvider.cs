@@ -10,8 +10,8 @@ namespace IdlePlus.Utilities {
 	/// </remarks>
 	public enum WebhookType {
 		/// <summary>Minigame/clan event webhooks.</summary>
-		Minigame
-
+		Minigame,
+		ClanAction
 		// When adding a new webhook type:
 		// 1. Add it here as a new enum value
 		// 2. Add its configuration to the _configs dictionary in WebhookConfigProvider
@@ -50,6 +50,13 @@ namespace IdlePlus.Utilities {
 					RequestMethod = "POST",
 					UrlPath = "/minigame/{action}/{type}",
 					SettingsName = "Minigames (Clan Events)"
+				}
+			},
+			{
+				WebhookType.ClanAction, new WebhookConfig {
+					RequestMethod = "POST",
+					UrlPath = "/clan",
+					SettingsName = "Clan Actions (Application received, new skill ticket, etc)"
 				}
 			}
             
