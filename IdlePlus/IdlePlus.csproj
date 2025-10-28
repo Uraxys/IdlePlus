@@ -10,6 +10,7 @@
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>IdlePlus</RootNamespace>
         <AssemblyName>IdlePlus</AssemblyName>
+        <TargetFramework>net471</TargetFramework>
         <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <!-- Annoying warnings for using Jetbrains Annotations, as it's also included in Unity. -->

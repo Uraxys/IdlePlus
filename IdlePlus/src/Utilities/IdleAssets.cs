@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Skilling;
+using Scripts.Shared.Data.Content.Skills;
 using UnityEngine;
 
 namespace IdlePlus.Utilities {

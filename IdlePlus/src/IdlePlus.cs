@@ -26,7 +26,7 @@ namespace IdlePlus {
 			ModAuthor = "Uraxys",
 			ModID = "idleplus",
 			ModGuid = "dev.uraxys.idleplus",
-			ModVersion = "1.5.1"
+			ModVersion = "1.6.0"
 #if DEBUG
 			             + "-DEBUG";
 #else
@@ -74,11 +74,6 @@ namespace IdlePlus {
 		}
 		
 		private static void OnLogin(PlayerLoginEventContext ctx) {
-			// Find the player market and "initialize" it.
-			var playerMarket = Object.FindObjectOfType<PlayerMarketPage>(true);
-			playerMarket.gameObject.SetActive(true);
-			playerMarket.gameObject.SetActive(false);
-			
 			// Do one time initialization for objects that are only created once.
 			InitializeOnceAttributeHandler.InitializeOnce();
 			// Do initialization for objects that are recreated on login.

@@ -140,7 +140,7 @@ namespace IdlePlus.Patches.Popups {
 			}
 			
 			PopupManager.Instance.SetupDefaultLoadingPopup();
-			NetworkMessage cancelPacket;
+			BaseNetworkMessage cancelPacket;
 
 			if (playerMarketPopup._isBuyOffer) cancelPacket = new CancelBuyOfferMessage { DocumentId = marketOffer.Id };
 			else cancelPacket = new CancelSellOfferMessage { DocumentId = marketOffer.Id };

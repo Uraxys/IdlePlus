@@ -64,6 +64,10 @@ namespace IdlePlus.Patches.Popups {
 		
 		[InitializeOnce]
 		public static void InitializeOnce() {
+
+			// TODO: See the reaction of the vanilla update (1.6000) before adding this back.
+			if (true) return;
+			
 			_enhancedTooltip = ModSettings.UI.EnhancedInventoryItemTooltip.Value;
 			_popup = GameObjects.FindByCachedPath("PopupManager/Canvas/HardPopups/InventoryItemHoverPopup");
 			var popupBehavior = _popup.Use<InventoryItemHoverPopup>();
@@ -237,8 +241,9 @@ namespace IdlePlus.Patches.Popups {
 		 * Patch
 		 */
 		
-		[HarmonyPostfix]
-		[HarmonyPatch(nameof(InventoryItemHoverPopup.Setup))]
+		// TODO: See the reaction of the vanilla update (1.6000) before adding this back.
+		//[HarmonyPostfix]
+		//[HarmonyPatch(nameof(InventoryItemHoverPopup.Setup))]
 		public static void PostfixSetup(InventoryItemHoverPopup __instance, Item item) {
 			if (item == null) return;
 			
@@ -263,7 +268,9 @@ namespace IdlePlus.Patches.Popups {
 		private static void UpdateItemValue(InventoryItemHoverPopup __instance, Item item = null) {
 			if (item == null) item = __instance.AttachedItem;
 			
-			var baseObj = __instance._itemValueText.transform.parent.gameObject;
+			// TODO: temporary to fix errors.
+			//var baseObj = __instance._itemValueText.transform.parent.gameObject;
+			GameObject baseObj = null;
 
 			var basePriceText = _sellValueText;//__instance._itemValueText;
 			var marketPriceText = _marketValueText;//_marketValue.transform.GetChild(1).Use<TextMeshProUGUI>();
@@ -322,7 +329,8 @@ namespace IdlePlus.Patches.Popups {
 				_split1.SetActive(state);
 			}
 			
-			__instance._contentRefresh.RefreshContentFitters();
+			//
+			//__instance._contentRefresh.RefreshContentFitters();
 		}
 	}
 }

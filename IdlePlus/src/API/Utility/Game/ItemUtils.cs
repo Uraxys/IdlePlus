@@ -6,6 +6,7 @@ using IdlePlus.Attributes;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Strings;
 using Il2CppSystem;
+using Scripts.Shared.Data.Content.MasteryCapes;
 
 namespace IdlePlus.API.Utility.Game {
 	public static class ItemUtils {

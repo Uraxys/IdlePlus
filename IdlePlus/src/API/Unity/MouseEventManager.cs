@@ -54,12 +54,15 @@ namespace IdlePlus.API.Unity {
 
 			var leftPressed = Input.GetMouseButtonDown(0);
 			var rightPressed = Input.GetMouseButtonDown(1);
+			var leftReleased = Input.GetMouseButtonUp(0);
+			var rightReleased = Input.GetMouseButtonUp(1);
 						
-			MouseEventData eventData = new MouseEventData(Input.mousePosition, leftPressed, rightPressed);
+			MouseEventData eventData = new MouseEventData(Input.mousePosition, leftPressed, rightPressed, 
+				leftReleased, rightReleased);
 			ProcessEnterExit(eventData, result?.gameObject);
 			ProcessMove(eventData);
 			
-			if (leftPressed || rightPressed) {
+			if (leftPressed || rightPressed || leftReleased || rightReleased) {
 				ExecuteEvent(Selected.GameObject, eventData, MouseEventFunctions.MouseClickFunc);
 			}
 		}
@@ -200,11 +203,32 @@ namespace IdlePlus.API.Unity {
 		/// If the right mouse button was just pressed.
 		/// </summary>
 		public readonly bool RightClickPressed;
+		/// <summary>
+		/// If the left mouse button was just released.
+		/// </summary>
+		public readonly bool LeftClickReleased;
+		/// <summary>
+		/// If the right mouse button was just released.
+		/// </summary>
+		public readonly bool RightClickReleased;
 		
-		public MouseEventData(Vector3 mousePosition, bool leftClickPressed, bool rightClickPressed) {
+		public MouseEventData(Vector3 mousePosition, bool leftClickPressed, bool rightClickPressed,
+			bool leftClickReleased, bool rightClickReleased) {
 			this.MousePosition = mousePosition;
 			this.LeftClickPressed = leftClickPressed;
 			this.RightClickPressed = rightClickPressed;
+			this.LeftClickReleased = leftClickReleased;
+			this.RightClickReleased = rightClickReleased;
+		}
+
+		public bool IsRelease() => this.LeftClickReleased || this.RightClickReleased;
+		public bool IsPressed() => this.LeftClickPressed || this.RightClickPressed;
+
+		public override string ToString() {
+			return
+				$"{nameof(MousePosition)}: {MousePosition}, {nameof(LeftClickPressed)}: {LeftClickPressed}, " +
+				$"{nameof(RightClickPressed)}: {RightClickPressed}, {nameof(LeftClickReleased)}: {LeftClickReleased}, " +
+				$"{nameof(RightClickReleased)}: {RightClickReleased}";
 		}
 	}
 
