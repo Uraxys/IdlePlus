@@ -22,7 +22,7 @@ the experience with features like *Edit Offer* in the Player Market, *Market Val
 - **And much more planned!**
 
 ## Installation
-1. Download BepInEx 6, you can find it [here](https://builds.bepinex.dev/projects/bepinex_be/692/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.692%2B851521c.zip). 
+1. Download BepInEx 6, you can find it [here](https://builds.bepinex.dev/projects/bepinex_be/738/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.738%2Baf0cba7.zip). 
 *(direct download, if you would rather download it yourself, then you can go [here](https://builds.bepinex.dev/projects/bepinex_be) 
 and download it, make sure to get the x86 version for IL2CPP)*
 2. Open the game folder (right-click the game in steam > Manage > Browse local files).
