@@ -20,7 +20,7 @@ namespace IdlePlus.Settings {
 		// Features category
 		public static readonly SettingCategory FeaturesCategory = SettingCategory.Create("Features",
 			Features.TotalWealth, Features.TotalWealthVendorValue, Features.ScrollInfo, 
-			Features.EquipmentStatsInfo, Features.PotionTime, Features.EnhancedChat, Features.DetailedRaidPlayer);
+			Features.EquipmentStatsInfo, Features.EnhancedChat, Features.DetailedRaidPlayer);
         
 		// Feature settings
 		public static class Features {
@@ -45,12 +45,6 @@ namespace IdlePlus.Settings {
 			public static readonly ToggleSetting EquipmentStatsInfo = ToggleSetting.Create(
 				"feature_equipmentStatsInfo",
 				"Equipment displays their stat differences if equipped.",
-				true
-			);
-
-			public static readonly ToggleSetting PotionTime = ToggleSetting.Create(
-				"feature_potionTime", true,
-				"Display the total time a potion will last when drinking it.",
 				true
 			);
 			

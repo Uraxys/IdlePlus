@@ -10,7 +10,7 @@ using IdlePlus.Utilities.Helpers;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Skilling;
+using Scripts.Shared.Data.Content.Skills;
 using Upgrades;
 
 namespace IdlePlus.API {

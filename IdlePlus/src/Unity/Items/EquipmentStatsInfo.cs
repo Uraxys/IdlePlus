@@ -4,6 +4,7 @@ using IdlePlus.Attributes;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Extensions;
 using Player;
+using Scripts.Shared.Data.Content.Skills;
 using Skilling;
 using TMPro;
 using UnityEngine;

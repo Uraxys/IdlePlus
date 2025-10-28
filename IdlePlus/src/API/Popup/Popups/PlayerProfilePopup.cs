@@ -8,6 +8,7 @@ using Guilds;
 using IdlePlus.API.Utility.Extensions;
 using IdlePlus.API.Utility.Game;
 using IdlePlus.Attributes;
+using IdlePlus.Unity.Chat;
 using IdlePlus.Utilities;
 using IdlePlus.Utilities.Collections;
 using IdlePlus.Utilities.Extensions;
@@ -24,6 +25,7 @@ using Newtonsoft.Json.Linq;
 using Player;
 using Popups;
 using Scripts.Content;
+using Scripts.Shared.Data.Content.Skills;
 using Skilling;
 using Tasks;
 using TMPro;
@@ -48,10 +50,12 @@ namespace IdlePlus.API.Popup.Popups {
 		public static void Create(GameObject obj) {
 			var originalPopup = GameObjects.FindByPath("PopupManager/Canvas/HardPopups/GuildMemberProfilePopup");
 			var inner = Instantiate(originalPopup, obj.transform, false);
+			var container = inner.Find("Container");
 			inner.name = "InnerProfilePopup";
 			inner.SetActive(true);
+			container.active = true;
 
-			var closeButton = inner.Find("CloseButton").Use<CloseButton>();
+			var closeButton = container.Find("CloseButton").Use<CloseButton>();
 			closeButton._uiToClose = obj;
 
 			var guildMemberPopup = inner.Use<GuildMemberPopup>();
@@ -71,14 +75,15 @@ namespace IdlePlus.API.Popup.Popups {
 			popup._taskText = guildMemberPopup._currentTaskText;
 			popup._skillInstances = guildMemberPopup._skillInstances;
 			popup._username = guildMemberPopup._username;
-			popup._isOnline = guildMemberPopup._isOnline;
+			//popup._isOnline = guildMemberPopup._isOnline;
 
-			popup._upgradeScrollRect = inner.Find("UpgradesBackground/Scroll View").Use<ScrollRect>();
+			popup._pvmStatScrollRect = container.Find("PvmStatsBackground/Scroll View").Use<ScrollRect>();
+			popup._upgradeScrollRect = container.Find("UpgradesBackground/Scroll View").Use<ScrollRect>();
 			popup._clanText.gameObject.name = "ClanText";
 			popup._clanText.SetText("<b>Clan:</b> <i>Not in a clan</i>");
 			popup._joinDateText.gameObject.SetActive(false);
 
-			var buttonContainer = inner.Find("ButtonsBackground/FooterButtons");
+			var buttonContainer = container.Find("ButtonsBackground/FooterButtons");
 			IdleLog.Info(buttonContainer.transform.childCount);
 			var button = Instantiate(buttonContainer.Find("MessageButton"), buttonContainer.transform, false);
 			button.SetActive(false);
@@ -99,8 +104,8 @@ namespace IdlePlus.API.Popup.Popups {
 				if (child.GetInstanceID() == button.GetInstanceID()) continue;
 				DestroyImmediate(child);
 			}
-
-			NetworkClient.OnGuildMemberProfileReceived += (Action<ReceiveMemberProfileMessage>) popup.OnReceiveMemberProfileMessage;
+			
+			NetworkClient.OnMemberProfileReceived += (Action<ReceiveMemberProfileMessage>) popup.OnReceiveMemberProfileMessage;
 			DestroyImmediate(guildMemberPopup);
 		}
 
@@ -141,6 +146,7 @@ namespace IdlePlus.API.Popup.Popups {
 		private GuildMemberSkillEntry[] _skillInstances;
 
 		private PvmStatEntry _pvmStatPrefab;
+		private ScrollRect _pvmStatScrollRect;
 		private Transform _pvmStatContainer;
 		private PvmStatEntry[] _pvmStatInstances;
 
@@ -192,9 +198,12 @@ namespace IdlePlus.API.Popup.Popups {
 		
 		private void OnReceiveMemberProfileMessage(ReceiveMemberProfileMessage message) {
 			IdleLog.Info($"Received member profile.");
-			this._isOnline = true;
 			
-			var equipmentIds = JsonConvert.DeserializeObject<Il2CppStructArray<int>>(message.EquipmentJson);
+			this._isOnline = message.IsOnline;
+			if (!message.IsOnline) return;
+			
+			// Equipment.
+			var equipmentIds = message.Equipment;
 			var equipment = new Dictionary<EquipmentSlot, int>();
 			foreach (var itemId in equipmentIds) {
 				if (!ItemDatabase.ItemList.TryGetValue(itemId, out var item)) {
@@ -204,10 +213,10 @@ namespace IdlePlus.API.Popup.Popups {
 				equipment[item.EquipmentSlot] = itemId;
 			}
 			
+			// Skills
 			var skills = new Dictionary<string, double>();
-			foreach (var entry in JsonHelper.ToSimpleDictionary<string, double>(JsonConvert
-				         .DeserializeObject(message.SkillExperiencesJson).Cast<JObject>())) {
-				var key = entry.Key.ToLower();
+			foreach (var entry in message.SkillExperiences) {
+				var key = entry.Key.ToString().ToLower();
 				if (key == "rigour") key = "attack";
 				skills.Add(key, entry.Value);
 			}
@@ -217,6 +226,7 @@ namespace IdlePlus.API.Popup.Popups {
 			if (CachedPlayerProfiles.TryGet(this._username.ToLower(), out var profile)) {
 				profile.Equipment = equipment;
 				profile.SkillExperiences = skills;
+				profile.GuildName = message.GuildName;
 			}
 
 			// We always want to use the information from the server, as it's
@@ -235,16 +245,16 @@ namespace IdlePlus.API.Popup.Popups {
 			this._serverResponse = true;
 			if (this._apiResponse) return;
 			base.Display();
-			IdleTasks.Run(() => this._upgradeScrollRect.SetHorizontalNormalizedPosition(0));
+			IdleTasks.Run(() => {
+				this._pvmStatScrollRect.SetHorizontalNormalizedPosition(0);
+				this._upgradeScrollRect.SetHorizontalNormalizedPosition(0);
+			});
 		}
 
 		private void OnReceiveApiPlayerProfile(FullPlayerProfile profile, bool expectOnline) {
 			IdleLog.Info($"Received api player profile.");
 			this._inGuild = !string.IsNullOrEmpty(profile.GuildName);
 			this._gameMode = Enum.TryParse<GameMode>(profile.GameMode, true, out var mode) ? mode : GameMode.NotSelected;
-			
-			// TODO: REMOVE THIS!
-			//if (!this._isOnline) this._isOnline = profile.HoursOffline == 0;
 			
 			// Only set up the inventory if we don't expect the player to be online.
 			if (!this._serverResponse && !expectOnline) {
@@ -262,7 +272,10 @@ namespace IdlePlus.API.Popup.Popups {
 			this._apiResponse = true;
 			if (this._serverResponse) return;
 			base.Display();
-			IdleTasks.Run(() => this._upgradeScrollRect.SetHorizontalNormalizedPosition(0));
+			IdleTasks.Run(() => {
+				this._pvmStatScrollRect.SetHorizontalNormalizedPosition(0);
+				this._upgradeScrollRect.SetHorizontalNormalizedPosition(0);
+			});
 		}
 
 		private void SetupButtons() {
@@ -410,8 +423,22 @@ namespace IdlePlus.API.Popup.Popups {
 		}
 
 		private void SetupClanText(string clan) {
-			var clanName = string.IsNullOrEmpty(clan) ? "Not in a clan" : clan;
+			var clanName = string.IsNullOrEmpty(clan) ? "Not in a clan" : $"<link=\"decorate:underline&color:e0e0e0&click:onClan\">{clan}</link>";
 			this._clanText.SetText($"Clan: {clanName}");
+
+			if (string.IsNullOrEmpty(clan)) return;
+			
+			var textDecoration = this._clanText.transform.With<GeneralTextDecorationLink>();
+			textDecoration.Setup(this._clanText, (id, data) => {
+				if (!data.LeftClickReleased) return;
+				if (!id.Equals("onClan")) return;
+				ClanApiManager.Instance.GetClanRecruitmentPage(clan).AcceptSync(page => { 
+					var popup = PopupManager.Instance.SetupHardPopup<ClanRecruitmentResultPopup>();
+					popup.Setup(page);
+				}, exception => {
+					IdleLog.Error("Failed to fetch clan recruitment page.", exception);
+				});
+			});
 		}
 
 		private static string GetTaskText(ReceiveMemberProfileMessage message) {

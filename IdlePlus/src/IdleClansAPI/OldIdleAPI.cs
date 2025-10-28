@@ -34,6 +34,11 @@ namespace IdlePlus.IdleClansAPI {
 #pragma warning restore CS0162 // Unreachable code detected
 			
 			var start = DateTime.Now.Ticks;
+
+			if (IdleClansAPIManager.HttpClient == null) {
+				IdleClansAPIManager.ConfigureSecurityAndCreateClient();
+			}
+			
 			IdleClansAPIManager.HttpClient.GetAsync(MarketPricesUrl)
 				.ContinueWith((Action<Task>) delegate(Task t1) {
 					var webTask = new Task<HttpResponseMessage>(t1.Pointer);

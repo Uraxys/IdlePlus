@@ -2,6 +2,7 @@ using System;
 using IdlePlus.API.Unity;
 using IdlePlus.API.Utility;
 using IdlePlus.Attributes;
+using IdlePlus.Utilities;
 using Il2CppInterop.Runtime.Attributes;
 using TMPro;
 using UnityEngine;

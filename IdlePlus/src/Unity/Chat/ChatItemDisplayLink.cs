@@ -48,7 +48,7 @@ namespace IdlePlus.Unity.Chat {
 		[HideFromIl2Cpp]
 		public void HandleMouseClick(MouseEventData data) {
 			if (this._selected == null || this._selectedItem == null) return;
-			if (!data.LeftClickPressed) return;
+			if (!data.LeftClickReleased) return;
 
 			if (_market == null) {
 				_market = FindObjectOfType<PlayerMarketPage>(true);
